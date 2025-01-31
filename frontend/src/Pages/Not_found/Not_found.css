@@ -1,0 +1,15 @@
+.noth1{
+    color: var(--icon-color);
+    font-size: 200px;
+    text-align: center;
+    font-family: monospace;
+}
+
+.noth5{
+    text-align: center;
+    color: var(--tagline-color);
+}
+
+.rows{
+    margin-top: 120px;
+}

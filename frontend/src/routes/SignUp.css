@@ -1,0 +1,25 @@
+.half-input{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.half-input .form-group{
+    width: 47%;
+
+}
+
+.form-group{
+    margin-top: 5px;
+}
+
+
+.cols-grid .sign_form {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
+    margin-top: 3.5%;
+    border: 3px solid var(--strok-color);
+    border-radius: 35px;
+    padding: 40px 55px ;
+}

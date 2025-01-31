@@ -1,0 +1,75 @@
+.tagline{
+    color: var(--tagline-color);
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Kumbh Sans';
+    line-height: 120%;
+    letter-spacing: -3%;
+    
+}
+
+.banner-heading{
+    color: var(--title-color);
+    font-family: 'Kumbh Sans';
+    font-weight: 500;
+    line-height: 120%;
+    letter-spacing: -3%;
+    font-size: 48px;
+}
+
+p{
+    color: var(--paragraph-color);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -3%;
+    
+}
+
+.left-b{
+    padding: 145px 0px 0px 75px;
+}
+.right-b{
+    padding: 75px 0px;
+    margin-top: 75px;
+    border-left: 2px solid var(--strok-color);
+    border-bottom: 2px solid var(--strok-color);
+    background-image: url(../../assets/banner.png);
+    background-repeat: no-repeat, repeat;
+}
+
+.left_b_under{
+    display: flex;
+    width: 100%;
+    margin-left: 3.1px;
+    border-bottom: 2px solid var(--strok-color);
+}
+
+.left_b_under .left-b-spetial{
+    width: 245px;
+    height: auto;
+    color: white;
+    border-right: 2px solid var(--strok-color);
+    border-top: 2px solid var(--strok-color);
+    padding: 20px 30px;
+}
+
+.left_b_under .left-b-spetial h4 {
+    font-size: 30px;
+    color: var(--title-color);
+}
+
+.left_b_under .left-b-spetial h4 span{
+    color: var(--icon-color);
+    font-size: 30px;
+}
+
+.left_b_under .left-b-spetial span{
+    color: #98989A;
+    font-size: 12px;
+}
+
+.fetuers-mid{
+    border-right: 2px solid var(--strok-color);
+    border-left: 2px solid var(--strok-color);
+}

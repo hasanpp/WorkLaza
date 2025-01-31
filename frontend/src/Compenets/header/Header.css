@@ -1,0 +1,144 @@
+
+
+.navbar{
+    background-color: var(--secondary-color);
+    padding: 10px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 2px solid var(--strok-color);
+}
+
+.navbar .navbar-brand{
+    display: flex;
+}
+
+.navbar .navbar-brand img{
+    width: 55px;
+    height: auto;
+}
+.navbar .navbar-brand h4{
+    color: var(--title-color);
+    font-family: 'Kumbh Sans';
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0;
+    line-height: 150%;
+    margin: 5px 1px;
+}
+
+.btn-info{
+    background-color: var(--icon-color);
+    border: 2px solid var(--icon-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-info:hover{
+    background-color: transparent;
+    color: var(--icon-color);
+    border: 2px solid var(--icon-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-info span{
+    color: var(--secondary-icon-color);
+}
+
+
+.btn-info:hover span{
+    color: var(--icon-color);
+}
+
+.navbar .navbar-nav .nav-item .nav-link{
+    color: var(--paragraph-color);
+    width: 80px;
+    height: auto;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.navbar .navbar-nav .nav-item .selected{
+    background-color: var(--secondary-icon-color);
+    color: var(--title-color);
+    border: 2px solid #333333;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.navbar .navbar-nav .nav-item .nav-link:hover{
+    color: var(--title-color);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.dropdown-menu{
+    background-color: var(--icon-color);
+}
+
+.dropdown-menu .dropdown-item{
+    background-color: var(--icon-color);
+    border-bottom: 1px solid var(--strok-color);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.dropdown-menu .dropdown-item:hover{
+    background-color: var(--icon-color);
+    border-bottom: 1px solid var(--strok-color);
+    filter: saturate(0.5);
+    cursor: pointer;
+}
+
+.navbar-collapse{
+    justify-content: center;
+}
+
+
+@media screen and (max-width: 500px) {
+    .navbar{
+        padding: 8px 10px ;
+    }
+    .navbar .navbar-brand img{
+        width: 40;
+        height: auto;
+    }
+    .navbar-toggler{
+        position: fixed;
+        width: 100%;
+        display: flex ;
+        justify-content: end;
+        z-index: 1;
+    }
+    .navbar-nav{
+        display: flex;
+        flex-direction: row;
+    }
+    .navbar-nav .nav-link{
+        width: 80px;
+    }
+
+    .dropdown {
+        display: flex;
+        justify-content: end;
+        z-index: 50;
+    }
+    .dropdown .btn-info{
+        margin-right: 33px;
+        z-index: 50;
+    }
+    .dropdown-menu{
+        margin-left: 0%;
+    }
+  }

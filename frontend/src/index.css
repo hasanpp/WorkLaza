@@ -1,0 +1,33 @@
+:root {
+
+  --primary-color: #1E1E1E; /* Black primary color */
+
+  --secondary-color: #1A1A1A; /* Dark grey secondary color */
+
+  --title-color: #ffffff; /* White title color */
+
+  --tagline-color: #666666; /* White tagline color */
+
+  --icon-color: #AFDDE5; /* Light blue icon color */
+
+  --secondary-icon-color: #141414; /* Black secondary icon color */
+
+  --paragraph-color: #7E7E81; /* Grey paragraph color */
+
+  --strok-color: #262626; /* Dark grey stroke color */
+
+  --secondary-paragraph-color: #262626; /* Dark grey secondary paragraph color */
+}
+
+
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-color);
+}
+
+
+input{
+  background-color: transparent;
+}
