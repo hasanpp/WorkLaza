@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import logo from '../assets/logo.png';
 import './SignIn.css';
 import API from '../api';
@@ -16,11 +16,9 @@ const SignIn = () => {
     const { userRole, login } = useAuth();
     const [error, setError] = useState(null);
     const setIsLoading = useContext(LoadingContext);
-    
 
     const messege = localStorage.getItem('messege');
-    console.log(messege);
-
+    
     useEffect(() => {
         if (messege){
             toast.success(messege);
@@ -36,17 +34,12 @@ const SignIn = () => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
-    
-    const googleSignIn = () => {
-        window.location.href = "http://127.0.0.1:8000/accounts/google/login/";
-    };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         try {
             const response = await API.post('/user/signin/', { identifire: formData.identifire, password: formData.password });
-            console.log(response);
             
             toast.success(response.data.message);
             
@@ -93,8 +86,35 @@ const SignIn = () => {
               }
         }
       }, [userRole, navigate]);
-      
-    
+
+
+
+    const reachGoogle = async() => {
+        const clientID = "358220686468-isdt3qooc2dedok4sg0h7kovaq2f03ld.apps.googleusercontent.com";
+        const callBackURI = "http://localhost:5173/";
+        window.location.replace(`https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${callBackURI}&prompt=consent&response_type=code&client_id=${clientID}&scope=openid%20email%20profile&access_type=offline`)
+
+        setIsLoading(true);
+        try {
+            const res = await API.post("/dj-rest-auth/google/",{})
+
+            toast.success(res.data.message);
+            console.log('hihih');
+            
+            login(res.data.access, res.data.refresh, {
+                first_name: res.data.first_name,
+                last_name: res.data.last_name,
+                Username: res.data.Username
+            });
+        } catch(err) {
+            toast.error(err.response.data.message)
+        } finally {
+            setIsLoading(false);
+        }
+
+        
+    }
+
     return (
         <div className="container">
             <div className="row">
@@ -123,8 +143,8 @@ const SignIn = () => {
                             <p className='label' onClick={()=>navigate('/signUP')}>{`Don't Have an account?`}<a>Please Sign Up</a></p>
                             <p className='label' onClick={()=>navigate('/Forgot')}><a>Forgot Password?</a></p>
                         </div>
-                        <div className='google_sign_in' onClick={googleSignIn}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-google" viewBox="0 0 16 16">
+                        <div className='google_sign_in' >
+                            <svg onClick={reachGoogle} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-google" viewBox="0 0 16 16">
                                 <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z" />
                             </svg>
                         </div>

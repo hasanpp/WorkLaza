@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,6 +13,9 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.conf import settings
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
 import jwt
 
 
@@ -140,12 +144,16 @@ class SignInView(APIView):
             if not user.is_authenticated:
                 send_otp_email(user)
                 return Response({'message': 'User is not authenticated Please verify email with otp','email_varify':True}, status=status.HTTP_401_UNAUTHORIZED)
+            if not user.is_active:
+                return Response({'message': 'This user is blocked by the admin'},status=status.HTTP_401_UNAUTHORIZED)
             refresh = RefreshToken.for_user(authenticated_user)
             refresh.payload['is_admin'] = user.is_superuser
             refresh.payload['is_worker'] = user.is_worker
             access_token = str(refresh.access_token)
             request.session['refresh_token'] = str(refresh)
             request.session['access_token'] = access_token
+            user.last_login = timezone.now()
+            user.save(update_fields=['last_login'])
             return Response({'message': 'Sign-in successful!', 'first_name':user.first_name, 'last_name':user.last_name, 'Username':user.username, 'refresh': str(refresh), 'is_admin':user.is_superuser, 'is_worker':user.is_worker, 'access': access_token},status=status.HTTP_200_OK)
         return Response({'message': 'Invalid password'}, status=status.HTTP_401_UNAUTHORIZED)
     
@@ -174,3 +182,11 @@ def get_tokens(request):
         return Response({'message': 'User not Loged in'}, status=401)
      
     return Response({ 'access_token' :access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
+
+
+
+class GoogleLogin(SocialLoginView): 
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = "http://localhost:5173/"
+    client_class = OAuth2Client
+

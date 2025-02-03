@@ -1,0 +1,99 @@
+/* tr:nth-child(even) {
+    background-color: #D6EEEE;
+  } */
+
+h1{
+    font-size: 30px;
+    font-family: "DM Sans", serif;
+}
+
+.table td {
+    padding: .75rem;
+    vertical-align: top;
+    border-bottom: 1px solid #23272A;
+    color: #505664;
+    font-family:  "DM Sans", serif;
+    font-weight: bold;
+    font-size: 12px;
+    border-top: none;
+    cursor: pointer;
+}
+
+.table .action-td {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+}
+
+.table .action-th {
+    text-align: center;
+}
+
+.table td img{
+    width: 20px;
+    height: 20px;
+}
+
+.table td svg{
+    width: 20px;
+    height: 20px;
+}
+
+
+.table th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: none ;
+    font-size: E4E4E4;
+    font-family:  "DM Sans", serif;
+    color: #E4E4E4;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #23272A;
+}
+
+.pagination{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    color: #6E6893;
+}
+
+.pagination-b{
+    color: #6E6893;
+    background-color: transparent;
+    font-size: 28px;
+    border: none;
+    cursor: pointer;
+}
+
+.top_row{
+    display: flex ;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.top_row button{
+    background: #4787FA;
+    color: white;
+    font-weight: 400;
+    font-size: 17px;
+    padding: 8px 22px;
+    border: 2px solid #4787FA;
+    border-radius: 30px;
+}
+
+.top_row button:hover{
+    background: transparent;
+    color: #4787FA;
+    font-weight: 400;
+    font-size: 17px;
+    padding: 8px 22px;
+    border: 2px solid #4787FA;
+    border-radius: 30px;
+}

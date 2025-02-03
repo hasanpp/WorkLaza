@@ -12,55 +12,53 @@ import Not_found from '../Pages/Not_found/Not_found';
 import { useAuth } from '../Authstate';
 import { useNavigate } from 'react-router-dom';
 
-export const PageContext  = createContext();
+export const PageContext = createContext();
 
 const Layout = (props) => {
 
-  const {  userRole } = useAuth();
+  const { userRole } = useAuth();
 
   const navigate = useNavigate();
-  
+
   console.log(userRole);
-  
+
   const [page, setPage] = useState('Home');
   useEffect(() => {
-    if (props.not_found=="true"){
+    if (props.not_found == "true") {
       setPage('not')
     }
   }, [])
-  
+
   useEffect(() => {
-    console.log(userRole.role);
-    
-        switch (userRole.role) {
-            case 'admin':
-              navigate('/admin-panel');
-              break;
-            case 'worker':
-              navigate('/worker');
-              break;
-            default:
-              navigate('/');
-          }
+    switch (userRole.role) {
+      case 'admin':
+        navigate('/admin-panel');
+        break;
+      case 'worker':
+        navigate('/worker');
+        break;
+      default:
+        navigate('/');
+    }
   }, [userRole, navigate]);
-  
-  
+
+
   return (
     <>
       <PageContext.Provider value={setPage}>
-        <Header page={page} not_found={props?.not_found}/>
-        
-        {page=='Home'&&<Home/>}
-        {page=='Saved'&&<Saved/>}
-        {page=='Workers'&&<Workers/>}
-        {page=='Bookings'&&<Bookings/>}
-        {page=='not'&&<Not_found/>}
-        <Footer/>
+        <Header page={page} not_found={props?.not_found} />
+
+        {page == 'Home' && <Home />}
+        {page == 'Saved' && <Saved />}
+        {page == 'Workers' && <Workers />}
+        {page == 'Bookings' && <Bookings />}
+        {page == 'not' && <Not_found />}
+        <Footer />
       </PageContext.Provider>
     </>
   )
 
- 
+
 }
 
 Layout.propTypes = {
