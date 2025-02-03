@@ -68,7 +68,7 @@ const Header = ({ page }) => {
             {!userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signup')}>Sign Up</a> : null}
             {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/profile')}>View profile</a> : null}
             {userRole.isAuthenticated ? <a className="dropdown-item" >Chat</a> : null}
-            {userRole.isAuthenticated ? <a className="dropdown-item" >Register as a worker</a> : null}
+            {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/worker_register')}>Register as a worker</a> : null}
             {userRole.isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={handleLogout}>Log out</a> : null}
 
           </div>

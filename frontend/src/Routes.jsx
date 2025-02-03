@@ -6,6 +6,7 @@ import Layout from './Layout/Layout';
 import Forgot from './routes/varification/Forgot';
 import ChangePassword from './routes/varification/ChangePassword';
 import Admin from './Admin/Admin'
+import WorkerRegister from './routes/WorkerRegister';
 
 function RouteSets() {
 
@@ -15,6 +16,7 @@ function RouteSets() {
         <Route path="/" element={<Layout not_found="false"/>} />
         <Route path="/signin" element={<SignIn/>} />
         <Route path="/signup" element={<SignUp/>} />
+        <Route path="/worker_register" element={<WorkerRegister/>} />
         <Route path="/signup/enterotp" element={<EnterOTP/>} />
         <Route path="/Forgot" element={<Forgot/>}/>
         <Route path="/change_password" element={<ChangePassword/>}/>
