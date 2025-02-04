@@ -7,6 +7,7 @@ import Forgot from './routes/varification/Forgot';
 import ChangePassword from './routes/varification/ChangePassword';
 import Admin from './Admin/Admin'
 import WorkerRegister from './routes/WorkerRegister';
+import Worker from './Worker/Worker';
 
 function RouteSets() {
 
@@ -17,10 +18,11 @@ function RouteSets() {
         <Route path="/signin" element={<SignIn/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/worker_register" element={<WorkerRegister/>} />
-        <Route path="/signup/enterotp" element={<EnterOTP/>} />
+        <Route path="/signup/enterotp" element={<EnterOTP />} />
         <Route path="/Forgot" element={<Forgot/>}/>
         <Route path="/change_password" element={<ChangePassword/>}/>
         <Route path="/admin-panel" element={<Admin/>}/>
+        <Route path="/worker" element={<Worker/>}/>
       </Routes>
   )
 }

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 import './Users.css';
 import chat_with_user from '../../assets/Admin_icones/Chat_to_user.png';
 import { Ban, ArrowRepeat } from 'react-bootstrap-icons';
@@ -15,7 +15,7 @@ const Users = () => {
   const [sortedUsers, setSortedUsers] = useState([]); 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 15;
+  const rowsPerPage = 10;
   const [ tb_c, setTb_c ]=useState(false);
   const [showModal, setShowModal] = useState(false); 
   const [showCreateModal, setShowCreateModal] = useState(false); 
@@ -312,7 +312,7 @@ const Users = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Close</Button>
-          <Button type='submit' variant="primary" onClick={handleCreateUser}> Save Changes </Button>
+          <Button type='submit' variant="primary" onClick={handleCreateUser}> Create user </Button>
         </Modal.Footer>
       </Modal>
     </div>

@@ -57,11 +57,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("first_name");
-    localStorage.removeItem("last_name");
-    localStorage.removeItem("Username");
+    localStorage.clear();
     setUserRole({ isAuthenticated: false, role: null });
   };
 

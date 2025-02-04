@@ -23,14 +23,14 @@ p{
     font-weight: 400;
     line-height: 150%;
     letter-spacing: -3%;
-    
+    width: 95%;
 }
 
 .left-b{
     padding: 145px 0px 0px 75px;
 }
 .right-b{
-    padding: 75px 0px;
+    padding: 230px 0px 0px 50px;
     margin-top: 75px;
     border-left: 2px solid var(--strok-color);
     border-bottom: 2px solid var(--strok-color);
@@ -73,3 +73,61 @@ p{
     border-right: 2px solid var(--strok-color);
     border-left: 2px solid var(--strok-color);
 }
+
+
+.container-fluid .fetuers{
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+
+.container-fluid .row .right-b img{
+    width: 136px;
+    height: 66px;
+}
+
+.container-fluid .row .right-b h2{
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    font-family: 'Kumbh Sans';
+}
+
+
+.container-fluid .row .right-b button{
+    border: 1px solid var(--strok-color);
+    border-radius: 8px;
+    background-color: var(--secondary-icon-color);
+    color: #98989A;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 10px 10px;
+}
+
+.container-fluid .row .right-b button img{
+    width: 20px;
+    height: 20px;
+}
+
+
+.container-fluid .fetuers .col-lg-4{
+    padding: 20px 50px;
+}
+.container-fluid .fetuers .col-lg-4 h5{
+    font-size: 18px;
+    font-weight: 400;
+    color: white;
+}
+
+.container-fluid .fetuers .col-lg-4 span{
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--paragraph-color);
+}
+
+
+@media screen and (max-width: 1000px) {
+    .left_b_under{
+        display: none;
+    }
+  }

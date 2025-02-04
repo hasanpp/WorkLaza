@@ -28,6 +28,8 @@ const WorkerRegister = () => {
     
 
     useEffect(() => {
+        console.log(userRole.role);
+        
         switch (userRole.role) {
             case 'admin':
                 navigate('/admin-panel');

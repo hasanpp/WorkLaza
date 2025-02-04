@@ -64,3 +64,4 @@ class WorkerSerializer(serializers.ModelSerializer):
         if value is not None and value.strip() == '':
             raise serializers.ValidationError("Previous company name cannot be empty if provided.")
         return value
+

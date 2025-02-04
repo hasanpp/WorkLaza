@@ -62,7 +62,7 @@ const Layout = (props) => {
 }
 
 Layout.propTypes = {
-  not_found: PropTypes.bool
+  not_found: PropTypes.string
 };
 
 Layout.defaultProps = {

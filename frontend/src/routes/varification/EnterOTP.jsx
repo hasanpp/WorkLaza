@@ -1,20 +1,16 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useEffect, useContext } from 'react';
 import API from '../../api';
 import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import './EnterOTP.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { useAuth } from '../../Authstate';
-import Loader from '../../Compenets/Loader/Loader';
 import { LoadingContext } from '../../App';
 
 
 
-const EnterOTP = ({email}) => {
+const EnterOTP = () => {
 
     
     const { isAuthenticated, login } = useAuth();
@@ -119,8 +115,5 @@ const EnterOTP = ({email}) => {
         </div>
     )
 }
-EnterOTP.propTypes = {
-    email: PropTypes.string.isRequired,
-};
 
 export default EnterOTP;

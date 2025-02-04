@@ -1,0 +1,10 @@
+.action-td button{
+    background-color: transparent;
+    border: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.action-td button svg{
+    font-size: 10px;
+}

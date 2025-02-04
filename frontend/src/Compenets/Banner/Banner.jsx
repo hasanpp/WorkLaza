@@ -1,6 +1,14 @@
 import './Banner.css';
+import profetionals from '../../assets/profetionsls.png'
+import right_top_arrow from '../../assets/right-top-arrow.png'
+import { useContext } from 'react';
+import { PageContext } from '../../Layout/Layout';
 
 const Banner = () => {
+
+    const setPage = useContext(PageContext);
+    
+
     return (
         <div className="container-fluid">
             <div className="row">
@@ -9,10 +17,10 @@ const Banner = () => {
                     <br />
                     <h1 className='banner-heading'>Redefining Service <br />Connections with WorkLaza</h1>
                     <p>
-                        Welcome to the Hub of Service Excellence. WorkLaza is your gateway to a world where skilled hands <br />
-                        meet real-world needs, creating seamless solutions for everyday challenges. Step into a platform <br />
-                        that redefines how services are delivered, connecting you with trusted professionals who bring <br />
-                        expertise and efficiency to every task. Join us on this journey to revolutionize the way work gets <br />
+                        Welcome to the Hub of Service Excellence. WorkLaza is your gateway to a world where skilled hands 
+                        meet real-world needs, creating seamless solutions for everyday challenges. Step into a platform 
+                        that redefines how services are delivered, connecting you with trusted professionals who bring 
+                        expertise and efficiency to every task. Join us on this journey to revolutionize the way work gets 
                         done.
                     </p>
                     <div className="row left_b_under">
@@ -24,15 +32,19 @@ const Banner = () => {
                             <h4>15k<span>+</span></h4>
                             <span>Registered Customers</span>
                         </div>
-                        <div className="left-b-spetial">
+                        <div className="left-b-spetial  ">
                             <h4>8k<span>+</span></h4>
                             <span>Verified Workers</span>
                         </div>
                     </div>
                 </div>
                 <div className="col-12 col-md-12 col-lg-5 right-b">
-
-                </div>
+                    <img src={profetionals} alt="" />
+                    <h2>Connect with 500+ Skilled Workers</h2>
+                    <p>Discover trusted professionals for all your needs, from home<    br/>repairs to specialized services.</p>
+                    <button onClick={()=>{setPage('Workers') ,localStorage.setItem('page','Workers')}}>Find Services Now <img src={right_top_arrow} alt="" /></button>
+                    <br />
+                </div> 
             </div>
             <div className="row fetuers">
                 <div className="col-lg-4">
