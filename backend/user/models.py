@@ -13,7 +13,8 @@ class CustomUser(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     otp = models.CharField(max_length=6, blank=True, null=True)
     otp_expiration = models.DateTimeField(blank=True, null=True)
-
+    google_id = models.CharField(max_length=255, blank=True, null=True)
+    profile_picture_g = models.URLField(blank=True, null=True)
     
     def __str__(self):
         return f"{self.username}"

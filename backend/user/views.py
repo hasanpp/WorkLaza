@@ -14,9 +14,12 @@ from django.http import JsonResponse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.conf import settings
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework.permissions import AllowAny
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 import jwt
+import requests
+
 
 
 User = get_user_model()
@@ -184,9 +187,31 @@ def get_tokens(request):
     return Response({ 'access_token' :access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
 
 
+class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
+    provider_id = "google"
+    profile_url = "https://www.googleapis.com/oauth2/v3/userinfo" 
+
+    def _fetch_user_info(self, token):
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(self.profile_url, headers=headers)
+        print(f"Google API Response: {response.status_code} - {response.text}")
+        
+        response.raise_for_status()
+        return response.json()
+
 
 class GoogleLogin(SocialLoginView): 
-    adapter_class = GoogleOAuth2Adapter
+    
+    adapter_class = CustomGoogleOAuth2Adapter
     callback_url = "http://localhost:5173/"
-    client_class = OAuth2Client
+    permission_classes = [AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        access_token = request.data.get("access_token")
+        print(access_token)
+        if not access_token:
+            return Response({"error": "Missing access_token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().post(request, *args, **kwargs)
+
 
