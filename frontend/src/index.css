@@ -1,25 +1,24 @@
 :root {
 
-  --primary-color: #1E1E1E; /* Black primary color */
+  --primary-color: #1E1E1E; 
 
-  --secondary-color: #1A1A1A; /* Dark grey secondary color */
+  --secondary-color: #1A1A1A; 
 
-  --title-color: #ffffff; /* White title color */
+  --title-color: #ffffff; 
 
-  --tagline-color: #666666; /* White tagline color */
+  --tagline-color: #666666; 
 
-  --icon-color: #AFDDE5; /* Light blue icon color */
+  --icon-color: #AFDDE5; 
 
-  --secondary-icon-color: #141414; /* Black secondary icon color */
+  --secondary-icon-color: #141414;
 
-  --paragraph-color: #7E7E81; /* Grey paragraph color */
+  --paragraph-color: #7E7E81; 
 
-  --strok-color: #262626; /* Dark grey stroke color */
+  --strok-color: #262626;
 
-  --secondary-paragraph-color: #262626; /* Dark grey secondary paragraph color */
+  --secondary-paragraph-color: #262626;
+
 }
-
-
 
 body {
   margin: 0;

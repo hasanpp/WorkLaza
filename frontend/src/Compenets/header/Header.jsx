@@ -23,6 +23,7 @@ const Header = ({ page }) => {
   const handleLogout = () => {
     logout();
     localStorage.clear();
+    setPage('Home')
     toast.success('user Loged out');
   };
 
@@ -43,16 +44,16 @@ const Header = ({ page }) => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent" >
           <ul className="navbar-nav ">
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Home'?'selected':null}`} onClick={() => setPage('Home') }>Home<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Home'?'selected':null}`} onClick={() =>{ setPage('Home'), localStorage.setItem('Page','Home')} }>Home<span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Workers'?'selected':null}`} onClick={() => setPage('Workers')}>Workers<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Workers'?'selected':null}`} onClick={() =>{ setPage('Workers'), localStorage.setItem('Page','Workers')}}>Workers<span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Bookings'?'selected':null}`} onClick={() => setPage('Bookings')}>Bookings<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Bookings'?'selected':null}`} onClick={() =>{ setPage('Bookings'), localStorage.setItem('Page','Bookings')}}>Bookings<span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Saved'?'selected':null}`} onClick={() => setPage('Saved')}>Saved<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Saved'?'selected':null}`} onClick={() =>{ setPage('Saved'), localStorage.setItem('Page','Saved')}}>Saved<span className="sr-only">(current)</span></a>
             </li>
           </ul>
         </div>
@@ -66,7 +67,7 @@ const Header = ({ page }) => {
 
             {!userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signin')}>Sign In</a> : null}
             {!userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signup')}>Sign Up</a> : null}
-            {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/profile')}>View profile</a> : null}
+            {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('Page','Profile')}}>View profile</a> : null}
             {userRole.isAuthenticated ? <a className="dropdown-item" >Chat</a> : null}
             {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/worker_register')}>Register as a worker</a> : null}
             {userRole.isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={handleLogout}>Log out</a> : null}

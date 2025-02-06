@@ -52,3 +52,21 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__' 
+        
+
+class ProfilePictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['profile_picture']
+
+    def update(self, instance, validated_data):
+        instance.profile_picture = validated_data.get('profile_picture', instance.profile_picture)
+        instance.save()
+        return instance

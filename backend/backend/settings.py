@@ -1,10 +1,15 @@
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 import os
+
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-&l5bc@knmd1a=(fng7m4=2*jcge6ubxe=nb_bk&oa@x1#tujpz'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
@@ -46,11 +51,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
+CORS_ALLOWED_ORIGINS = [ "http://localhost:5173" ]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -77,16 +81,19 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'worklaza',  
-        'USER': 'postgres',  
-        'PASSWORD': 'hasa',  
+        'NAME': os.getenv('DATABASES_NAME'),  
+        'USER': os.getenv('DATABASES_USER'),  
+        'PASSWORD': os.getenv('DATABASES_PASSWORD'),  
         'HOST': 'localhost',  
-        'PORT': '5432',
+        'PORT': os.getenv('DATABASES_PORT'),
     }
 }
 
@@ -117,8 +124,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online'},
         'OAUTH_PKCE_ENABLED': True, 
         "APP": {
-            "client_id": "358220686468-isdt3qooc2dedok4sg0h7kovaq2f03ld.apps.googleusercontent.com",
-            "secret": "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",
+            "client_id": os.getenv('GOOGLE_AUTH_CLIENT_ID'),
+            "secret": os.getenv('GOOGLE_AUTH_CLIENT_SECRET'),
         }
     }
 }
@@ -151,24 +158,26 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_PORT = 587  
 EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = 'hasanpp02@gmail.com'
-EMAIL_HOST_PASSWORD = 'osoe nspo neyv fpzy'
-DEFAULT_FROM_EMAIL = 'hasanpp02@gmail.com'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '358220686468-isdt3qooc2dedok4sg0h7kovaq2f03ld.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = "http://localhost:8000/user/auth/google/callback/"
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 
-REST_USE_JWT = True  # If using JWT
+REST_USE_JWT = True 
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 SITE_ID = 2

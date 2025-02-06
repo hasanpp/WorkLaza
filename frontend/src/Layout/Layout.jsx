@@ -11,7 +11,7 @@ import Bookings from '../Pages/Bookings/Bookings'
 import Not_found from '../Pages/Not_found/Not_found';
 import { useAuth } from '../Authstate';
 import { useNavigate } from 'react-router-dom';
-
+import Profile from '../Pages/Profile/Profile';
 export const PageContext = createContext();
 
 const Layout = (props) => {
@@ -20,9 +20,8 @@ const Layout = (props) => {
 
   const navigate = useNavigate();
 
-  console.log(userRole);
 
-  const [page, setPage] = useState('Home');
+  const [page, setPage] = useState(localStorage.getItem('Page')||'Home');
   useEffect(() => {
     if (props.not_found == "true") {
       setPage('not')
@@ -52,6 +51,7 @@ const Layout = (props) => {
         {page == 'Saved' && <Saved />}
         {page == 'Workers' && <Workers />}
         {page == 'Bookings' && <Bookings />}
+        {page == 'Profile' && <Profile />}
         {page == 'not' && <Not_found />}
         <Footer />
       </PageContext.Provider>

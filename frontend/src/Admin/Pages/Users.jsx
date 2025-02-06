@@ -233,23 +233,23 @@ const Users = () => {
             <Form>
               <Form.Group controlId="formUsername">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" value={currentUser.username} onChange={(e) => setCurrentUser({ ...currentUser, username: e.target.value })} required/>
+                <Form.Control type="text" value={currentUser.username} onChange={(e) => setCurrentUser({ ...currentUser, username: e.target.value })} required readOnly={true}/>
               </Form.Group>
               <Form.Group controlId="formEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" value={currentUser.email} onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} required/>
+                <Form.Control type="email" value={currentUser.email} onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} required readOnly={true}/>
               </Form.Group>
               <Form.Group controlId="formPhone">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="number" value={currentUser.phone} onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })} required/>
+                <Form.Control type="number" value={currentUser.phone} onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })} required readOnly={true}/>
               </Form.Group>
               <Form.Group controlId="formUsername">
                 <Form.Label>First name</Form.Label>
-                <Form.Control type="text" value={currentUser.first_name} onChange={(e) => setCurrentUser({ ...currentUser, first_name: e.target.value })} required/>
+                <Form.Control type="text" value={currentUser.first_name} onChange={(e) => setCurrentUser({ ...currentUser, first_name: e.target.value })} required readOnly={true}/>
               </Form.Group>
               <Form.Group controlId="formUsername">
                 <Form.Label>Last name</Form.Label>
-                <Form.Control type="text" value={currentUser.last_name} onChange={(e) => setCurrentUser({ ...currentUser, last_name: e.target.value })} required/>
+                <Form.Control type="text" value={currentUser.last_name} onChange={(e) => setCurrentUser({ ...currentUser, last_name: e.target.value })} required readOnly={true}/>
               </Form.Group>
               <Form.Group controlId="formRole">
                 <Form.Label>Role</Form.Label>

@@ -1,22 +1,19 @@
 from django.utils import timezone
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .serializers import SignUpSerializer
+from .serializers import SignUpSerializer,UserSerializer,ProfilePictureSerializer
 from .utils import send_otp_email
-from django.utils.timezone import now, timedelta
-from django.shortcuts import redirect
 from django.http import JsonResponse
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.conf import settings
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
-from rest_framework.permissions import AllowAny
-from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from rest_framework.permissions import AllowAny,IsAuthenticated
+from django.shortcuts import render
 import jwt
 import requests
 
@@ -84,6 +81,7 @@ def change_password(request,  *args, **kwargs):
 
 @api_view(['POST'])
 def send_otp(request,  *args, **kwargs):
+    permission_classes=[AllowAny]
     email = request.data.get('email')
     try:
         user = User.objects.get(email=email)
@@ -95,6 +93,7 @@ def send_otp(request,  *args, **kwargs):
     
 @api_view(['POST'])
 def verify_otp(request,  *args, **kwargs):
+    permission_classes=[AllowAny]
     email = request.data.get('email')
     otp = request.data.get('otp')
     try:
@@ -113,6 +112,7 @@ def verify_otp(request,  *args, **kwargs):
         
 
 class SignupView(APIView):
+    permission_classes=[AllowAny]
     def post(self, request, *args, **kwargs):
         required_fields = ['username', 'password', 'email', 'phone', 'first_name', 'last_name']
         
@@ -141,14 +141,15 @@ class SignInView(APIView):
     
     def authenticate_user(self, user, password, request):
         
+        if not user.is_authenticated:
+            send_otp_email(user)
+            return Response({'message': 'User is not authenticated Please verify email with otp','email_varify':True}, status=status.HTTP_401_UNAUTHORIZED)
+        if not user.is_active:
+            return Response({'message': 'This user is blocked by the admin'},status=status.HTTP_401_UNAUTHORIZED)
+        
         authenticated_user = authenticate(username=user.username, password=password)
         
         if authenticated_user:
-            if not user.is_authenticated:
-                send_otp_email(user)
-                return Response({'message': 'User is not authenticated Please verify email with otp','email_varify':True}, status=status.HTTP_401_UNAUTHORIZED)
-            if not user.is_active:
-                return Response({'message': 'This user is blocked by the admin'},status=status.HTTP_401_UNAUTHORIZED)
             refresh = RefreshToken.for_user(authenticated_user)
             refresh.payload['is_admin'] = user.is_superuser
             refresh.payload['is_worker'] = user.is_worker
@@ -186,6 +187,18 @@ def get_tokens(request):
      
     return Response({ 'access_token' :access_token, 'refresh_token':refresh_token}, status=status.HTTP_200_OK)
 
+    
+    
+@api_view(['POST'])
+def view_profile(request, *args, **kwargs):
+    username = request.data.get('username')
+    try:
+        user = User.objects.get(username=username)
+        serializer = UserSerializer(user)
+        return Response({'user':serializer.data}, status=status.HTTP_200_OK)
+    except:
+        return Response({ 'message' :"The user not found"}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
     provider_id = "google"
@@ -208,10 +221,44 @@ class GoogleLogin(SocialLoginView):
     
     def post(self, request, *args, **kwargs):
         access_token = request.data.get("access_token")
-        print(access_token)
         if not access_token:
-            return Response({"error": "Missing access_token"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Missing access_token"}, status=status.HTTP_400_BAD_REQUEST)
+        decoded = jwt.decode(access_token, options={"verify_signature":False})
+        email = decoded['email']
+        username = decoded['name']
+        profile_pic_g = decoded['picture']
+        first_name = decoded['given_name']
+        last_name = decoded['family_name']
+        
+        if User.objects.filter(username=username).exists():
+            user = User.objects.get(username=username)
+            user.profile_picture_g = profile_pic_g
+            user.save()
+            return Response({"message": "Google login successfull", 'is_admin':False, 'is_worker':user.is_worker,'username':username,'access_token':str(access_token),'refresh':str(access_token),'first_name':user.first_name,'last_name':user.last_name}, status=status.HTTP_200_OK)
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            user.profile_picture_g = profile_pic_g
+            user.save()
+            return Response({"message": "Google login successfull",'is_admin':False, 'is_worker':user.is_worker,'username':user.username,'access_token':str(access_token),'refresh':str(access_token),'first_name':user.first_name,'last_name':user.last_name}, status=status.HTTP_200_OK)
+        try:
+            user = User.objects.create(username=username,email=email,profile_picture_g=profile_pic_g,phone=None,is_worker=False,is_authenticated=True,first_name=first_name,last_name=last_name)
+            return Response({"message": "Google login successfull",'is_admin':False, 'is_worker':user.is_worker,'username':user.username,'access_token':str(access_token),'refresh':str(access_token),'first_name':user.first_name,'last_name':user.last_name}, status=status.HTTP_201_CREATED)
+        except:
+            return Response({"message": "Google login failed"}, status=status.HTTP_400_BAD_REQUEST)
+        
 
-        return super().post(request, *args, **kwargs)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def upload_profile_picture(request, *args, **kwargs):
+    
+    username = request.data.get('username') 
+    user = User.objects.get(username=username)
+        
+    serializer = ProfilePictureSerializer(user, data=request.data, partial=True)
 
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Profile picture updated successfully", "profile_picture": user.profile_picture.url}, status=status.HTTP_200_OK)
+    print(serializer.errors)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

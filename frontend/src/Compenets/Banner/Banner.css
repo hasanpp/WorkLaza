@@ -46,7 +46,7 @@ p{
 }
 
 .left_b_under .left-b-spetial{
-    width: 245px;
+    width: 272px;
     height: auto;
     color: white;
     border-right: 2px solid var(--strok-color);
@@ -129,5 +129,22 @@ p{
 @media screen and (max-width: 1000px) {
     .left_b_under{
         display: none;
+    }
+    .left-b{
+        padding: 90px 0px 0px 20px;
+
+    }
+    .right-b{
+        padding: 160px 0px 20px 20px;
+    }
+    .container-fluid .fetuers {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    .container-fluid .fetuers .fetuers-mid {
+        border-left: none;
+        border-right: none;
+        border-top: 2px solid var(--strok-color);
+        border-bottom: 2px solid var(--strok-color);
     }
   }

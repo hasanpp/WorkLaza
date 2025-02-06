@@ -66,6 +66,8 @@ const Admin = () => {
           {page == 'Files' && <Files/>}
           {page == 'Settings' && <Settings/>}
           {page == 'Requests' && <Requests/>}
+          <br /><br /><br /><br /><br /><br /><br /><br /><br />
+          <br /><br /><br /><br /><br /><br /><br /><br /><br />
         </div>
         
       </PageContext.Provider>

@@ -7,7 +7,6 @@ import { createContext, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-
 export const LoadingContext = createContext();
 
 function App() {

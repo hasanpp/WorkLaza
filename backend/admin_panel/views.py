@@ -23,7 +23,7 @@ def view_requests(*args, **kwargs):
 
 @api_view(['GET'])
 def view_workers(*args, **kwargs):
-    workers = Worker.objects.all()
+    workers = Worker.objects.filter(is_verified=True)
     serializer = WorkerSerializer(workers, many=True) 
     return Response({'message': 'success','workers':serializer.data}, status=status.HTTP_200_OK)
 
@@ -178,6 +178,9 @@ def process_worker_request(request,*args, **kwargs):
             worker.save()
             return Response({"message": "Worker status updated successfully!"},status=200)
         elif accept == 'false':
+            user = User.objects.filter(worker_profile__id=worker_id).first()
+            user.is_worker = False
+            user.save()
             worker.delete()
             return Response({"message": "Worker deleted successfully!"},status=200)
     except Worker.DoesNotExist:

@@ -28,9 +28,20 @@ const SignIn = () => {
         axios.post('http://localhost:8000/user/google-login/', {
             access_token: response.credential
         }).then(res => {
-            console.log('Login successful:', res.data);
+            toast.success(res?.data?.message)
+
+            login(res.data.access_token, res.data.refresh, {
+                first_name: res.data.first_name,
+                last_name: res.data.last_name,
+                Username: res.data.username,
+                g_login : true
+            });
+            
+            localStorage.setItem('first_name', res.data.first_name);
+            localStorage.setItem('last_name', res.data.last_name);
+            localStorage.setItem('Username', res.data.username);
         }).catch(err => {
-            console.log('Login failed:', err);
+            toast.error(err?.response?.data?.message)
         });
     };
     
