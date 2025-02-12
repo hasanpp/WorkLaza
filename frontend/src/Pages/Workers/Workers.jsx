@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import search_i from '../../assets/Search.svg';
 import user_icon from '../../assets/user.png';
 import API from '../../api';
 import './Workers.css';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { Postage, X } from 'react-bootstrap-icons'
+import { Postage, X } from 'react-bootstrap-icons';
+import { LoadingContext } from '../../App';
 
 const Workers = () => {
   const [workers, setWorkers] = useState([]);
@@ -20,6 +21,9 @@ const Workers = () => {
   const [qualification, setQualification] = useState('');
   const [experience, setExperience] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const setIsLoading = useContext(LoadingContext);
   const workersPerPage = 6;
 
 
@@ -44,6 +48,7 @@ const Workers = () => {
 
   useEffect(() => {
     const fetchWorkers = async () => {
+      setIsLoading(true)
       try {
         const l_res = await getcords();
         const res = await API.post('user/view_workers/',{'longitude':l_res.longitude,'latitude':l_res.latitude});
@@ -51,6 +56,8 @@ const Workers = () => {
         setFilteredWorkers(res?.data?.Workers);
       } catch (err) {
         toast.error(err?.response?.data?.message);
+      }finally{
+        setIsLoading(false)
       }
     };
     fetchWorkers();
@@ -97,8 +104,22 @@ const Workers = () => {
       tempWorkers = tempWorkers.filter(worker => worker.qualification === qualification);
     }
     if (experience) {
-      tempWorkers = tempWorkers.filter(worker => worker.experience >= experience);
+      tempWorkers = tempWorkers.filter(worker => worker.experience === experience);
     }
+
+    if (selectedDate && selectedTime) {
+      const selectedDay = new Date(selectedDate).toLocaleString('en-US', { weekday: 'long' });
+      
+      tempWorkers = tempWorkers.filter(worker => 
+        worker.availabilities.some(availability => 
+          availability.day_of_week === selectedDay &&
+          availability.is_active &&
+          selectedTime >= availability.start_time &&
+          selectedTime <= availability.end_time
+        )
+      );
+    }
+
     setFilteredWorkers(tempWorkers);
     setShowFilterModal(false);
   };
@@ -147,7 +168,7 @@ const Workers = () => {
                 <button className='Book_btn'>Book now</button>
               </div>
             </div>
-          )) : <h1></h1>}
+          )) : <div><br /><br /><br /><span>There are no data to your requirment</span></div>}
         </div>
 
         <div className='pagination'>
@@ -185,6 +206,27 @@ const Workers = () => {
             <Form.Group>
               <Form.Label>Max Price</Form.Label>
               <Form.Control type='number' value={maxSalary} onChange={(e) => setMaxSalary(e.target.value)} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Experience</Form.Label>
+              <Form.Control type='number' value={experience} onChange={(e) => setExperience(e.target.value)} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Qualification</Form.Label>
+              <Form.Control as="select" value={qualification} onChange={(e) => setQualification(e.target.value)}>
+                <option value="">All</option>
+                {[...new Set(workers?.map(worker => worker?.qualification))].map(qualification => (
+                  <option key={qualification} value={qualification}>{qualification}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Select Date</Form.Label>
+              <Form.Control  type="date"  value={selectedDate}  onChange={(e) => setSelectedDate(e.target.value)}  />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Select Time</Form.Label>
+              <Form.Control type="time" value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}  />
             </Form.Group>
           </Form>
         </Modal.Body>
