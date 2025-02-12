@@ -15,6 +15,7 @@ class CustomUser(AbstractUser):
     otp_expiration = models.DateTimeField(blank=True, null=True)
     google_id = models.CharField(max_length=255, blank=True, null=True)
     profile_picture_g = models.URLField(blank=True, null=True)
+    google_login = models.BooleanField(default=False,blank=False,null=False)
     
     def __str__(self):
         return f"{self.username}"

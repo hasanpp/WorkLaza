@@ -9,6 +9,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 
 const Workers = () => {
   const [workers, setWorkers] = useState([]);
+  const [jobs, setJobs] = useState();
   const [users, setUsers] = useState([])
   const [filteredWorkers, setFilteredWorkers] = useState([]);
   const { searchQuery } = useContext(SearchContext);
@@ -37,7 +38,9 @@ const Workers = () => {
     async function fetchData() {
       try {
         const res = await API.get('admin_view/view_workers/');
-        setWorkers(res.data.workers);
+        const j_res = await API.get('admin_view/view_jobs/');
+        setWorkers(res?.data?.workers);
+        setJobs(j_res?.data?.Jobs)
         setSortedWorkers(res.data.workers);
 
       } catch (error) {
@@ -263,8 +266,14 @@ const Workers = () => {
                 <Form.Control type="text" value={currentWorker.experience} onChange={(e) => setCurrentWorker({ ...currentWorker, experience: e.target.value })} required />
               </Form.Group>
               <Form.Group controlId="formTxt">
-                <Form.Label>JOB</Form.Label>
-                <Form.Control type="text" value={currentWorker.job} onChange={(e) => setCurrentWorker({ ...currentWorker, job: e.target.value })} required />
+                <Form.Label>JOB Category</Form.Label>
+                <Form.Control as="select" value={currentWorker.job} onChange={(e) => setCurrentWorker({ ...currentWorker, job: e.target.value })} >
+                  {
+                    jobs?.map((job, index) => {
+                      return <option key={index} value={job.id} selected={currentWorker.job === job.id}>{job.title}</option>
+                    })
+                  }
+                </Form.Control>
               </Form.Group>
               <Form.Group controlId="formTxt">
                 <Form.Label>Previous Company</Form.Label>
@@ -328,10 +337,16 @@ const Workers = () => {
                 <Form.Label>experience</Form.Label>
                 <Form.Control type="text" value={formData.experience} onChange={(e) => setFormData({ ...formData, experience: e.target.value })} required />
               </Form.Group>
-              <Form.Group controlId="formEmail">
-                <Form.Label>JOB</Form.Label>
-                <Form.Control type="text" value={formData.job} onChange={(e) => setFormData({ ...formData, job: e.target.value })} required />
-              </Form.Group>
+              <Form.Group controlId="formRole" style={{width:'44%'}}>
+                <Form.Label>JOB Category</Form.Label>
+                <Form.Control as="select" value={formData.job} onChange={(e) => setFormData({ ...formData, job: e.target.value })} >
+                  {
+                    jobs?.map((job, index) => {
+                      return <option key={index} value={job.id} selected={formData.job === job.id}>{job.title}</option>
+                    })
+                  }
+                </Form.Control>
+            </Form.Group>
             </Form.Group>
             <Form.Group controlId="half_grop" style={{display:'flex',width:'100%',justifyContent:'space-between'}}>
               <Form.Group controlId="formEmail">
@@ -339,14 +354,14 @@ const Workers = () => {
                 <Form.Control type="text" value={formData.previous_company} onChange={(e) => setFormData({ ...formData, previous_company: e.target.value })} required />
               </Form.Group>
               <Form.Group controlId="formRole" style={{width:'44%'}}>
-              <Form.Label>User</Form.Label>
-              <Form.Control as="select" value={formData.user_id} onChange={(e) => setFormData({ ...formData, user_id: e.target.value })} >
-                {
-                  users.map((user, index) => {
-                    return <option key={index} value={user.id}>{user.username}</option>
-                  })
-                }
-              </Form.Control>
+                <Form.Label>User</Form.Label>
+                <Form.Control as="select" value={formData.user_id} onChange={(e) => setFormData({ ...formData, user_id: e.target.value })} >
+                  {
+                    users.map((user, index) => {
+                      return <option key={index} value={user.id}>{user.username}</option>
+                    })
+                  }
+                </Form.Control>
             </Form.Group>
             </Form.Group>
             <Form.Group controlId="formdeS">

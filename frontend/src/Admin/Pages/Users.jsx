@@ -70,9 +70,9 @@ const Users = () => {
   useEffect(() => {
     if (searchQuery) {
       const filtered = sortedUsers.filter(user => 
-        user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.phone.toLowerCase().includes(searchQuery.toLowerCase())
+        user?.username?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+        user?.email?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+        user?.phone?.toLowerCase()?.includes(searchQuery?.toLowerCase())
       );
       setFilteredUsers(filtered);
     } else {

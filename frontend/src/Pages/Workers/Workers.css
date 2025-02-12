@@ -1,0 +1,185 @@
+.main_workers_div{
+    margin: 1% 1%;
+}
+
+.main_workers_div .sub_workers_div{
+    
+}
+
+.toprow {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1% 5%;
+}
+
+.toprow .search{
+    width: 330px;
+    display: flex;
+    justify-content: space-between;
+    color: #98989a;
+    border: 2px solid var(--strok-color);
+    border-radius: 5px;
+    font-size: 19px;
+    padding: 5px 15px;
+    height: 45px;
+}
+
+.toprow .search input{
+    border: none;
+    color: #98989a;
+}
+
+.toprow .flter button{
+    background: transparent;
+    border: 2px solid var(--strok-color);
+    color: #98989A;
+    font-size: 19px;
+    padding: 0px 0px;
+    width: 160px;
+    height: 45px;
+    border-radius: 5px;
+    cursor: pointer;
+} 
+
+.toprow .sort select{
+    width: 160px;
+    height: 45px;
+    padding: 0;
+    margin: 0;
+    background: var(--secondary-color);
+    border: 2px solid var(--strok-color);
+    border-radius: 5px;
+    cursor: pointer;
+} 
+
+.toprow .sort select{
+    
+    background: var(--primary-color);
+    font-size: 18px;
+    color: #98989A;
+    padding: 7px 16px 6px 0px;
+    border-radius: 5px;
+    text-align: center;
+} 
+
+.workers_dis{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12%;
+    margin: 2% 4%;
+}
+
+.workers_dis .worker_card{
+    width: 340px;
+    margin-bottom: 2%;
+    height: 400px;
+    text-align: center;
+    border: 3px solid var(--strok-color);
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 0px 15px ;
+}
+
+.workers_dis .worker_card img{
+    width: 180px;
+    height: 180px;
+    border-radius: 100px;
+    margin-top: 10px;
+}
+
+.workers_dis .worker_card h3{
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--title-color);
+    line-height: 0px;
+    margin-top: 10px;
+}
+
+.workers_dis .worker_card h4{
+    font-size: 18px;
+    font-weight: 500;
+    color: #98989A;
+    margin-top: 10px;
+}
+
+.workers_dis .worker_card span{
+    font-size: 15px;
+    font-weight: 300;
+    color: #98989A;
+}
+
+
+.workers_dis .worker_card .button_row{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin: 0% 0%;
+}
+
+.workers_dis .worker_card .button_row button{
+    color: #98989a;
+    border: 2px solid var(--strok-color);
+    padding: 3% 6%;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.workers_dis .worker_card .button_row .details_btn{
+    background-color: var(--secondary-icon-color);
+}
+
+
+.workers_dis .worker_card .button_row .Book_btn{
+    background-color: var(--secondary-color);
+}
+
+
+.workers_dis .worker_card .button_row .details_btn:hover{
+    background-color: var(--secondary-color);
+}
+
+
+.workers_dis .worker_card .button_row .Book_btn:hover{
+    background-color: var(--secondary-icon-color);
+}
+
+.pagination{
+    margin-right: 5%;
+    gap: 0px;
+}
+
+
+.pagination button{
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+    text-align: center;
+    color: var(--icon-color);
+    background: transparent;
+    border: 2px solid var(--icon-color);
+    cursor: pointer;
+}
+
+.pag_dec{
+    border-radius: 10px 0px 0px 10px;
+}
+
+.pag_aec{
+    border-radius: 0px 10px 10px 0px;
+}
+
+
+
+
+
+
+
+
+    
+
+
+
+    

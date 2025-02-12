@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 import { useNavigate} from 'react-router-dom';
 import logo from '../assets/logo.png';
 import './SignIn.css';
@@ -7,42 +6,39 @@ import API from '../api';
 import { useState,useEffect,useContext } from 'react';
 import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../Authstate';
 import { LoadingContext } from '../App';
 import { GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
+import { useDispatch,useSelector } from 'react-redux';
+import { login } from '../authSlice';
+
 
 
 const SignIn = () => {
 
     const navigate = useNavigate();
-    const { userRole, login } = useAuth();
     const [error, setError] = useState(null);
     const setIsLoading = useContext(LoadingContext);
-
+    const dispatch = useDispatch();
+    const { role,isAuthenticated } = useSelector((state) => state.auth)
     const messege = localStorage.getItem('messege');
 
-    const responseGoogle = (response) => {
-        console.log(response);
+    const responseGoogle =  async(response) => {
+        setIsLoading(true);
+        try {
+                const res =  await API.post('user/google-login/', { access_token: response.credential })
 
-        axios.post('http://localhost:8000/user/google-login/', {
-            access_token: response.credential
-        }).then(res => {
-            toast.success(res?.data?.message)
-
-            login(res.data.access_token, res.data.refresh, {
-                first_name: res.data.first_name,
-                last_name: res.data.last_name,
-                Username: res.data.username,
-                g_login : true
-            });
-            
-            localStorage.setItem('first_name', res.data.first_name);
-            localStorage.setItem('last_name', res.data.last_name);
-            localStorage.setItem('Username', res.data.username);
-        }).catch(err => {
-            toast.error(err?.response?.data?.message)
-        });
+                const username = res.data.username
+                const password = res.data.password
+                const new_res = await API.post('token/',{ username:username, password:password})
+                const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
+                toast.success(res?.data?.message)
+                dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
+                    
+        } catch (err) {
+            toast.warning(err?.response?.data?.message)
+        }finally {
+            setIsLoading(false);
+          }
     };
     
     useEffect(() => {
@@ -62,27 +58,23 @@ const SignIn = () => {
     };
 
     const handleSubmit = async (e) => {
+        
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await API.post('/user/signin/', { identifire: formData.identifire, password: formData.password });
-            
-            toast.success(response.data.message);
-            
-            login(response.data.access, response.data.refresh, {
-                first_name: response.data.first_name,
-                last_name: response.data.last_name,
-                Username: response.data.Username
-            });
-            
-            localStorage.setItem('first_name', response.data.first_name);
-            localStorage.setItem('last_name', response.data.last_name);
-            localStorage.setItem('Username', response.data.Username);
+            const res = await API.post('/user/signin/', { identifire: formData.identifire, password: formData.password });
 
+            const username = res.data.username
+            const new_res = await API.post('token/',{ username:username, password:formData.password})
+                
+            const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
+            dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
+                
         } catch (error) {
-            setError(error.message);
-            toast.error(error.response.data.message);
-            if (error.response.data?.email_varify){
+            toast.error(error?.response?.data?.message);
+            console.log(error);
+            
+            if (error?.response?.data?.email_varify){
                 try{
                     const get_email = await  API.post('/user/get_emaiil_from_id/', { identifire: formData.identifire,});  
                     toast.info('This email is not verified please verify it by otp')
@@ -99,8 +91,8 @@ const SignIn = () => {
     };
 
     useEffect(() => {
-        if (userRole.isAuthenticated) {
-            switch (userRole.role) {
+        if (isAuthenticated) {
+            switch (role) {
                 case 'admin':
                   navigate('/admin-panel');
                   break;
@@ -111,7 +103,7 @@ const SignIn = () => {
                   navigate('/');
               }
         }
-      }, [userRole, navigate]);
+      }, [role, navigate, isAuthenticated]);
 
 
 

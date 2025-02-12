@@ -6,17 +6,17 @@ import './SignUP.css';
 import API from '../api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../Authstate';
-import Loader from '../Compenets/Loader/Loader';
+import { useSelector } from 'react-redux';
 import { LoadingContext } from '../App';
 
 
 const SignUp = () => {
 
-  
-  const { isAuthenticated, login } = useAuth();
-  const setIsLoading = useContext(LoadingContext);
+  localStorage.clear();
 
+  const setIsLoading = useContext(LoadingContext);
+  const { isAuthenticated } = useSelector((state) => state.auth)
+  
 
   const [formData, setFormData] = useState({
     first_name: '',

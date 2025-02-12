@@ -1,0 +1,118 @@
+.table-container{
+    background-color: var(--secondary-color);
+    margin: 1% 5%;
+}
+.table-container .table{
+    background-color: var(--secondary-color);
+    width: 96%;
+    margin: 1% 2%;
+}
+.table-container .table thead tr th{
+    color: var(--icon-color);
+    font-size: 18px;
+}
+.table-container .table tbody tr td{
+    color: var(--title-color);
+    font-weight: 400;
+}
+
+
+.schedule-container{
+    padding: 2% 6%;
+}
+
+
+.schedule-container div .add_slot{
+    height: 40px;
+    width: 120px;
+    border-radius: 6px;
+    border: 2px solid var(--icon-color);
+    background-color: transparent;
+    color: var(--icon-color);
+    font-size: 20px;
+    margin: 8px 15px;
+    cursor: pointer;
+    -webkit-transition: ease-out 0.4s;
+    -moz-transition: ease-out 0.4s;
+}
+
+.schedule-container div .add_slot:hover{
+    color: var(--title-color);
+    box-shadow: inset 400px 0 0 0 var(--icon-color);
+}
+
+.schedule-container div select{
+    background-color: transparent;
+    border: 1px solid;
+    filter: invert(47%) sepia(6%) saturate(1230%) hue-rotate(160deg) brightness(90%) contrast(80%);
+    -webkit-appearance: none;
+    text-align: center;
+    margin: 0px 0px;
+    padding: 1px 2px;
+    font-size: 17px;
+    height: 40px;
+    width: 120px;
+}
+
+
+.schedule-container div span{
+    display: flex;
+    margin: 18px 10px;
+    filter: invert(47%) sepia(6%) saturate(1230%) hue-rotate(160deg) brightness(90%) contrast(80%);
+}
+
+.schedule-container div .time-inp{
+    display: flex;
+    flex-direction: column;
+}
+.schedule-container div .time-inp label{
+    font-size: 10px;
+    color: var(--paragraph-color);
+    line-height:0px;
+}
+
+.schedule-container div .week-inp{
+    display: flex;
+    flex-direction: column;
+    margin: 0px 15px;
+}
+.schedule-container div .week-inp label{
+    font-size: 10px;
+    color: var(--paragraph-color);
+    line-height:0px;
+}
+.schedule-container div .week-inp select{
+    border-radius: 6px;
+}
+.schedule-container div .week-inp select option{
+    background-color: var(--secondary-color);
+    color: #98989A;
+
+}
+.schedule-container div .time-inp input{
+    border: transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    filter: invert(47%) sepia(6%) saturate(1230%) hue-rotate(160deg) brightness(90%) contrast(80%);
+    width : 120px;
+    height: 40px;
+}
+/* 
+.schedule-container div select.decorated option:hover {
+    box-shadow: 0 0 10px 100px #1882A8 inset;
+} */
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+    filter: invert(47%) sepia(6%) saturate(1230%) hue-rotate(160deg) brightness(90%) contrast(80%);
+  }
+
+
+@media screen and (max-width: 700px) {
+    .schedule-container .tems-center{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .page_class{
+        margin: 15% 0%;
+    }
+}

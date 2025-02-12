@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Worker
+from .models import Worker,Jobs, WorkerAvailability
 
 class WorkerSerializer(serializers.ModelSerializer):
     age = serializers.CharField(max_length=2)
@@ -7,7 +7,8 @@ class WorkerSerializer(serializers.ModelSerializer):
     experience = serializers.CharField(max_length=2)
     certificate = serializers.ImageField(required=False)
     id_prof = serializers.ImageField(required=True)
-
+    longitude = serializers.CharField(max_length=100)
+    latitude = serializers.CharField(max_length=100)
     class Meta:
         model = Worker
         fields = '__all__'
@@ -55,13 +56,36 @@ class WorkerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Full name cannot be empty.")
         return value
 
-    def validate_job(self, value):
-        if not value.strip():
-            raise serializers.ValidationError("Job title cannot be empty.")
-        return value
-
     def validate_previous_company(self, value):
         if value is not None and value.strip() == '':
             raise serializers.ValidationError("Previous company name cannot be empty if provided.")
         return value
 
+
+
+class JobSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Jobs
+        fields = '__all__'
+
+
+
+class SlotSerializer(serializers.ModelSerializer):
+    worker = serializers.PrimaryKeyRelatedField(queryset=Worker.objects.all()) 
+
+    class Meta:
+        model = WorkerAvailability
+        fields = '__all__'
+        
+class WorkersSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source='job.title', read_only=True)
+    profile_pic = serializers.ImageField(source='user.profile_picture', read_only=True) 
+    availabilities = SlotSerializer(many=True, read_only=True)  
+
+    class Meta:
+        model = Worker
+        fields = [
+            'id', 'full_name', 'age', 'experience', 'previous_company', 'salary', 'certificate', 
+            'description', 'qualification', 'is_verified', 'is_active', 'job_title', 'profile_pic', 'availabilities'
+        ]

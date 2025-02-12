@@ -1,10 +1,11 @@
 import { LoadingContext } from '../../App';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import logo from '../../assets/logo.png'
 import { toast } from 'react-toastify';
 import API from '../../api';
+import { useDispatch,useSelector } from 'react-redux';
+import { login } from '../../authSlice';
 import { useNavigate } from 'react-router-dom';
-
 
 
 const ChangePassword = () => {
@@ -12,7 +13,9 @@ const ChangePassword = () => {
     const setIsLoading = useContext(LoadingContext);
     const [password,setPassword] = useState('');
     const [cpassword,setCpassword] = useState('');
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { isAuthenticated } = useSelector((state) => state.auth)
 
     const handleSubmit = async(e) =>{
 
@@ -24,9 +27,13 @@ const ChangePassword = () => {
         else {
             setIsLoading(true);
             try{
-                await API.post('/user/change_password/', { email:localStorage.getItem('email'), password:password });
-                toast.success('Password changed please relogin');
-                navigate('/signin')
+                const res = await API.post('/user/change_password/', { email:localStorage.getItem('email'), password:password });
+                const username = res.data.username
+                const new_res = await API.post('token/',{ username:username, password:password})
+
+                const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
+                toast.success('Password changed successfully');
+                dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.username, first_name: data_res.first_name, last_name: data_res.last_name, role: data_res.role}))
             }
             catch(err) {
                 toast(err.response.data.message)
@@ -36,6 +43,12 @@ const ChangePassword = () => {
             }
         }
     }
+
+    useEffect(() => {
+            if (isAuthenticated) {
+                navigate('/');
+            }
+    }, [navigate, isAuthenticated]);
 
     return (
         <div className="container">

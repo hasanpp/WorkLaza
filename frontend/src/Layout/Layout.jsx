@@ -9,16 +9,36 @@ import Saved from '../Pages/Saved/Saved'
 import Workers from '../Pages/Workers/Workers'
 import Bookings from '../Pages/Bookings/Bookings'
 import Not_found from '../Pages/Not_found/Not_found';
-import { useAuth } from '../Authstate';
 import { useNavigate } from 'react-router-dom';
 import Profile from '../Pages/Profile/Profile';
+import ProtectedRoute from '../Compenets/ProtectedRoute/ProtectedRoute'
+import { useDispatch, useSelector } from 'react-redux';
+import { getGeolocation } from '../Compenets/Address/GetAddress';
+import API from '../api';
+import { toast } from 'react-toastify';
+import { logout } from '../authSlice';
+
 export const PageContext = createContext();
 
 const Layout = (props) => {
 
-  const { userRole } = useAuth();
-
   const navigate = useNavigate();
+  const { role,refreshToken } = useSelector((state) => state.auth)
+  const dispatch = useDispatch();
+
+  const user_status_handler= async() =>{
+    try {
+      await API.post('token/refresh/', { refresh: refreshToken})
+    } catch (err) {
+      if(err.response.status==401){
+        toast.warning('This account is blocked by the admin!!')
+        setPage('Home')
+        localStorage.setItem('Page','Home')
+        await dispatch(logout())
+        navigate('/')
+      }
+    }
+  }
 
 
   const [page, setPage] = useState(localStorage.getItem('Page')||'Home');
@@ -26,10 +46,12 @@ const Layout = (props) => {
     if (props.not_found == "true") {
       setPage('not')
     }
+    user_status_handler()
+    getGeolocation() 
   }, [])
 
   useEffect(() => {
-    switch (userRole.role) {
+    switch (role) {
       case 'admin':
         navigate('/admin-panel');
         break;
@@ -39,7 +61,7 @@ const Layout = (props) => {
       default:
         navigate('/');
     }
-  }, [userRole, navigate]);
+  }, [role, navigate]);
 
 
   return (
@@ -48,10 +70,10 @@ const Layout = (props) => {
         <Header page={page} not_found={props?.not_found} />
 
         {page == 'Home' && <Home />}
-        {page == 'Saved' && <Saved />}
-        {page == 'Workers' && <Workers />}
-        {page == 'Bookings' && <Bookings />}
-        {page == 'Profile' && <Profile />}
+        {page == 'Saved' && <ProtectedRoute><Saved /></ProtectedRoute>}
+        {page == 'Workers' && <ProtectedRoute><Workers /></ProtectedRoute>}
+        {page == 'Bookings' && <ProtectedRoute><Bookings /></ProtectedRoute>}
+        {page == 'Profile' && <ProtectedRoute><Profile /></ProtectedRoute>}
         {page == 'not' && <Not_found />}
         <Footer />
       </PageContext.Provider>

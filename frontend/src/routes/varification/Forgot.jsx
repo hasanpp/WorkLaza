@@ -1,25 +1,22 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import API from '../../api';
 import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import './EnterOTP.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
-import { useAuth } from '../../Authstate';
-import Loader from '../../Compenets/Loader/Loader';
 import { LoadingContext } from '../../App';
-
+import {useSelector } from 'react-redux';
 
 
 
 const Forgot = () => {
 
     
-    const { isAuthenticated, login } = useAuth();
     const [identifire, setIdentifire] = useState();
     const navigate = useNavigate();
+    const { isAuthenticated } = useSelector((state) => state.auth)
     const setIsLoading = useContext(LoadingContext);
 
 

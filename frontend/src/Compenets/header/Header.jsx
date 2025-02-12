@@ -2,27 +2,25 @@
 import './Header.css'
 import logo from '../../assets/logo.png'
 import { Person } from 'react-bootstrap-icons';
-import { useContext, useState } from 'react';
-import { useAuth } from '../../Authstate'
+import { useContext } from 'react'; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { PageContext } from '../../Layout/Layout';
 import PropTypes from 'prop-types';
+import { useDispatch,useSelector } from 'react-redux';
+import { logout } from '../../authSlice';
 
 
 const Header = ({ page }) => {
 
-  const { userRole,logout } = useAuth();
-  const username = localStorage.getItem('Username');
-  const first_name = localStorage.getItem('first_name');
-  const last_name = localStorage.getItem('last_name');
-  const setPage = useContext(PageContext);
+  const { username, first_name,last_name,role,isAuthenticated } = useSelector((state) => state.auth)
 
+  const setPage = useContext(PageContext);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    logout();
-    localStorage.clear();
+    dispatch(logout());
     setPage('Home')
     toast.success('user Loged out');
   };
@@ -65,12 +63,12 @@ const Header = ({ page }) => {
           </button>
           <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-            {!userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signin')}>Sign In</a> : null}
-            {!userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signup')}>Sign Up</a> : null}
-            {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('Page','Profile')}}>View profile</a> : null}
-            {userRole.isAuthenticated ? <a className="dropdown-item" >Chat</a> : null}
-            {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/worker_register')}>Register as a worker</a> : null}
-            {userRole.isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={handleLogout}>Log out</a> : null}
+            {!isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signin')}>Sign In</a> : null}
+            {!isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signup')}>Sign Up</a> : null}
+            {isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('Page','Profile')}}>View profile</a> : null}
+            {isAuthenticated ? <a className="dropdown-item" >Chat</a> : null}
+            {role=="user" ? <a className="dropdown-item" onClick={() => navigate('/worker_register')}>Register as a worker</a> : null}
+            {isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={handleLogout}>Log out</a> : null}
 
           </div>
         </div>

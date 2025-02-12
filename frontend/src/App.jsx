@@ -6,6 +6,9 @@ import './App.css';
 import { createContext, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Provider } from 'react-redux';
+import { store, persistor } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 export const LoadingContext = createContext();
 
@@ -16,13 +19,17 @@ function App() {
 
   return (
     <BrowserRouter>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <LoadingContext.Provider value={setIsLoading}>
-        <RouteSets />
-      </LoadingContext.Provider>
-      {isLoading && <Loader />}
-      <ToastContainer theme='dark'/>
-    </GoogleOAuthProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+            <LoadingContext.Provider value={setIsLoading}>
+              <RouteSets />
+            </LoadingContext.Provider>
+            {isLoading && <Loader />}
+            <ToastContainer theme='dark' />
+          </GoogleOAuthProvider>
+        </PersistGate>
+      </Provider>
     </BrowserRouter>
   )
 }

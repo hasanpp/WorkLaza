@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { useAuth } from "../Authstate"
 import { useNavigate } from "react-router-dom";
 import Top from "./Herders/Top/Top";
 import Left from "./Herders/Left/Left";
@@ -11,7 +10,8 @@ import Bookings from "./Pages/Bookings";
 import Files from "./Pages/Files";
 import Requests from "./Pages/Requests";
 import Settings from "./Pages/Settings";
-
+import Categoryes from "./Pages/Categoryes";
+import { useSelector } from 'react-redux';
 import './Admin.css'
 
 export const SearchContext = createContext();
@@ -20,12 +20,12 @@ export const PageContext = createContext();
 const Admin = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
-  const { userRole } = useAuth();
   const navigate = useNavigate();
+  const { role } = useSelector((state) => state.auth)
   const [page, setPage] = useState(localStorage.getItem('page')||'Dash')
 
   useEffect(() => {
-    switch (userRole.role) {
+    switch (role) {
 
       case 'admin':
         navigate('/admin-panel');
@@ -36,7 +36,7 @@ const Admin = () => {
       default:
         navigate('/');
     }
-  }, [userRole, navigate])
+  }, [role, navigate])
 
   useEffect(() => {
     let link = document.querySelector("link[rel~='icon']");
@@ -57,8 +57,9 @@ const Admin = () => {
       <PageContext.Provider value={setPage}>
         <Top/>
         <Left page={page} />
-        <div className="content">
+        <div className="content-admin">
           {page == 'Dash' && <Dashboard />}
+          {page == 'Categoryes' && <Categoryes />}
           {page == 'Users' && <Users/>}
           {page == 'Workers' && <Workers/>}
           {page == 'Chats' && <Chats/>}
@@ -69,7 +70,6 @@ const Admin = () => {
           <br /><br /><br /><br /><br /><br /><br /><br /><br />
           <br /><br /><br /><br /><br /><br /><br /><br /><br />
         </div>
-        
       </PageContext.Provider>
     </SearchContext.Provider>
   )

@@ -1,13 +1,20 @@
 
-import { createRoot } from 'react-dom/client'
+// import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import { AuthProvider } from "./Authstate.jsx";
+// import { AuthProvider } from "./Authstate.jsx";
+import ReactDOM from 'react-dom/client';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <App />
+);
 
 
-createRoot(document.getElementById('root')).render(
+// createRoot(document.getElementById('root')).render(
   
-    <AuthProvider>
-      <App />
-    </AuthProvider>
-)
+//     <AuthProvider>
+//       <App />
+//     </AuthProvider>
+// )

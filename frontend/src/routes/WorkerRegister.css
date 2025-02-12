@@ -34,3 +34,16 @@
 }
 
 
+.job_select{
+    background: transparent;
+    color: var(--icone-color);
+}
+.job_select:hover{
+    background: #AFDDE5;
+    color: #1E1E1E;
+}
+
+.job_obtions{
+    background-color: #1E1E1E;
+    color: #AFDDE5;
+}

@@ -5,19 +5,15 @@ import logo from '../../assets/logo.png';
 import './EnterOTP.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../../Authstate';
 import { LoadingContext } from '../../App';
-
-
-
+import { useSelector } from 'react-redux';
 const EnterOTP = () => {
 
-    
-    const { isAuthenticated, login } = useAuth();
 
     const [otp, setOtp] = useState('');
     const [resendTimer, setResendTimer] = useState(60);
     const navigate = useNavigate();
+    const { isAuthenticated } = useSelector((state) => state.auth)
     const setIsLoading = useContext(LoadingContext);
 
 
@@ -52,20 +48,13 @@ const EnterOTP = () => {
 
           if (response.status === 200) {
             toast.success('OTP verified successfully!');
-            localStorage.setItem('first_name',response.data.first_name)
-            localStorage.setItem('last_name',response.data.last_name) 
-            localStorage.setItem('Username',response.data.Username)
             
             if (localStorage.getItem('forgot_password')){
                 navigate('/change_password')
             }
             else {
-                login(response.data.access, response.data.refresh, {
-                    first_name: response.data.first_name,
-                    last_name: response.data.last_name,
-                    Username: response.data.Username
-                });
-                navigate('/'); 
+                toast.success('Email varification complted please signin with your email')
+                navigate('/singin'); 
             }
             
           }

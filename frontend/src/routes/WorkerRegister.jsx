@@ -1,36 +1,42 @@
 import './WorkerRegister.css';
-import { useAuth } from '../Authstate';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { CloudUpload } from 'react-bootstrap-icons'
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import API from '../api';
+import { logout } from '../authSlice';
 
 const WorkerRegister = () => {
-    const { userRole } = useAuth();
+
+    const { role, username } = useSelector((state) => state.auth)
+
     const navigate = useNavigate();
     const [certificate, setCertificate] = useState(null);
     const [idProof, setIdProof] = useState(null);
+    const [jobs, setJobs] = useState([]);
+    const dispatch = useDispatch();
     const [workerData, setWorkerData] = useState({
-        'username':localStorage.getItem('Username'),
-        'full_name':'',
+        'username': username,
+        'full_name': '',
         'age': null,
-        'salary':null,
-        'description':null,
-        'qualification':null,
-        'experience':null,
-        'job':'',
-        'previous_company':'',
-        'id_prof':null,
-        'certificate':null,
+        'salary': null,
+        'description': null,
+        'qualification': null,
+        'experience': null,
+        'job': '',
+        'previous_company': '',
+        'id_prof': null,
+        'certificate': null,
+        'location': null,
     });
 
-    
+
 
     useEffect(() => {
-        console.log(userRole.role);
-        
-        switch (userRole.role) {
+        console.log(role);
+
+        switch (role) {
             case 'admin':
                 navigate('/admin-panel');
                 break;
@@ -43,18 +49,46 @@ const WorkerRegister = () => {
             default:
                 navigate('/signin');
         }
-    }, [userRole, navigate]);
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setWorkerData((prevData) => ({
+                        ...prevData,
+                        location: { latitude, longitude },
+                    }));
+                },
+                (err) => {
+                    console.log(err)
+                    toast.error("Location permission denied.");
+                }
+            );
+        } else {
+            toast.error("Geolocation is not supported by this browser.");
+        }
+
+        async function fetchData() {
+            try {
+                const j_res = await API.get('worker/view_jobs/');
+                setJobs(j_res?.data?.Jobs)
+            } catch (error) {
+                toast.error(error.response.data.message);
+            }
+        }
+        fetchData();
+    }, [role, navigate]);
 
     const handleCertificateChange = (event) => {
         const file = event.target.files[0];
-        setCertificate(URL.createObjectURL(file)); 
-        setWorkerData({...workerData,certificate:file})
+        setCertificate(URL.createObjectURL(file));
+        setWorkerData({ ...workerData, certificate: file })
     };
 
     const handleIdProofChange = (event) => {
         const file = event.target.files[0];
-        setIdProof(URL.createObjectURL(file)); 
-        setWorkerData({...workerData,id_prof:file})
+        setIdProof(URL.createObjectURL(file));
+        setWorkerData({ ...workerData, id_prof: file })
     };
 
     const handleInputChange = (e) => {
@@ -77,22 +111,32 @@ const WorkerRegister = () => {
         formData.append('id_prof', workerData.id_prof);
         formData.append('certificate', workerData.certificate);
 
-        
-        try {
-            const response = await API.post('worker/register/',formData,{
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            toast.success(response.data.message)
-            navigate('/')
-        } catch (error) {
-            toast.error(error?.response?.data?.message)
-            if (error.response.data.messages){
-                Object.entries(error.response.data.messages).forEach(([key, value]) => {
-                    toast.error(`${key} : ${value.join(', ')}`);
+        if (workerData.location) {
+            formData.append('latitude', workerData.location.latitude);
+            formData.append('longitude', workerData.location.longitude);
+
+
+
+            try {
+                const response = await API.post('worker/register/', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 });
+                toast.success(response.data.message)
+                dispatch(logout())
+                navigate('/')
+            } catch (error) {
+                toast.error(error?.response?.data?.message)
+                if (error.response.data.messages) {
+                    Object.entries(error.response.data.messages).forEach(([key, value]) => {
+                        toast.error(`${key} : ${value.join(', ')}`);
+                    });
+                }
             }
+
+        } else {
+            toast.error("Geolocation is not supported by this browser.");
         }
 
     }
@@ -107,35 +151,41 @@ const WorkerRegister = () => {
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="full_name" className="label">Full name</label>
-                                <input type="text" className="form-input" id="full_name" required onChange={handleInputChange}/>
+                                <input type="text" className="form-input" id="full_name" required onChange={handleInputChange} />
                             </div>
                             <div className="half-input">
                                 <div className="form-group">
                                     <label htmlFor="age" className="label">Age</label>
-                                    <input type="number" className="form-input" id="age" required  onChange={handleInputChange}/>
+                                    <input type="number" className="form-input" id="age" required onChange={handleInputChange} />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="salary" className="label">Price per hour</label>
-                                    <input type="number" maxLength={4} className="form-input" id="salary" required  onChange={handleInputChange}/>
+                                    <input type="number" maxLength={4} className="form-input" id="salary" required onChange={handleInputChange} />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="qualification" className="label">Educational qualification</label>
-                                <input type="text" className="form-input" id="qualification" required  onChange={handleInputChange}/>
+                                <input type="text" className="form-input" id="qualification" required onChange={handleInputChange} />
                             </div>
                             <div className="half-input">
                                 <div className="form-group">
                                     <label htmlFor="experience" className="label">No years of experience</label>
-                                    <input type="number" className="form-input" id="experience" required  onChange={handleInputChange}/>
+                                    <input type="number" className="form-input" id="experience" required onChange={handleInputChange} />
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="previous_company" className="label">Previous company (if any)</label>
-                                    <input type="text" className="form-input" id="previous_company" required  onChange={handleInputChange}/>
+                                    <input type="text" className="form-input" id="previous_company" required onChange={handleInputChange} />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="job" className="label">Job title</label>
-                                <input type="text" className="form-input" id="job" required  onChange={handleInputChange}/>
+                                <select name="" id="job" className="form-input job_select" onChange={handleInputChange} required>
+                                    {
+                                        jobs?.map((job, index) => {
+                                            return <option key={index} value={job.id} className='job_obtions'>{job.title}</option>
+                                        })
+                                    }
+                                </select>
                             </div>
                         </form>
                     </div>
@@ -146,7 +196,7 @@ const WorkerRegister = () => {
                         <form onSubmit={handleSubmit}>
                             <div className="form-group des">
                                 <label htmlFor="description" className="label">Tell us about yourself</label>
-                                <input type="text" className="inp_des form-input" id="description" required  onChange={handleInputChange}/>
+                                <input type="text" className="inp_des form-input" id="description" required onChange={handleInputChange} />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="certificate" className="label">Any certificates</label>
@@ -154,7 +204,7 @@ const WorkerRegister = () => {
                                     {/* The file input is hidden, but the button triggers it */}
                                     <input type="file" id="certificate" accept="image/*" onChange={handleCertificateChange} style={{ display: 'none' }} />
                                     <button type="button" className="form-input" onClick={() => document.getElementById('certificate').click()} >
-                                        {certificate ? ( <img src={certificate} alt="Certificate Preview" style={{ width: '100px', height: 'auto' }} /> ) : <><CloudUpload/>Upload Certificate</> }
+                                        {certificate ? (<img src={certificate} alt="Certificate Preview" style={{ width: '100px', height: 'auto' }} />) : <><CloudUpload />Upload Certificate</>}
                                     </button>
                                 </div>
                             </div>
@@ -164,7 +214,7 @@ const WorkerRegister = () => {
                                 <div className="custom-file-input">
                                     <input type="file" id="idProof" accept="image/*" onChange={handleIdProofChange} style={{ display: 'none' }} />
                                     <button type="button" className="form-input" onClick={() => document.getElementById('idProof').click()} >
-                                        {idProof ? ( <img src={idProof} alt="ID Proof Preview" style={{ width: '100px', height: 'auto' }} /> ) : <><CloudUpload/>Upload Id Proof</> }
+                                        {idProof ? (<img src={idProof} alt="ID Proof Preview" style={{ width: '100px', height: 'auto' }} />) : <><CloudUpload />Upload Id Proof</>}
                                     </button>
                                 </div>
                             </div>

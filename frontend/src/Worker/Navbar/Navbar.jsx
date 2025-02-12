@@ -2,20 +2,15 @@ import './Navbar.css'
 import logo from '../../assets/logo.png'
 import { Person } from 'react-bootstrap-icons';
 import { useContext} from 'react';
-import { useAuth } from '../../Authstate'
 import { PageContext } from '../Worker';
 import PropTypes from 'prop-types';
-
-
-
+import { useSelector,useDispatch } from 'react-redux';
+import { logout } from '../../authSlice';
 
 const Navbar = ({page}) => {
-
-  const { userRole,logout } = useAuth();
-  const username = localStorage.getItem('Username');
-  const first_name = localStorage.getItem('first_name');
-  const last_name = localStorage.getItem('last_name');
   const setPage = useContext(PageContext);
+  const { isAuthenticated,first_name ,last_name, username } = useSelector((state) => state.auth)
+  const dispatch = useDispatch();
 
   return (
     <div className="container">
@@ -49,8 +44,8 @@ const Navbar = ({page}) => {
           </button>
           <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-            {userRole.isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('page','Profile')}}>View profile</a> : null}
-            {userRole.isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={()=>{logout()}}>Log out</a> : null}
+            {isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('page','Profile')}}>View profile</a> : null}
+            {isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={()=>{dispatch(logout())}}>Log out</a> : null}
 
           </div>
         </div>
