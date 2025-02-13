@@ -106,9 +106,9 @@ const SignIn = () => {
       }, [role, navigate, isAuthenticated]);
 
 
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     const navigateToGoogleLogin = () => {
-        window.location.replace("http://localhost:8000/user/auth/google/"); 
+        window.location.replace(`${apiUrl}user/auth/google/`); 
     };
     return (
         <div className="container">

@@ -32,8 +32,10 @@ const SignUp = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const navigateToGoogleLogin = () => {
-    window.location.replace("http://localhost:8000/user/auth/google/");
+    window.location.replace(`${apiUrl}user/auth/google/`);
   };
 
   const handleSubmit = async (e) => {

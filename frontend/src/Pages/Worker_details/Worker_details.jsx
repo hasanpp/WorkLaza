@@ -13,6 +13,7 @@ const Worker_details = ({worker_id}) => {
     const [worker,setWorker] = useState();
     const [availabilities,setAvailabilities] = useState();
     const { isAuthenticated } = useSelector((state) => state.auth)
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(()=>{
         const fetch_data = async()=>{
@@ -49,7 +50,7 @@ const Worker_details = ({worker_id}) => {
             <div className="inner_div">
                 <div className="first_row">
                     <div className="left_side">
-                        <img src={worker?.profile_pic ? `http://localhost:8000${worker?.profile_pic}` : user_icon} alt="" />
+                        <img src={worker?.profile_pic ? `${apiUrl}${worker?.profile_pic}` : user_icon} alt="" />
                     </div>
                     <div className="right_side">
                         <br />

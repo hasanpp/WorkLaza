@@ -11,6 +11,7 @@ const Saved = () => {
   const [workers, setWorkers] = useState();
   const [tb, setTb] =useState(false);
   const setPage = useContext(PageContext);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(()=>{
     const featc_data = async ()=>{
@@ -42,7 +43,7 @@ const Saved = () => {
       <div className="workers_dis">
                 { workers? workers.map(worker => (
                   <div key={worker?.id} className="worker_card" style={{cursor:'pointer'}}>
-                    <img src={worker?.profile_pic ? `http://localhost:8000${worker?.profile_pic}` : user_icon} alt="Profile" />
+                    <img src={worker?.profile_pic ? `${apiUrl}${worker?.profile_pic}` : user_icon} alt="Profile" />
                     <h3>{worker?.full_name}</h3>
                     <span>{worker?.job_title}</span>
                     <h4>₹ {worker?.salary}/hour</h4>

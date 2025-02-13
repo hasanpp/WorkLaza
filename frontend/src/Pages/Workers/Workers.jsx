@@ -30,6 +30,7 @@ const Workers = () => {
   const [selectedTime, setSelectedTime] = useState('');
   const setIsLoading = useContext(LoadingContext);
   const setPage = useContext(PageContext);
+  const apiUrl = import.meta.env.VITE_API_URL;
   const workersPerPage = 6;
 
 
@@ -178,7 +179,7 @@ const Workers = () => {
         <div className="workers_dis">
           { currentWorkers ? currentWorkers.map(worker => (
             <div key={worker?.id} className="worker_card">
-              <img src={worker?.profile_pic ? `http://localhost:8000${worker?.profile_pic}` : user_icon} alt="Profile" />
+              <img src={worker?.profile_pic ? `${apiUrl}${worker?.profile_pic}` : user_icon} alt="Profile" />
               <h3>{worker?.full_name}</h3>
               <span>{worker?.job_title}</span>
               <h4>₹ {worker?.salary}/hour</h4>
