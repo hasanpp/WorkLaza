@@ -4,12 +4,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import Banner from '../../Compenets/Banner/Banner'
 import { useContext } from 'react';
 import { LoadingContext } from '../../App';
-import { Medium } from 'react-bootstrap-icons'
+import { StarFill,Star,StarHalf } from 'react-bootstrap-icons'
 import stay_conected from '../../assets/stay_conect.png'
 import trusted from '../../assets/trusted.png'
-import user_icone from '../../assets/user.png'
-
-
+import profile1 from '../../assets/profile1.png'
+import profile2 from '../../assets/profile2.png'
+import profile3 from '../../assets/profile3.png'
+import logo from "../../assets/logo.png";
+import top_right_arrow from '../../assets/top-right-arrow.png'
+ 
 
 const Home = () => {
 
@@ -92,22 +95,110 @@ const Home = () => {
       <div className="customeres_words col-lg-12 row">
         <div className="col-lg-4">
           <div className="user_det">
-            <img src={user_icone} alt="profile" />
+            <img src={profile1} alt="profile" />
             <div className="name">
-              <h6>Emma J</h6>
-              <span>Home Painting</span>
+              <h6>Tom H.</h6>
+              <span>Electrical Services</span>
             </div>
+          </div>
+          <br />
+          <div className="testimonial-box">
+            <div className="stars">
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+            </div>
+            <br />
+            <p className="review-text">
+                {`"I had an electrical issue with my home wiring, and Worklaza sent an expert electrician who quickly diagnosed the problem and fixed it. Great service!"`}
+            </p>
           </div>
         </div>
         <div className="col-lg-4">
-          
+          <div className="user_det">
+            <img src={profile2} alt="profile" />
+            <div className="name">
+              <h6>John P.</h6>
+              <span>General Home Services</span>
+            </div>
+          </div>
+          <br />
+          <div className="testimonial-box">
+            <div className="stars">
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+                <StarHalf/>
+            </div>
+            <br />
+            <p className="review-text">
+                {`"I love how Worklaza provides a one-stop solution for various home services. Their customer support is also fantastic – easy to reach and very helpful!"`}
+            </p>
+          </div>
         </div>
         <div className="col-lg-4">
-          
+          <div className="user_det">
+            <img src={profile3} alt="profile" />
+            <div className="name">
+              <h6>David L</h6>
+              <span>Plumbing Services</span>
+            </div>
+          </div>
+          <br />
+          <div className="testimonial-box">
+            <div className="stars">
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+                <StarFill/>
+                <Star/>
+            </div>
+            <br />
+            <p className="review-text">
+                {`"I needed a repair. The Worklaza team was sent a plumber right to my doorstep. The service was smooth and reasonably priced. Highly recommend!"`}
+            </p>
+          </div>
+        </div>
+      </div> 
+      <div className="be_a_part container-fluid">
+        <div className="col-lg-3 col-12">
+          <img src={logo} alt="Logo" />
+        </div>
+        <div className='col-lg-9 col-12'>
+          <br />
+          <span>Earn, Connect, and Innovate</span>
+          <h3>Be Part of the Wrok Laza Revolution</h3>
+          <br />
+          <p>{`Join a thriving team that is reshaping the home service industry. Explore endless opportunities to grow, connect with passionate professionals, and make a real impact in people's lives. Be part of a dynamic and innovative community that's dedicated to delivering top-quality services and excellence every day.`}</p>
+        </div>
+
+        <div className='row'>
+          <div className="lar_atr_box">
+            <div className="top">  
+              <h5>Resource Access</h5>
+              <img src={top_right_arrow} alt="top-right-arrow" />
+            </div>
+            <p>{`Visitors can access a wide range of resources, including ebooks, whitepapers, reports.`}</p>
+          </div>
+          <div className="lar_atr_box">
+            <div className="top">  
+              <h5>Resource Access</h5>
+              <img src={top_right_arrow} alt="top-right-arrow" />
+            </div>
+            <p>{`Visitors can access a wide range of resources, including ebooks, whitepapers, reports.`}</p>
+          </div>
+          <div className="lar_atr_box">
+            <div className="top">  
+              <h5>Resource Access</h5>
+              <img src={top_right_arrow} alt="top-right-arrow" />
+            </div>
+            <p>{`Visitors can access a wide range of resources, including ebooks, whitepapers, reports.`}</p>
+          </div>
         </div>
       </div>
-      <br /><br /><br />
-
     </div>
   )
 }

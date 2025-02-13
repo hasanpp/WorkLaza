@@ -137,7 +137,7 @@
 
 
 .customeres_words .col-lg-4{
-    padding: 2% 5%;
+    padding: 3% 6%;
     border-top: 2px solid var(--strok-color);
     border-bottom: 2px solid var(--strok-color);
 }
@@ -171,3 +171,114 @@
     font-weight: 400;
 }
 
+
+.customeres_words .col-lg-4 .testimonial-box {
+    background: var(--secondary-color);
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--strok-color);
+}
+
+.customeres_words .col-lg-4 .testimonial-box .stars {
+    background: var(--secondary-icon-color);
+    border: 1px solid var(--strok-color);
+    display: inline-block;
+    padding: 3px 15px 0px 15px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    margin-top: -13px;
+    position: absolute;
+    margin-left: -45px;
+}
+
+.customeres_words .col-lg-4 .testimonial-box .stars svg {
+    color: var(--icon-color); 
+}
+
+.customeres_words .col-lg-4 .testimonial-box .review-text {
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 5px 20px 0px 30px;
+    color: var(--title-color);
+}
+
+.be_a_part{
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1% 5%;
+    width: 100%;
+}
+
+.be_a_part .col-lg-3{
+    padding: 3% 3%;
+}
+
+.be_a_part .col-lg-3 img{
+    width: 170px;
+    height: auto;
+}
+
+.be_a_part .col-lg-9 h3{
+    color: var(--title-color);
+    font-size: 44px;
+    font-weight: 500;
+    line-height: 60px;
+}
+
+.be_a_part .col-lg-9 span{
+    color: var(--title-color);
+    background-color: #333333;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 4px 5px ;
+}
+
+.be_a_part .row{
+    background-color: var( --secondary-icon-color);
+    padding: 4px 7px ;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    border-radius: 10px;
+    border: 2px solid var(--strok-color);
+    margin: 1% 6%;
+}
+
+.be_a_part .row .lar_atr_box{
+    background-color: var( --secondary-color);
+    padding: 4px 5px ;
+    display: flex;
+    flex-wrap: wrap;
+    width: 380px;
+    padding: 20px 35px;
+    border: 1px solid var(--strok-color);
+    border-radius: 10px;
+}
+
+.be_a_part .row .lar_atr_box .top{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+@media screen and (max-width: 500px) {
+   
+    .be_a_part .row{
+        margin: 1% 0%;
+    }
+    .be_a_part{
+        padding: 1% 2%;
+
+    }
+    .be_a_part .col-lg-9 h3{
+        font-size: 38px;
+    }
+    
+    .customeres_words .col-lg-4{
+        padding: 5% 10%;
+    }
+
+  }
