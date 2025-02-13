@@ -21,6 +21,7 @@ const SignIn = () => {
     const dispatch = useDispatch();
     const { role,isAuthenticated } = useSelector((state) => state.auth)
     const messege = localStorage.getItem('messege');
+    const google_clint_id = import.meta.env.VITE_GOOGLE_CLINT_ID;
 
     const responseGoogle =  async(response) => {
         setIsLoading(true);
@@ -140,7 +141,7 @@ const SignIn = () => {
                             <p className='label' onClick={()=>navigate('/Forgot')} style={{textAlign:'end'}}><a>Forgot Password?</a></p>
                         </div>
                         <div className='google_sign_in' >
-                            <GoogleLogin clientId="358220686468-isdt3qooc2dedok4sg0h7kovaq2f03ld.apps.googleusercontent.com" onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
+                            <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
                         </div>
                     </div>
                 </div>
