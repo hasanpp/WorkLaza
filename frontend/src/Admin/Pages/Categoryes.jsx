@@ -28,7 +28,6 @@ const Categoryes = () => {
     async function fetchData() {
       try {
         const res = await API.get('admin_view/view_jobs/');
-        console.log(res.data)
         setJobs(res.data.Jobs);
         setSortedJobs(res.data.Jobs);
       } catch (error) {
@@ -60,9 +59,8 @@ const Categoryes = () => {
 
   useEffect(() => {
     if (searchQuery) {
-      const filtered = sortedJobs.filter(job =>
+      const filtered = sortedJobs?.filter(job =>
         job?.title?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-        job?.id?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
         job?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase())
       );
       setFilteredJobs(filtered);

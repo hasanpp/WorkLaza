@@ -8,8 +8,13 @@ import './Workers.css';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Postage, X } from 'react-bootstrap-icons';
 import { LoadingContext } from '../../App';
+import { PageContext } from '../../Layout/Layout';
+import { useSelector } from "react-redux";
+
 
 const Workers = () => {
+
+  const { isAuthenticated } = useSelector((state) => state.auth)
   const [workers, setWorkers] = useState([]);
   const [filteredWorkers, setFilteredWorkers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,6 +29,7 @@ const Workers = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const setIsLoading = useContext(LoadingContext);
+  const setPage = useContext(PageContext);
   const workersPerPage = 6;
 
 
@@ -36,7 +42,7 @@ const Workers = () => {
           },
           (error) => {
             toast.error("Error getting geolocation:", error);
-            reject(error);
+            resolve({ latitude: 0, longitude: 0 });
           }
         );
       } else {
@@ -45,6 +51,20 @@ const Workers = () => {
       }
     });
   };
+
+  const saveWorker = async (worker_id)=>{
+    if (!isAuthenticated){
+        toast.warning("Please login to save a profile")
+        return
+    }
+    try {
+        const res = await API.post('user/save_worker/',{'worker_id':worker_id})
+        toast.success(res?.data?.message)
+    } catch (err) {
+        console.log(err)
+        toast.error(err?.response?.data?.message)
+    }
+}
 
   useEffect(() => {
     const fetchWorkers = async () => {
@@ -157,15 +177,15 @@ const Workers = () => {
 
         <div className="workers_dis">
           { currentWorkers ? currentWorkers.map(worker => (
-            <div key={worker.id} className="worker_card">
+            <div key={worker?.id} className="worker_card">
               <img src={worker?.profile_pic ? `http://localhost:8000${worker?.profile_pic}` : user_icon} alt="Profile" />
               <h3>{worker?.full_name}</h3>
               <span>{worker?.job_title}</span>
               <h4>₹ {worker?.salary}/hour</h4>
               <p>{worker?.description?.slice(0, 65)}...</p>
               <div className="button_row">
-                <button className='details_btn'>View Details</button>
-                <button className='Book_btn'>Book now</button>
+                <button className='details_btn' onClick={()=>{setPage(`Worker_details/${worker?.id}`), localStorage.setItem('page',`Worker_details/${worker?.id}`)}}>View Details</button>
+                <button className='Book_btn' onClick={()=>saveWorker(worker?.id)}>Save Profile</button>
               </div>
             </div>
           )) : <div><br /><br /><br /><span>There are no data to your requirment</span></div>}

@@ -1,6 +1,7 @@
 from .serializers import SignUpSerializer,UserSerializer,ProfilePictureSerializer
 from worker.serializers import WorkerSerializer, WorkersSerializer
 from .utils import send_otp_email
+from .models import Saved_Workers
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -314,6 +315,11 @@ def view_workers(request, *args, **kwargs):
         if not user_latitude or not user_longitude:
             return Response({"message": "Latitude and Longitude are required"}, status=status.HTTP_400_BAD_REQUEST)
         
+        if user_latitude == 0 or user_latitude == 0 :
+            workers = Worker.objects.filter(is_active=True, latitude__isnull=False, longitude__isnull=False).select_related('job', 'user').prefetch_related('availabilities')
+            serialized_data = WorkersSerializer(workers, many=True).data
+            return Response({"message": "Latitude and Longitude are not submited"}, status=status.HTTP_400_BAD_REQUEST)
+        
         user_latitude, user_longitude = float(user_latitude), float(user_longitude)
         workers = Worker.objects.filter(is_active=True, latitude__isnull=False, longitude__isnull=False).select_related('job', 'user').prefetch_related('availabilities')
         
@@ -332,6 +338,74 @@ def view_workers(request, *args, **kwargs):
         
         return Response({"message":"OK success","Workers":serialized_data}, status=status.HTTP_200_OK)
     except :
-        return Response({"message":"No workers"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"No workers awailable in your area"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def view_worker(request, *args, **kwargs):
+    
+    try:
+        worker_id = request.data.get('id')
+        worker = Worker.objects.filter(id=worker_id).select_related('job', 'user').prefetch_related('availabilities').first()
+        
+        serialized_data = WorkersSerializer(worker ).data
+        return Response({"message":"got the worker data","worker":serialized_data}, status=status.HTTP_200_OK)
+    except: 
+        return Response({"message":"There are No workers with this id"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def save_worker(request, *args, **kwargs):
+    try:
+        token = request.headers['Authorization'][7:]
+        decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
+        user_id = decoded['user_id']
+        user = User.objects.get(id=user_id)
+        worker_id = request.data.get('worker_id')
+        worker  = Worker.objects.get(id=worker_id)
+        
+        if Saved_Workers.objects.filter(user=user,worker=worker).exists() :
+            return Response({"message":"Worker already in saved"}, status=status.HTTP_200_OK)
+        save_worker = Saved_Workers.objects.create(user=user,worker=worker)
+        return Response({"message":"Worker saved"}, status=status.HTTP_200_OK)
+    except Exception as e: 
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_saved_worker(request, *args, **kwargs):
+    try:
+        token = request.headers['Authorization'][7:]
+        decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
+        user_id = decoded['user_id']
+        user = User.objects.get(id=user_id)
+        worker_id = request.data.get('worker_id')
+        worker  = Worker.objects.get(id=worker_id)
+        
+        if not Saved_Workers.objects.filter(user=user,worker=worker).exists() :
+            return Response({"message":"This worker is not in your saved list"}, status=status.HTTP_400_OK)
+        save_worker = Saved_Workers.objects.filter(user=user,worker=worker).first().delete()
+        return Response({"message":"Worker removed from saved"}, status=status.HTTP_200_OK)
+    except Exception as e: 
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_saved_worker(request, *args, **kwargs):
+    try:
+        token = request.headers['Authorization'][7:]
+        decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
+        user_id = decoded['user_id']
+        user = User.objects.get(id=user_id)
+        saved_workers = Saved_Workers.objects.filter(user=user)
+        if not saved_workers.exists():
+            return Response({"message": "You have not saved any workers yet."}, status=status.HTTP_200_OK)
+        
+        
+        workers = [saved_worker.worker for saved_worker in saved_workers]
+        
+        serialized_data = WorkersSerializer(workers, many=True).data
+        return Response({ "workers": serialized_data}, status=status.HTTP_200_OK)
+    except Exception as e: 
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)

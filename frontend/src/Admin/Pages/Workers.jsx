@@ -89,10 +89,9 @@ const Workers = () => {
 
   useEffect(() => {
     if (searchQuery) {
-      const filtered = sortedWorkers.filter(worker =>
-        worker.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        worker.job.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        worker.qualification.toLowerCase().includes(searchQuery.toLowerCase())
+      const filtered = sortedWorkers?.filter(worker =>
+        worker?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        worker?.qualification?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredWorkers(filtered);
     } else {
@@ -206,7 +205,13 @@ const Workers = () => {
                 <td>{worker.salary}</td>
                 <td>{worker.qualification}</td>
                 <td>{worker?.experience}</td>
-                <td>{worker.job}</td>
+                <td>
+                  {
+                    jobs?.map((job) => {
+                      return (job?.id == worker?.job && job.title)
+                    })
+                  }
+                </td>
                 <td className="action-td">
                   <img src={chat_with_user} alt="" />
                   {worker.is_active ? <Ban onClick={() => { restrict_worker(worker.id, index) }} color="red" /> : <ArrowRepeat onClick={() => { restrict_worker(worker.id, index) }} color="green" />}
@@ -342,7 +347,7 @@ const Workers = () => {
                 <Form.Control as="select" value={formData.job} onChange={(e) => setFormData({ ...formData, job: e.target.value })} >
                   {
                     jobs?.map((job, index) => {
-                      return <option key={index} value={job.id} selected={formData.job === job.id}>{job.title}</option>
+                      return(job?.is_active ? <option key={index} value={job.id} selected={formData.job === job.id}>{job.title}</option> : null)
                     })
                   }
                 </Form.Control>

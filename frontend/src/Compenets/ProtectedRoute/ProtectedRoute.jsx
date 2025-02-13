@@ -36,7 +36,7 @@ function ProtectedRoute({children}){
         } catch (error) {
             console.error("Token refresh error:", error);
             setPage('Home')
-            localStorage.setItem('Page','Home')
+            localStorage.setItem('page','Home')
             toast.error("Session expired. Please log in again.");
             dispatch(logout());
             setIsAuthorized(false)
@@ -46,7 +46,7 @@ function ProtectedRoute({children}){
     const auth = async () =>{
         if (!accessToken || !refreshToken){
             setPage('Home')
-            localStorage.setItem('Page','Home')
+            localStorage.setItem('page','Home')
             toast.info('Please signIn to visit this page')
             setIsAuthorized(false)
             return

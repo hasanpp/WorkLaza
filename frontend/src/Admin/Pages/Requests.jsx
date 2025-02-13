@@ -23,6 +23,7 @@ const Requests = () => {
   const [showModal, setShowModal] = useState(false);
   const [showReson, setShowReson] = useState(false);
   const [currentWorker, setCurrentWorker] = useState(null);
+  const [jobs, setJobs] = useState();
   const setIsLoading = useContext(LoadingContext);
 
   const process_request = async (id, index, accept) => {
@@ -41,7 +42,7 @@ const Requests = () => {
         setReason('Id proof is not valid')
       }
       setTb_c(!tb_c)
-      toast.success(response.data.message);
+      toast.success(response?.data?.message);
     } catch (err) {
       console.log(err);
       toast.error(err.response?.data?.message || "An error occurred");
@@ -54,9 +55,10 @@ const Requests = () => {
     async function fetchData() {
       try {
         const res = await API.get('admin_view/view_requests/');
-  
-        setWorkers(res.data.workers);
-        setSortedWorkers(res.data.workers);
+        const j_res = await API.get('admin_view/view_jobs/');
+        setWorkers(res?.data?.workers);
+        setJobs(j_res?.data?.Jobs)
+        setSortedWorkers(res?.data?.workers);
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -160,7 +162,13 @@ const Requests = () => {
                 <td>{worker.salary}</td>
                 <td>{worker.qualification}</td>
                 <td>{worker.experience}</td>
-                <td>{worker.job}</td>
+                <td>
+                  {
+                    jobs?.map((job) => {
+                      return (job?.id == worker?.job && job.title)
+                    })
+                  }
+                </td>
                 <td>{worker.previous_company}</td>
                 <td className="action-td">
                   <button onClick={()=>{process_request(worker.id,index,true)}}><CheckCircle color="green" size={11}/></button>
@@ -213,7 +221,7 @@ const Requests = () => {
               </Form.Group>
               <Form.Group controlId="formJob">
                 <Form.Label>Job</Form.Label>
-                <Form.Control type="text" value={currentWorker.job} readOnly={true}/>
+                <Form.Control type="text" value={ jobs?.map((job) => { return (job?.id == currentWorker?.job && job.title) }) } readOnly={true}/>
               </Form.Group>
               <Form.Group controlId="formdeS">
                 <Form.Label>Description</Form.Label>

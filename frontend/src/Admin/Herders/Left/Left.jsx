@@ -34,7 +34,7 @@ const Left = ({page}) => {
             <li className={`${page=='Files'? 'selected':null}`} onClick={()=>setPage('Files')}><img src={Folder} alt="" /></li>
             <li className={`${page=='Chats'? 'selected':null}`} onClick={()=>setPage('Chats')}><img src={Chats} alt="" /></li>
             <li className={`${page=='Settings'? 'selected':null}`} onClick={()=>setPage('Settings')}><img src={settings} alt="" /></li>
-            <li onClick={()=>dispatch(logout())} className='logout'><img src={Logout} alt="" /></li>
+            <li onClick={()=>{setPage('Home'), localStorage.setItem('page','Home'), dispatch(logout())}} className='logout'><img src={Logout} alt="" /></li>
         </ul>
     </div>
   )

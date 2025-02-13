@@ -45,7 +45,7 @@ const Navbar = ({page}) => {
           <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
             {isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('page','Profile')}}>View profile</a> : null}
-            {isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={()=>{dispatch(logout())}}>Log out</a> : null}
+            {isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={()=>{setPage('Home'), localStorage.setItem('page','Home'), dispatch(logout())}}>Log out</a> : null}
 
           </div>
         </div>

@@ -20,8 +20,9 @@ const Header = ({ page }) => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout());
     setPage('Home')
+    localStorage.setItem('page','Home')
+    dispatch(logout());
     toast.success('user Loged out');
   };
 
@@ -42,16 +43,16 @@ const Header = ({ page }) => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent" >
           <ul className="navbar-nav ">
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Home'?'selected':null}`} onClick={() =>{ setPage('Home'), localStorage.setItem('Page','Home')} }>Home<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Home'?'selected':null}`} onClick={() =>{ setPage('Home'), localStorage.setItem('page','Home')} }>Home<span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Workers'?'selected':null}`} onClick={() =>{ setPage('Workers'), localStorage.setItem('Page','Workers')}}>Workers<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Workers'?'selected':null}`} onClick={() =>{ setPage('Workers'), localStorage.setItem('page','Workers')}}>Workers<span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Bookings'?'selected':null}`} onClick={() =>{ setPage('Bookings'), localStorage.setItem('Page','Bookings')}}>Bookings<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Bookings'?'selected':null}`} onClick={() =>{ setPage('Bookings'), localStorage.setItem('page','Bookings')}}>Bookings<span className="sr-only">(current)</span></a>
             </li>
             <li className="nav-item active">
-              <a className={`nav-link ${page=='Saved'?'selected':null}`} onClick={() =>{ setPage('Saved'), localStorage.setItem('Page','Saved')}}>Saved<span className="sr-only">(current)</span></a>
+              <a className={`nav-link ${page=='Saved'?'selected':null}`} onClick={() =>{ setPage('Saved'), localStorage.setItem('page','Saved')}}>Saved<span className="sr-only">(current)</span></a>
             </li>
           </ul>
         </div>
@@ -65,7 +66,7 @@ const Header = ({ page }) => {
 
             {!isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signin')}>Sign In</a> : null}
             {!isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signup')}>Sign Up</a> : null}
-            {isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('Page','Profile')}}>View profile</a> : null}
+            {isAuthenticated ? <a className="dropdown-item" onClick={() =>{ setPage('Profile'), localStorage.setItem('page','Profile')}}>View profile</a> : null}
             {isAuthenticated ? <a className="dropdown-item" >Chat</a> : null}
             {role=="user" ? <a className="dropdown-item" onClick={() => navigate('/worker_register')}>Register as a worker</a> : null}
             {isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={handleLogout}>Log out</a> : null}

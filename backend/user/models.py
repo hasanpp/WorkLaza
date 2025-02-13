@@ -2,8 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.timezone import now, timedelta
 
-
-
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, blank=True, null=True, unique=True)
@@ -33,3 +31,9 @@ class CustomUser(AbstractUser):
             self.save()
             return True
         return False
+    
+    
+class Saved_Workers(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='saved_workers')
+    worker = models.ForeignKey('worker.Worker', on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)

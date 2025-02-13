@@ -33,6 +33,8 @@ const Worker = () => {
       localStorage.setItem('full_name', res.data.full_name)
     } catch (err) {
       toast.error(err?.response?.data?.messages)
+      setPage('Home')
+      localStorage.setItem('page','Home')
       dispatch(logout())
     }
   }

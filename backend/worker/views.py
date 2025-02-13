@@ -66,7 +66,7 @@ def worker_view(request,*args, **kwargs):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_jobs(*args, **kwargs):
-    jobs = Jobs.objects.all()
+    jobs = Jobs.objects.filter(is_active=True)
     serializer = JobSerializer(jobs, many=True) 
     return Response({'message': 'success','Jobs':serializer.data}, status=status.HTTP_200_OK)
 

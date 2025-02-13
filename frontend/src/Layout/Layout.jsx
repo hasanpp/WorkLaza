@@ -6,7 +6,8 @@ import Header from '../Compenets/header/Header';
 import Footer from '../Compenets/Footer/Footer'
 import Home from '../Pages/Home/Home'
 import Saved from '../Pages/Saved/Saved'
-import Workers from '../Pages/Workers/Workers'
+import Workers from '../Pages/Workers/Workers';
+import Worker_details from '../Pages/Worker_details/Worker_details';
 import Bookings from '../Pages/Bookings/Bookings'
 import Not_found from '../Pages/Not_found/Not_found';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +34,7 @@ const Layout = (props) => {
       if(err.response.status==401){
         toast.warning('This account is blocked by the admin!!')
         setPage('Home')
-        localStorage.setItem('Page','Home')
+        localStorage.setItem('page','Home')
         await dispatch(logout())
         navigate('/')
       }
@@ -41,7 +42,7 @@ const Layout = (props) => {
   }
 
 
-  const [page, setPage] = useState(localStorage.getItem('Page')||'Home');
+  const [page, setPage] = useState(localStorage.getItem('page')||'Home');
   useEffect(() => {
     if (props.not_found == "true") {
       setPage('not')
@@ -71,7 +72,8 @@ const Layout = (props) => {
 
         {page == 'Home' && <Home />}
         {page == 'Saved' && <ProtectedRoute><Saved /></ProtectedRoute>}
-        {page == 'Workers' && <ProtectedRoute><Workers /></ProtectedRoute>}
+        {page == 'Workers' && <Workers />}
+        {page.slice(0,14) == 'Worker_details' &&<Worker_details worker_id={page.slice(15)}/>}
         {page == 'Bookings' && <ProtectedRoute><Bookings /></ProtectedRoute>}
         {page == 'Profile' && <ProtectedRoute><Profile /></ProtectedRoute>}
         {page == 'not' && <Not_found />}

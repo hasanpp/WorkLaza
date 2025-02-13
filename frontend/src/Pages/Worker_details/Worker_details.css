@@ -1,0 +1,161 @@
+.main_worker_details{
+    margin: 8%  3%;
+    
+}
+.main_worker_details .main_details{
+   padding: 1% 3%;
+}
+.main_worker_details .inner_div{
+  border: 3px solid var(--strok-color);
+  border-radius: 34px;
+   width: 100%;
+   
+}
+.main_worker_details .inner_div .first_row{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+   width: 100%;
+
+}
+.main_worker_details .inner_div .first_row .left_side{
+  width: 49%;
+  padding: 3% 8%;
+}
+.main_worker_details .inner_div .first_row .left_side img{
+    width: 100%;
+    height: auto;
+    border-radius: 100%;
+}
+.main_worker_details .inner_div .first_row .right_side{
+  width: 49%;
+  padding: 3% 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.main_worker_details .inner_div .first_row .right_side h2{
+    color: var(--icon-color);
+    font-size: 66px;
+    font-weight: 600;
+    margin: 0% 0%;
+}
+.main_worker_details .inner_div .first_row .right_side div span{
+    color: #98989a;
+    font-size: 32px;
+    font-weight: 400px;
+    margin: 0% 0%;
+}
+.main_worker_details .inner_div .first_row .right_side div .feild{
+    color: #98989a;
+    font-size: 24px;
+    font-weight: 400px;
+    margin: 0% 0%;
+}
+.main_worker_details .inner_div .first_row .right_side h4{
+    color: var(--icon-color);
+    font-size: 48px;
+    font-weight: 400px;
+    margin: 0% 0%;
+}
+.main_worker_details .inner_div .first_row .right_side .buttons{
+    display: flex;
+    justify-content: space-between;
+    margin: 0% 0% 0% 0%;
+}
+.main_worker_details .inner_div .first_row .right_side .buttons button{
+    color: #98989A;
+    border: 2px solid var(--strok-color);
+    font-size: 28px;
+    padding: 3% 5%;
+    cursor: pointer;
+    width: 48%;
+}
+.main_worker_details .inner_div .first_row .right_side .buttons button:nth-child(1) {
+    background-color: var(--secondary-icon-color);
+}
+.main_worker_details .inner_div .first_row .right_side .buttons button:nth-child(2) {
+    background-color: var(--secondary-color);
+}
+.main_worker_details .inner_div .first_row .right_side .buttons button:nth-child(1):hover {
+    background-color: var(--secondary-color);
+}
+.main_worker_details .inner_div .first_row .right_side .buttons button:nth-child(2):hover {
+    background-color: var(--secondary-icon-color);
+}
+.main_worker_details .inner_div .second_row {
+    width: 100%;
+    padding: 0% 4% 0% 5%;
+    font-size: 17px;
+}
+
+
+@media screen and (max-width: 600px) {
+
+    .main_worker_details{
+        margin: 20%  3%;
+    }
+
+    .main_worker_details .inner_div .first_row .left_side{
+        width: 100%;
+      }
+      .main_worker_details .inner_div .first_row .right_side{
+        width: 100%;
+    }
+    .main_worker_details .inner_div .first_row .right_side h2{
+        font-size: 45px;
+    }
+
+    .main_worker_details .inner_div .first_row .right_side div span{
+        font-size: 24px;
+    }
+    .main_worker_details .inner_div .first_row .right_side div .feild{
+        font-size: 20px;
+    }
+    .main_worker_details .inner_div .first_row .right_side h4{
+        font-size: 40px;
+    }
+    .main_worker_details .inner_div .first_row .right_side .buttons button{
+        color: #98989A;
+        border: 2px solid var(--strok-color);
+        font-size: 20px;
+        padding: 3% 5%;
+        cursor: pointer;
+        width: 49%;
+    }
+}
+
+@media screen and (max-width: 300px) {
+
+    .main_worker_details{
+        margin: 24%  3%;
+    }
+
+    .main_worker_details .inner_div .first_row .left_side{
+        width: 100%;
+      }
+      .main_worker_details .inner_div .first_row .right_side{
+        width: 100%;
+    }
+    .main_worker_details .inner_div .first_row .right_side h2{
+        font-size: 45px;
+    }
+
+    .main_worker_details .inner_div .first_row .right_side div span{
+        font-size: 24px;
+    }
+    .main_worker_details .inner_div .first_row .right_side div .feild{
+        font-size: 20px;
+    }
+    .main_worker_details .inner_div .first_row .right_side h4{
+        font-size: 40px;
+    }
+    .main_worker_details .inner_div .first_row .right_side .buttons button{
+        color: #98989A;
+        border: 2px solid var(--strok-color);
+        font-size: 18px;
+        padding: 2% 1%;
+        cursor: pointer;
+        width: 49%;
+    }
+}

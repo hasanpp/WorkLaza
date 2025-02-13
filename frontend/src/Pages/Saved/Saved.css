@@ -1,0 +1,12 @@
+.main_saved{
+    margin: 8% 5%;
+}
+.main_saved span{
+    color: #98989A;
+}
+.main_saved .workers_dis {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8%;
+    margin: 2% 4%;
+}

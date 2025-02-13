@@ -4,10 +4,11 @@
 
 .footer .footer-bootam{
     width: 90%;
-    margin: 10px 60px;
+    margin: 0px 60px;
     border-top: 1px solid var(--secondary-paragraph-color);
     justify-content: space-between;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .footer .footer-bootam span{
@@ -15,16 +16,48 @@
     font-size: 14px;
     font-weight: 300;
     line-height: 40px;
+    cursor: pointer;
 }
 
 .footer .footer-bootam .icones{
     display: flex;
     color: var(--title-color);
     align-items: center;
+    cursor: pointer;
 }
 
 .footer .footer-bootam .icones svg{
     width: 20px;
     height: 20px;
     margin: 0px 5px;
+}
+
+
+.footer .footer-bootam .ic_small{
+    display: none;
+}
+
+
+
+@media screen and (max-width: 500px) {
+    
+    .footer .footer-bootam .ic_big{
+        display: none;
+    }
+    .footer .footer-bootam .ic_small{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 40px;
+    }
+    .footer .footer-bootam{
+        width: 90%;
+        margin: 0px 24px;
+        border-top: 1px solid var(--secondary-paragraph-color);
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
 }
