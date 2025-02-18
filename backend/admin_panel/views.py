@@ -13,14 +13,14 @@ User = get_user_model()
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_jobs(*args, **kwargs):
-    jobs = Jobs.objects.all()
+    jobs = Jobs.objects.all().order_by('-id').values()
     serializer = JobSerializer(jobs, many=True) 
     return Response({'message': 'success','Jobs':serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_users(*args, **kwargs):
-    Users = User.objects.all().exclude(is_superuser=True)
+    Users = User.objects.all().exclude(is_superuser=True).order_by('-id').values()
     serializer = UserSerializer(Users, many=True) 
     return Response({'message': 'success','Users':serializer.data}, status=status.HTTP_200_OK)
 

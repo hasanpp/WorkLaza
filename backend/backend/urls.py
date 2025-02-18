@@ -12,6 +12,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('worker/', include('worker.urls')),
     path('admin_view/', include('admin_panel.urls')),
+    path('booking/', include('booking.urls')),
     path('token/', TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-auth/', include("rest_framework.urls")),

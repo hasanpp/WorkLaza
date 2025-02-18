@@ -259,11 +259,16 @@
     border-radius: 10px;
 }
 
+.be_a_part .row .lar_atr_box h5{
+    color: var(--title-color);
+}
+
 .be_a_part .row .lar_atr_box .top{
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
+
 @media screen and (max-width: 500px) {
    
     .be_a_part .row{

@@ -15,6 +15,8 @@ from django.db.models import F
 from django.conf import settings
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from  worker.models import *
+from datetime import datetime,timedelta
+from  booking.models import Booking
 from math import sin, cos, sqrt, atan2, radians
 import jwt
 import requests
@@ -77,8 +79,10 @@ def send_otp(request,  *args, **kwargs):
 def verify_otp(request,  *args, **kwargs):
     email = request.data.get('email')
     otp = request.data.get('otp')
+    print(email,otp)
     try:
         user = User.objects.get(email=email)
+        print(user.username, otp)
         if user.verify_otp(otp):
             return Response({'message': 'OTP verified successfully!',"username":user.username}, status=status.HTTP_200_OK)
         return Response({'message': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
@@ -409,3 +413,85 @@ def view_saved_worker(request, *args, **kwargs):
         return Response({ "workers": serialized_data}, status=status.HTTP_200_OK)
     except Exception as e: 
         return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def book_worker (request, *args, **kwargs):
+        # required_fields = [ 'latitude', 'longitude', 'selectedDay', 'selectedSlot', 'issueDescription', 'address' ,'duration']
+        # missing_fields = [field for field in required_fields if not request.data.get(field)]
+        # if missing_fields:
+        #     return Response( {'error': f'Missing required fields: {", ".join(missing_fields)}'}, status=status.HTTP_400_BAD_REQUEST )
+        # try:
+            token = request.headers['Authorization'][7:]
+            decoded = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
+            user_id = decoded['user_id']
+            
+            latitude = request.data.get('latitude')
+            longitude = request.data.get('longitude')
+            address = request.data.get('address')
+            bookedDate = request.data.get('bookedDate')
+            bookedTime = request.data.get('bookedTime')
+            selectedDay = request.data.get('selectedDay').split(" ")[1]
+            slot_id = request.data.get('selectedSlot')
+            worker_id = request.data.get('worker')
+            previousIssues = request.data.get('previousIssues')
+            damagedParts = request.data.get('damagedParts')
+            issueDescription = request.data.get('issueDescription')
+            duration = int(request.data.get('duration'))
+            
+            try:
+                selectedDay = datetime.strptime(selectedDay, '%m/%d/%Y').date()
+            except ValueError:
+                return Response({"error": "Invalid date format for 'selectedDay', use MM/DD/YYYY."}, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = User.objects.get(id=user_id)
+            worker = Worker.objects.get(id=worker_id)
+            slot = WorkerAvailability.objects.get(id=slot_id)
+            
+            if Booking.objects.filter(slot=slot, booked_date=selectedDay).exists:
+                
+                previus_boookings = Booking.objects.filter(slot=slot, booked_date=selectedDay)
+                total_duration = 0
+                
+                for p in previus_boookings:
+                    total_duration += int(p.duration)
+                    
+                slot_duration = slot.get_time_difference()    
+                
+                if slot_duration - total_duration < duration:
+                        return Response({"message": "The slot don't have vackend space for your duration"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            booking = Booking.objects.create(
+            user=user,
+            worker=worker,
+            job=worker.job,
+            slot=slot,
+            latitude=latitude,
+            longitude=longitude,
+            address=address,
+            booked_date=selectedDay,
+            booking_time=bookedTime,
+            booking_date=bookedDate,
+            any_previous_issues=previousIssues,
+            damaged_parts=damagedParts,
+            details=issueDescription,
+            duration=str(duration),
+            status='created'
+            )
+            
+            image = request.data.get('photo')
+            
+            if image:
+                booking.photo = image
+                booking.save()
+            
+            return Response({"message": "Booking successful, worker will contact you."}, status=status.HTTP_200_OK)
+        
+        # except Worker.DoesNotExist:
+        #     return Response({"error": "Worker not found."}, status=status.HTTP_404_NOT_FOUND)
+        # except WorkerAvailability.DoesNotExist:
+        #     return Response({"error": "Selected slot is unavailable."}, status=status.HTTP_404_NOT_FOUND)
+        # except Exception as e:
+        #     return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)

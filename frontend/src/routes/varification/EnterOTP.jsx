@@ -27,6 +27,7 @@ const EnterOTP = () => {
 
     const handleResend = async (e) => {
         e.preventDefault()
+        setIsLoading(true)
         try {
          const res= await API.post('/user/sendotp/', { email:localStorage.getItem('email') });
          console.log(res);
@@ -37,13 +38,16 @@ const EnterOTP = () => {
             console.log(err);
             
             toast.error('Failed to resend OTP.');
-        }
+        }finally {
+            setIsLoading(false);
+          }
       };
 
     const handleVerify = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         try {
+            console.log('email : ',localStorage.getItem('email'))
           const response = await API.post('/user/verifyotp/', { email:localStorage.getItem('email'), otp:otp });
 
           if (response.status === 200) {
@@ -54,7 +58,7 @@ const EnterOTP = () => {
             }
             else {
                 toast.success('Email varification complted please signin with your email')
-                navigate('/singin'); 
+                navigate('/signin'); 
             }
             
           }

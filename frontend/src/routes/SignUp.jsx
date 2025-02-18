@@ -12,7 +12,6 @@ import { LoadingContext } from '../App';
 
 const SignUp = () => {
 
-  localStorage.clear();
 
   const setIsLoading = useContext(LoadingContext);
   const { isAuthenticated } = useSelector((state) => state.auth)
@@ -48,6 +47,7 @@ const SignUp = () => {
       const response = await API.post('/user/signup/', formData);
       toast.success(response.data.message);
       localStorage.setItem('email', formData.email);
+      console.log(formData.email)
       navigate('/signup/enterotp');
     } catch (error) {
       for (let key in error.response.data) {

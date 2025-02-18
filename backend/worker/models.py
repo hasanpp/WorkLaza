@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from datetime import datetime
 
 User = get_user_model()
 
@@ -48,6 +49,15 @@ class WorkerAvailability(models.Model):
 
     def __str__(self):
         return f"{self.worker.full_name} - {self.day_of_week} {self.start_time} - {self.end_time}"
+    
+    def get_time_difference(self):
+        
+        start_datetime = datetime.combine(datetime.today(), self.start_time)
+        end_datetime = datetime.combine(datetime.today(), self.end_time)
+
+        time_diff = end_datetime - start_datetime
+        hours = time_diff.total_seconds() // 3600
+        return int(hours)
 
     
     

@@ -62,10 +62,10 @@ const ChangePassword = () => {
                             <div className="form-group">
                                 <br /><br />
                                 <label htmlFor="password" className='label'>New password</label>
-                                <input type="text" className="form-input" id="password" value={password} required onChange={(e) => setPassword(e.target.value)} />
+                                <input type="password" className="form-input" id="password" value={password} required onChange={(e) => setPassword(e.target.value)} />
                                 <br />
                                 <label htmlFor="cpassword" className='label'>Confirm password</label>
-                                <input type="text" className="form-input" id="cpassword" value={cpassword} required onChange={(e) => setCpassword(e.target.value)} />
+                                <input type="password" className="form-input" id="cpassword" value={cpassword} required onChange={(e) => setCpassword(e.target.value)} />
                             </div>
                             <br />
                             <hr />

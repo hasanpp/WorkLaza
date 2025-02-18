@@ -20,8 +20,8 @@ class CustomUser(AbstractUser):
     
     def generate_otp(self):
         import random
-        self.otp = str(random.randint(1000, 9999))
-        self.otp_expiration = now() + timedelta(minutes=1)
+        self.otp = str(random.randint(1000, 999999))
+        self.otp_expiration = now() + timedelta(minutes=5)
         self.save()
         
     def verify_otp(self, otp):
