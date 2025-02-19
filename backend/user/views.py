@@ -17,6 +17,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from  worker.models import *
 from datetime import datetime,timedelta
 from  booking.models import Booking
+from booking.serializers import BookingSerializer
 from math import sin, cos, sqrt, atan2, radians
 import jwt
 import requests
@@ -419,11 +420,11 @@ def view_saved_worker(request, *args, **kwargs):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def book_worker (request, *args, **kwargs):
-        # required_fields = [ 'latitude', 'longitude', 'selectedDay', 'selectedSlot', 'issueDescription', 'address' ,'duration']
-        # missing_fields = [field for field in required_fields if not request.data.get(field)]
-        # if missing_fields:
-        #     return Response( {'error': f'Missing required fields: {", ".join(missing_fields)}'}, status=status.HTTP_400_BAD_REQUEST )
-        # try:
+        required_fields = [ 'latitude', 'longitude', 'selectedDay', 'selectedSlot', 'issueDescription', 'address' ,'duration']
+        missing_fields = [field for field in required_fields if not request.data.get(field)]
+        if missing_fields:
+            return Response( {'error': f'Missing required fields: {", ".join(missing_fields)}'}, status=status.HTTP_400_BAD_REQUEST )
+        try:
             token = request.headers['Authorization'][7:]
             decoded = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
             user_id = decoded['user_id']
@@ -440,6 +441,7 @@ def book_worker (request, *args, **kwargs):
             damagedParts = request.data.get('damagedParts')
             issueDescription = request.data.get('issueDescription')
             duration = int(request.data.get('duration'))
+            total = int(request.data.get('total'))
             
             try:
                 selectedDay = datetime.strptime(selectedDay, '%m/%d/%Y').date()
@@ -478,7 +480,8 @@ def book_worker (request, *args, **kwargs):
             damaged_parts=damagedParts,
             details=issueDescription,
             duration=str(duration),
-            status='created'
+            status='created',
+            total=total,
             )
             
             image = request.data.get('photo')
@@ -489,9 +492,48 @@ def book_worker (request, *args, **kwargs):
             
             return Response({"message": "Booking successful, worker will contact you."}, status=status.HTTP_200_OK)
         
-        # except Worker.DoesNotExist:
-        #     return Response({"error": "Worker not found."}, status=status.HTTP_404_NOT_FOUND)
-        # except WorkerAvailability.DoesNotExist:
-        #     return Response({"error": "Selected slot is unavailable."}, status=status.HTTP_404_NOT_FOUND)
-        # except Exception as e:
-        #     return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Worker.DoesNotExist:
+            return Response({"error": "Worker not found."}, status=status.HTTP_404_NOT_FOUND)
+        except WorkerAvailability.DoesNotExist:
+            return Response({"error": "Selected slot is unavailable."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_bookings(request, *args, **kwargs):
+    try:
+        token = request.headers['Authorization'][7:]
+        decoded = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
+        user_id = decoded['user_id']
+        user = User.objects.get(id=user_id)
+        bookings = Booking.objects.filter(user=user)
+        
+        serialized_data = BookingSerializer(bookings, many=True).data
+        
+        return Response({"message":"OK success","Bookings":serialized_data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_booking(request, booking_id, *args, **kwargs):
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        serialized_data = BookingSerializer(booking).data
+        return Response({"message": "OK success", "Booking": serialized_data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def cancel_booking(request, booking_id, *args, **kwargs):
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        booking.status = "canceled"
+        booking.save()
+        return Response({"message": "Booking canceled"}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)

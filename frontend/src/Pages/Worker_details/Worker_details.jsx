@@ -270,7 +270,7 @@ const Worker_details = ({ worker_id }) => {
                         </Form.Group>
                         <Form.Group controlId="formSlotSelection">
                             <Form.Label>Give the duration in hours</Form.Label>
-                            <Form.Control style={{ backgroundColor: 'var(--secondary-color)' }} as="select" value={formData?.duration} onChange={(e) => setFormData({ ...formData, duration: e.target.value })} >
+                            <Form.Control style={{ backgroundColor: 'var(--secondary-color)' }} as="select" value={formData?.duration} onChange={(e) =>{ setFormData({ ...formData, duration: e.target.value,total:e.target.value*worker?.salary }), console.log(e.target.value*worker?.salary)}} >
                                 <option value="">Select Slot</option>
                                 {getDurationsForSlot()?.map((duration, index) => (<option key={index} value={duration}>{`${duration} (hours)`}</option>))}
                             </Form.Control>

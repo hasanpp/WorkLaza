@@ -20,11 +20,12 @@ class Booking(models.Model):
     longitude = models.FloatField(blank=False, null=False)
     latitude = models.FloatField( blank=False, null=False)
     photo = models.ImageField(upload_to='booking_photos/', null=True, blank=True)
-    
+    total = models.CharField( max_length=50)
     STATUS_CHOICES = [
         ('created', 'Booking Created'),
         ('accepted', 'Labor Accepted'),
-        ('rejected', 'Rejected'),
+        ('canceled', 'User Canceled'),
+        ('rejected', 'Labor Rejected'),
         ('pending', 'Work Pending'),
         ('completed', 'Completed'),
         ('visited', 'Place Visited'),

@@ -8,6 +8,7 @@ import Home from '../Pages/Home/Home'
 import Saved from '../Pages/Saved/Saved'
 import Workers from '../Pages/Workers/Workers';
 import Worker_details from '../Pages/Worker_details/Worker_details';
+import Booking_details from '../Pages/Booking_details/Booking_details';
 import Bookings from '../Pages/Bookings/Bookings'
 import Not_found from '../Pages/Not_found/Not_found';
 import { useNavigate } from 'react-router-dom';
@@ -74,6 +75,7 @@ const Layout = (props) => {
         {page == 'Saved' && <ProtectedRoute><Saved /></ProtectedRoute>}
         {page == 'Workers' && <Workers />}
         {page.slice(0,14) == 'Worker_details' &&<Worker_details worker_id={page.slice(15)}/>}
+        {page.slice(0,15) == 'Booking_details' &&<ProtectedRoute><Booking_details booking_id={page.slice(16)}/></ProtectedRoute>}
         {page == 'Bookings' && <ProtectedRoute><Bookings /></ProtectedRoute>}
         {page == 'Profile' && <ProtectedRoute><Profile /></ProtectedRoute>}
         {page == 'not' && <Not_found />}

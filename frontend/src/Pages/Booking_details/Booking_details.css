@@ -1,0 +1,159 @@
+.booking_details_main{
+    margin: 8% 5%;
+    padding: 0%;
+}
+.booking_details_main span{
+    color: #98989a;
+}
+
+.booking_details_main .details{
+    margin: 0%;
+    padding: 0%;
+    border-radius: 15px;
+    border: 2px solid var(--strok-color);
+
+}
+
+.booking_details_main .row{
+    margin: 1% 0%;
+    padding: 0% 3%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.booking_details_main .row img{
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}
+
+.booking_details_main .row .status{
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+    width: 150px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.booking_details_main .row .created{
+    background-color: rgb(212, 255, 0);
+}
+
+.booking_details_main .row .accepted{
+    background-color: rgb(0, 153, 255);
+}
+
+.booking_details_main .row .rejected{
+    background-color: red;
+}
+
+.booking_details_main .row .canceled{
+    background-color: red;
+}
+
+.booking_details_main .row .completed{
+    background-color: rgb(20, 203, 20);
+}
+
+.booking_details_main .row .pending{
+    background-color: rgb(90, 90, 90);
+}
+.booking_details_main .row h3{
+    color: var(--icon-color);
+    display: flex;
+    align-items: center;
+    margin: 0%;
+}
+.booking_details_main .row svg{
+    color: var(--icon-color);
+    font-size: 35px;
+    display: flex;
+    align-items: center;
+    margin: 0%;
+    cursor: pointer;
+}
+
+.booking_details_main .bootam_part{
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.booking_details_main .bootam_part .left{
+    padding: 0% 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.booking_details_main .bootam_part .left img{
+    width: 80%;
+    height: 80%;
+    border-radius: 5px;
+}
+
+.booking_details_main .bootam_part .right  {
+    padding: 3% 0%;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+}
+
+.booking_details_main .bootam_part .right h4{
+    color: var(--title-color);
+}
+
+.booking_details_main .bootam_part .right button{
+    color: #98989a;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--strok-color);
+    border-radius: 5px;
+    width: 80%;
+    height: 40px;
+    cursor: pointer;
+}
+
+.booking_details_main .bootam_part .right button:hover{
+    background-color: var(--secondary-icon-color);
+}
+
+
+
+@media screen and (max-width: 900px) {
+    .booking_details_main{
+        margin: 15% 5%;
+        padding: 0%;
+    }
+} 
+
+@media screen and (max-width: 500px) {
+    .booking_details_main{
+        margin: 20% 5%;
+        padding: 0%;
+    }
+    .booking_details_main .row h3{
+        display: none;
+    }
+    
+    .booking_details_main .bootam_part .right  {
+        padding: 3% 7%;
+        flex-direction: column;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .booking_details_main .bootam_part .right button {
+        width: 100%;
+    }
+} 
