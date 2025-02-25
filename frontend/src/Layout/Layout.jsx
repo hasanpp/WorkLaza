@@ -17,7 +17,7 @@ import ProtectedRoute from '../Compenets/ProtectedRoute/ProtectedRoute'
 import { useDispatch, useSelector } from 'react-redux';
 import { getGeolocation } from '../Compenets/Address/GetAddress';
 import API from '../api';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { logout } from '../authSlice';
 
 export const PageContext = createContext();

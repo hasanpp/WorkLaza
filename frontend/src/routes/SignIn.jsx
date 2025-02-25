@@ -4,8 +4,7 @@ import logo from '../assets/logo.png';
 import './SignIn.css';
 import API from '../api';
 import { useState,useEffect,useContext } from 'react';
-import {  toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'sonner';
 import { LoadingContext } from '../App';
 import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch,useSelector } from 'react-redux';
@@ -70,7 +69,7 @@ const SignIn = () => {
                 
             const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
             dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
-                
+            toast.success(res?.data?.message)   
         } catch (error) {
             toast.error(error?.response?.data?.message);
             console.log(error);

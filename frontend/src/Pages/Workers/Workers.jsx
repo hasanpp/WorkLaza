@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState, useContext } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import search_i from '../../assets/Search.svg';
 import user_icon from '../../assets/user.png';
 import API from '../../api';
@@ -10,7 +10,8 @@ import { Postage, X } from 'react-bootstrap-icons';
 import { LoadingContext } from '../../App';
 import { PageContext } from '../../Layout/Layout';
 import { useSelector } from "react-redux";
-
+import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import axios from 'axios';
 
 const Workers = () => {
 
@@ -59,8 +60,10 @@ const Workers = () => {
         return
     }
     try {
-        const res = await API.post('user/save_worker/',{'worker_id':worker_id})
-        toast.success(res?.data?.message)
+      await secureRequest(async () => {
+        const res = await API.post("user/save_worker/", { worker_id });
+        toast.success(res?.data?.message);
+    });
     } catch (err) {
         console.log(err)
         toast.error(err?.response?.data?.message)
@@ -72,7 +75,7 @@ const Workers = () => {
       setIsLoading(true)
       try {
         const l_res = await getcords();
-        const res = await API.post('user/view_workers/',{'longitude':l_res.longitude,'latitude':l_res.latitude});
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}user/view_workers/`,{'longitude':l_res.longitude,'latitude':l_res.latitude});
         setWorkers(res?.data?.Workers);
         setFilteredWorkers(res?.data?.Workers);
       } catch (err) {

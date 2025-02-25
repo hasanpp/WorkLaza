@@ -15,6 +15,7 @@ class Booking(models.Model):
     details = models.TextField()
     booked_date = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
     booking_date = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
+    title = models.TextField( blank=True, null=True)
     booking_time = models.TimeField(blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     longitude = models.FloatField(blank=False, null=False)
@@ -32,5 +33,21 @@ class Booking(models.Model):
         ('liked', 'User Like'),
     ]
     status = models.CharField( max_length=10, choices=STATUS_CHOICES, default='created' )
+    
+    def __str__(self):
+        return f"{self.title}"
 
     
+class Review(models.Model):
+    
+    RATINGS = [ (0.5, '0.5'), (1, '1'), (1.5, '1.5'), (2, '2'), (2.5, '2.5'), (3, '3'), (3.5, '3.5'), (4, '4'), (4.5, '4.5'), (5, '5')]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    worker =  models.ForeignKey(Worker, on_delete=models.CASCADE)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='review')
+    rating = models.DecimalField( max_digits=2,  decimal_places=1,  choices=RATINGS,  default=5 )
+    title = models.CharField(max_length=50)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"Review by {self.user.username} for Booking {self.booking.title}"

@@ -4,7 +4,7 @@ import { useEffect,useState,useContext } from 'react';
 import { SearchContext } from '../Admin';
 import { LoadingContext } from '../../App';
 import API from '../../api';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Ban, ArrowRepeat, X } from 'react-bootstrap-icons';
 

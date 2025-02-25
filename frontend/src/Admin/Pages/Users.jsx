@@ -3,7 +3,7 @@ import './Users.css';
 import chat_with_user from '../../assets/Admin_icones/Chat_to_user.png';
 import { Ban, ArrowRepeat } from 'react-bootstrap-icons';
 import API from '../../api';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useEffect, useState, useContext } from 'react';
 import { SearchContext } from '../Admin';
 import { Modal, Button, Form } from 'react-bootstrap'; 

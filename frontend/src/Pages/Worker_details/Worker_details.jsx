@@ -4,11 +4,12 @@ import { useSelector } from "react-redux";
 import './Worker_details.css';
 import PropTypes from 'prop-types';
 import API from '../../api';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import user_icon from '../../assets/user.png';
 import { X, CloudUpload } from 'react-bootstrap-icons'
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import { LoadingContext } from '../../App';
+import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
 
 
 const Worker_details = ({ worker_id }) => {
@@ -164,8 +165,10 @@ const Worker_details = ({ worker_id }) => {
             return
         }
         try {
-            const res = await API.post('user/save_worker/', { 'worker_id': worker_id })
-            toast.success(res?.data?.message)
+            await secureRequest(async () => {
+                const res = await API.post('user/save_worker/', { 'worker_id': worker_id })
+                toast.success(res?.data?.message)
+            });
         } catch (err) {
             console.log(err)
             toast.error(err?.response?.data?.message)
@@ -187,8 +190,10 @@ const Worker_details = ({ worker_id }) => {
             for (const key in formData) {
                 formDataToSend.append(key, formData[key]);
             }
-            const res = await API.post('user/book_worker/',formDataToSend)
-            toast.success(res?.data?.message)
+            await secureRequest(async () => {
+                const res = await API.post('user/book_worker/',formDataToSend);
+                toast.success(res?.data?.message);
+            });
         } catch (err) {
             toast.error(err?.response?.data?.error)
             toast.error(err?.response?.data?.message)
@@ -276,10 +281,13 @@ const Worker_details = ({ worker_id }) => {
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formPreviousIssues">
+                            <Form.Label>Work</Form.Label>
+                            <Form.Control style={{ backgroundColor: 'var(--secondary-color)' }} type="text" value={formData?.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder="What kind of work you need   ?" />
+                        </Form.Group>
+                        <Form.Group controlId="formPreviousIssues">
                             <Form.Label>Any Previous Issues</Form.Label>
                             <Form.Control style={{ backgroundColor: 'var(--secondary-color)' }} type="text" value={formData?.previousIssues} onChange={(e) => setFormData({ ...formData, previousIssues: e.target.value })} placeholder="Enter any previous issues" />
                         </Form.Group>
-
                         <Form.Group controlId="formDamagedParts">
                             <Form.Label>Damaged Parts (if any)</Form.Label>
                             <Form.Control style={{ backgroundColor: 'var(--secondary-color)' }} type="text" value={formData?.damagedParts} onChange={(e) => setFormData({ ...formData, damagedParts: e.target.value })} placeholder="Enter any damaged parts" />

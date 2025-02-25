@@ -2,15 +2,18 @@
 import './Profile.css';
 import user_icone from '../../assets/user.png'
 import { useEffect, useState, useRef } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import API from '../../api';
 import { Modal, Button, Form } from "react-bootstrap";
 import { X, PencilSquare } from 'react-bootstrap-icons'
 import { Cropper } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { useNavigate } from 'react-router-dom';
+import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../authSlice';
+
+
 const Profile = () => {
 
   const [user, setUser] = useState();
@@ -69,13 +72,12 @@ const Profile = () => {
       const formData = new FormData();
       formData.append("profile_picture", dataURLtoFile(croppedImage, "profile.jpg"));
 
-      const res = await API.post("user/upload_profile_picture/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await secureRequest(async () => {
+        const res = await API.post("user/upload_profile_picture/", formData, { headers: { "Content-Type": "multipart/form-data" }, });
+        toast.success(res.data.message);
+        setShow(false);
+        setUser((prev) => ({ ...prev, profile_picture: res.data.profile_picture }));
       });
-
-      toast.success(res.data.message);
-      setShow(false);
-      setUser((prev) => ({ ...prev, profile_picture: res.data.profile_picture }));
     } catch (error) {
       console.log(error.response);
 
@@ -85,11 +87,12 @@ const Profile = () => {
 
   const handleEditProfile= async () => {
     try {
-      const res = await API.post("user/edit_details/",formEditData);
-
-      toast.success(res?.data?.message)
-      setShowEdit(false)
-      setTb(!tb)
+      await secureRequest(async () => {
+        const res = await API.post("user/edit_details/",formEditData);
+        toast.success(res?.data?.message)
+        setShowEdit(false)
+        setTb(!tb)
+      });
     } catch (err) {
       toast.warning(err?.response?.data?.message)
     }

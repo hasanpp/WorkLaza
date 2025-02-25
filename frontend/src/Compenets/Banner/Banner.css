@@ -43,6 +43,7 @@ p{
     width: 100%;
     margin-left: 3.1px;
     border-bottom: 2px solid var(--strok-color);
+    flex-wrap: nowrap;
 }
 
 .left_b_under .left-b-spetial{

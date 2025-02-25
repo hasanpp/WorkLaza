@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { toast } from 'react-toastify'
+import { toast } from 'sonner';
 import './Worker.css'
 import API from '../api'
 import { useEffect, useState } from 'react'

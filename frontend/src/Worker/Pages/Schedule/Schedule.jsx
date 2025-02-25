@@ -2,7 +2,7 @@
 import './Schedule.css'
 import { useEffect, useState } from 'react'
 import { Trash3, PenFill, Ban,ArrowRepeat } from 'react-bootstrap-icons'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import API from '../../../api'
 
 const Schedule = () => {
@@ -78,7 +78,7 @@ const Schedule = () => {
       <span className='page_name'>Schedule</span>
       <div className="container-fluid">
         <div className="schedule-container row col-12">
-          <div className="flex i  tems-center space-x-4">
+          <div className="flex items-center space-x-4">
             <div className='week-inp'>
               <label className="text-sm font-medium">Week</label>
               <select value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)} className='decorated'>
@@ -138,44 +138,6 @@ const Schedule = () => {
           <br /> 
         </div>
       </div>
-      {/* <h1>Schedule Your Availability</h1>
-      <div>
-        <select value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)}>
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-          <option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
-          <option value="Sunday">Sunday</option>
-        </select>
-      </div>  
-
-      <div>
-        <input
-          type="time"
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-        />
-        <input
-          type="time"
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-        />
-      </div>
-
-      <button onClick={handleAddSlot}>Add Slot</button>
-
-      <div>
-        <h3>Scheduled Slots</h3>
-        {slots.map((slot, index) => (
-          <div key={index}>
-            {slot.day} {slot.startTime} - {slot.endTime}
-          </div>
-        ))}
-      </div> */}
-
-
     </div>
   )
 }

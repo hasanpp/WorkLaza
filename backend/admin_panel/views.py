@@ -5,7 +5,9 @@ from rest_framework import status
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from worker.serializers import WorkerSerializer,JobSerializer
+from booking.serializers import BookingSerializer
 from worker.models import *
+from booking.models import Booking
 from .utils import send_rejection_email
 
 User = get_user_model()
@@ -16,6 +18,18 @@ def view_jobs(*args, **kwargs):
     jobs = Jobs.objects.all().order_by('-id').values()
     serializer = JobSerializer(jobs, many=True) 
     return Response({'message': 'success','Jobs':serializer.data}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_bookings(*args, **kwargs):
+    try:
+        bookings = Booking.objects.all()
+        
+        serialized_data = BookingSerializer(bookings, many=True).data
+        
+        return Response({"message":"OK success","Bookings":serialized_data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -48,7 +62,9 @@ def restrict_user(request,*args, **kwargs):
         user.save()
         return Response({"message": "User status updated successfully!","status":user.is_active})
     except User.DoesNotExist:
-        return Response({"message": "User not found."}, status=404)
+        return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -60,7 +76,9 @@ def restrict_job(request,*args, **kwargs):
         job.save()
         return Response({"message": "JOB status updated successfully!","status":job.is_active})
     except User.DoesNotExist:
-        return Response({"message": "JOB not found."}, status=404)
+        return Response({"message": "JOB not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -70,9 +88,11 @@ def restrict_worker(request,*args, **kwargs):
         worker = Worker.objects.get(id=worker_id)
         worker.is_active = not worker.is_active  
         worker.save()
-        return Response({"message": "Worker status updated successfully!"},status=200)
-    except:
-        return Response({"message": "Worker not found."}, status=404)
+        return Response({"message": "Worker status updated successfully!"},status=status.HTTP_200_OK)
+    except Worker.DoesNotExist:
+        return Response({"message": "Worker not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -95,7 +115,9 @@ def edit_user(request,*args, **kwargs):
         user.save()
         return Response({"message": "User details updated successfully!","status":user.is_active})
     except User.DoesNotExist:
-        return Response({"message": "User not found."}, status=404)
+        return Response({"message": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['POST'])
@@ -109,9 +131,11 @@ def edit_job(request,*args, **kwargs):
         job.title = title
         job.description = description
         job.save()
-        return Response({"message": "JOB details updated successfully!"},status=200)
+        return Response({"message": "JOB details updated successfully!"},status=status.HTTP_200_OK)
     except User.DoesNotExist:
-        return Response({"message": "JOB not found."}, status=404)
+        return Response({"message": "JOB not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['POST'])
@@ -139,9 +163,11 @@ def edit_worker(request,*args, **kwargs):
         worker.previous_company = previous_company
         worker.description = description
         worker.save()
-        return Response({"message": "Worker details updated successfully!"},status=200)
-    except :
-        return Response({"message": "Worker not found."}, status=404)
+        return Response({"message": "Worker details updated successfully!"},status=status.HTTP_200_OK)
+    except Worker.DoesNotExist:
+        return Response({"message": "Worker not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -155,21 +181,23 @@ def create_user(request,*args, **kwargs):
         password = request.data.get('password')
         
         if User.objects.filter(phone=phone).exists():
-            return Response({"message":"A user with this phone number already exists."},status=401)
+            return Response({"message":"A user with this phone number already exists."},status=status.HTTP_401_UNAUTHORIZED)
         
         if User.objects.filter(email=email).exists():
-            return Response({"message":"A user with this Email id already exists."},status=401)
+            return Response({"message":"A user with this Email id already exists."},status=status.HTTP_401_UNAUTHORIZED)
         
         if User.objects.filter(username=username).exists():
-            return Response({"message":"A user with this Username already exists."},status=401)
+            return Response({"message":"A user with this Username already exists."},status=status.HTTP_401_UNAUTHORIZED)
         
         user = User.objects.create(username=username,email=email,phone=phone,first_name=first_name,last_name=last_name,is_authenticated=True)
         user.set_password(password)
         user.save()
                 
-        return Response({"message": "User created successfully!"},status=201)
+        return Response({"message": "User created successfully!"},status=status.HTTP_201_CREATED)
     except KeyError :
-        return Response({"message":"Please rtecheck data"},status=401)
+        return Response({"message":"Please rtecheck data"},status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -191,7 +219,7 @@ def create_worker(request,*args, **kwargs):
         previous_company = request.data.get('previous_company')
         
         if Worker.objects.filter(user=user).exists():
-            return Response({"message":"A Worker with this user model already exists."},status=401)
+            return Response({"message":"A Worker with this user model already exists."},status=status.HTTP_401_UNAUTHORIZED)
         user.is_worker = True
         user.save()
         worker = Worker.objects.create(
@@ -210,10 +238,9 @@ def create_worker(request,*args, **kwargs):
             user=user
         )
         
-        return Response({"message": "Worker created successfully!"},status=201)
-    except :
-        
-        return Response({"message":"Please rtecheck data"},status=401)
+        return Response({"message": "Worker created successfully!"},status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     
 @api_view(['POST'])
@@ -225,13 +252,12 @@ def create_job(request,*args, **kwargs):
         
         
         if Jobs.objects.filter(title__iexact=title).exists():
-            return Response({"message":"A JOB with this title already exists."},status=401)
+            return Response({"message":"A JOB with this title already exists."},status=status.HTTP_401_UNAUTHORIZED)
         job = Jobs.objects.create(title = title, description=description )
         
-        return Response({"message": "JOB created successfully!"},status=201)
-    except :
-        
-        return Response({"message":"Please rtecheck data"},status=401)
+        return Response({"message": "JOB created successfully!"},status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['POST'])
@@ -244,7 +270,7 @@ def process_worker_request(request,*args, **kwargs):
         if accept == 'true' :
             worker.is_verified = True 
             worker.save()
-            return Response({"message": "Worker status updated successfully!"},status=200)
+            return Response({"message": "Worker status updated successfully!"},status=status.HTTP_200_OK)
         elif accept == 'false':
             user = User.objects.filter(worker_profile__id=worker_id).first()
             reason = request.data.get('reason')
@@ -252,6 +278,10 @@ def process_worker_request(request,*args, **kwargs):
             user.is_worker = False
             user.save()
             worker.delete()
-            return Response({"message": "Worker deleted successfully!"},status=200)
+            return Response({"message": "Worker deleted successfully!"},status=status.HTTP_200_OK)
     except Worker.DoesNotExist:
-        return Response({"message": "Worker not found."}, status=404)
+        return Response({"message": "Worker not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+

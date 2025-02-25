@@ -1,9 +1,10 @@
 import { useEffect, useState, useContext } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { PageContext } from '../../Layout/Layout';
 import API from '../../api'
 import './Saved.css'
 import user_icon from '../../assets/user.png';
+import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
 
 
 const Saved = () => {
@@ -18,7 +19,6 @@ const Saved = () => {
       try {
         const res = await API.get('user/view_saved_worker/')
         setWorkers(res?.data?.workers)
-        toast.info(res?.data?.message)
       } catch (err) {
         toast.error(err?.response?.data?.message)
       }
@@ -28,9 +28,11 @@ const Saved = () => {
 
   const remove_saved = async (worker_id)=>{
     try {
-      const res = await API.post('user/remove_saved_worker/',{'worker_id':worker_id})
-      toast.success(res?.data?.message)
-      setTb(!tb)
+      await secureRequest(async () => {
+        const res = await API.post('user/remove_saved_worker/',{'worker_id':worker_id})
+        toast.success(res?.data?.message)
+        setTb(!tb)
+      });
     } catch (err) {
       toast.error(err?.response?.data?.message)
     }

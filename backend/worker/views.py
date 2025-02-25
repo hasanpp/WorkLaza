@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Worker,Jobs, WorkerAvailability as Slots
 from .serializers import WorkerSerializer,JobSerializer, SlotSerializer
+from booking.models import Booking
+from booking.serializers import BookingSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from django.conf import settings
@@ -58,8 +60,8 @@ def worker_view(request,*args, **kwargs):
                 return Response({'messages':'The user des not have a worker profile'},status=status.HTTP_401_UNAUTHORIZED)
         elif not user.is_worker :
             return Response({'messages':"You don't have access to this page"},status=status.HTTP_401_UNAUTHORIZED)
-    except:
-        return Response({'messages':"You don't have access to this page"},status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({'messages':str(e)},status=status.HTTP_401_UNAUTHORIZED)
     
     
     
@@ -85,8 +87,8 @@ def view_details(request,*args, **kwargs):
         seriloised_data = WorkerSerializer(worker).data
         seriloised_data.update({'job':job_title})
         return Response({'messages':"Data featch successfully",'worker':seriloised_data },status=status.HTTP_200_OK)
-    except:
-        return Response({'messages':"An error occurd"},status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({'messages':str(e)},status=status.HTTP_401_UNAUTHORIZED)
     
 
 @api_view(['POSt'])
@@ -123,8 +125,8 @@ def edit_details(request,*args, **kwargs):
         worker.qualification = qualification
         worker.save()
         return Response({'message':"Data Updated successfully" },status=status.HTTP_200_OK)
-    except:
-        return Response({'message':"An error occurd"},status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({'message':str(e)},status=status.HTTP_401_UNAUTHORIZED)
     
     
     
@@ -142,8 +144,25 @@ def view_slot(request,*args, **kwargs) :
         slotSerializer = SlotSerializer(slots, many=True).data
         
         return Response({'message':"Slots get successfully",'slots':slotSerializer },status=status.HTTP_200_OK) 
-    except: 
-        return Response({'message':"Slots not found"},status=status.HTTP_409_CONFLICT) 
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_bookings(request,*args, **kwargs) :
+    token = request.headers['Authorization'][7:]
+    decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
+    user_id = decoded['user_id']
+    try:
+        user = User.objects.get(id=user_id)
+        worker = Worker.objects.get(user=user)
+        
+        bookings = Booking.objects.filter(worker=worker).exclude(status="canceled").order_by('-id')
+        serializer = BookingSerializer(bookings, many=True)
+        
+        return Response({'message':"Bookings featch successfully",'Bookings':serializer.data },status=status.HTTP_200_OK) 
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -164,8 +183,8 @@ def add_slot(request,*args, **kwargs) :
         
         return Response({'message':"Slot created successfully"},status=status.HTTP_200_OK) 
     
-    except: 
-        return Response({'message':"Slots can't add now the time have some mistakes"},status=status.HTTP_409_CONFLICT) 
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -178,8 +197,8 @@ def ban_slot(request,*args, **kwargs) :
         
         return Response({'message':"Slot status updated successfully"},status=status.HTTP_200_OK) 
     
-    except: 
-        return Response({'message':"Slots status can't change now"},status=status.HTTP_409_CONFLICT) 
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -191,6 +210,20 @@ def delete_slot(request,*args, **kwargs) :
         
         return Response({'message':"Slot status updated successfully"},status=status.HTTP_200_OK) 
     
-    except: 
-        return Response({'message':"Slots can't delete now"},status=status.HTTP_409_CONFLICT) 
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
+    
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def change_booking_status(request, booking_id, *args, **kwargs) : 
+    try:
+        booking_status = request.data.get('status')
+        booking =  Booking.objects.get(id=booking_id)
+        booking.status = booking_status
+        booking.save()
+        return Response({'message':"Booking status updated successfully"},status=status.HTTP_200_OK) 
+    
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
+    
     

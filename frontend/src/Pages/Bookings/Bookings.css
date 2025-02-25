@@ -133,6 +133,69 @@
 }
 
 
+
+
+.main_booking .booking_div .last_part .testimonial-box {
+    background: var(--secondary-color);
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--strok-color);
+}
+
+.main_booking .booking_div .last_part .testimonial-box .stars {
+    background: var(--secondary-icon-color);
+    border: 1px solid var(--strok-color);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 3px 15px 0px 15px;
+    border-radius: 30px;
+    margin: -5% 10% 0% 10%;
+}
+
+.main_booking .booking_div .last_part .testimonial-box .stars svg {
+    color: var(--icon-color); 
+    margin: 0%;
+    font-size: 30px ;
+}
+
+.main_booking .booking_div .last_part .testimonial-box .review-text {
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 5px 20px 0px 30px;
+    color: var(--title-color);
+}
+
+
+.MuiBox-root .css-1xc33vf-MuiRating-root {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    position: relative;
+    font-size: 1.5rem;
+    color: var(--icon-color);
+    cursor: pointer;
+    text-align: left;
+    width: -webkit-min-content;
+    width: -moz-min-content;
+    width: min-content;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.css-jm3i9k {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
 @media screen and (max-width: 500px) {
     .main_booking{
         margin: 20% 0%;

@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import './Home.css'
-import 'react-toastify/dist/ReactToastify.css';
 import Banner from '../../Compenets/Banner/Banner'
 import { useContext } from 'react';
 import { LoadingContext } from '../../App';
@@ -82,12 +81,12 @@ const Home = () => {
           </div>
         </div> 
       </div>
-
-      <div className="conectivity container-fluid">
-        <span>A Knowledge Treasure Trove</span>
-        <h2>Popular Professionals in Your Area</h2>
-      </div>
-      <br /><br /><br />
+      {/* 
+        <div className="conectivity container-fluid">
+          <span>A Knowledge Treasure Trove</span>
+          <h2>Popular Professionals in Your Area</h2>
+        </div> 
+      */}
       <div className="conectivity container-fluid">
         <span>What Our Customers  Say</span>
         <h2>Real Words from Customers</h2>

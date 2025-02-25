@@ -21,6 +21,11 @@
     padding: 2% 6%;
 }
 
+.schedule-container div{
+    display: flex;
+    flex-wrap: wrap;
+}
+
 
 .schedule-container div .add_slot{
     height: 40px;

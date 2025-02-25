@@ -16,7 +16,7 @@ from django.conf import settings
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from  worker.models import *
 from datetime import datetime,timedelta
-from  booking.models import Booking
+from  booking.models import Booking, Review
 from booking.serializers import BookingSerializer
 from math import sin, cos, sqrt, atan2, radians
 import jwt
@@ -45,6 +45,8 @@ def get_emaiil_from_id(request,  *args, **kwargs):
         return Response({'message': 'success','email':user.email}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({'message': 'No user exists with this identifire'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -62,6 +64,8 @@ def change_password(request,  *args, **kwargs):
         return Response({'message': 'Password changed successfully', "username":user.username}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({'message': 'No user exists with this identifire'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -74,6 +78,8 @@ def send_otp(request,  *args, **kwargs):
         return Response({'message': 'OTP sent successfully!'}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({'message': 'No user exists with this email'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -89,6 +95,8 @@ def verify_otp(request,  *args, **kwargs):
         return Response({'message': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         return Response({'message': 'No user exists with this email'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
 class SignupView(APIView):
@@ -169,8 +177,8 @@ def view_profile(request, *args, **kwargs):
         user = User.objects.get(id=user_id)
         serializer = UserSerializer(user)
         return Response({'user':serializer.data}, status=status.HTTP_200_OK)
-    except:
-        return Response({ 'message' :"The user not found"}, status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({ 'message' :str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
@@ -208,8 +216,8 @@ def edit_details(request, *args, **kwargs):
             user.last_name = last_name
         user.save()
         return Response({'message':'The user details updated successfully'}, status=status.HTTP_200_OK)
-    except:
-        return Response({ 'message' :"The user not found"}, status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({ 'message' :str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
@@ -342,10 +350,9 @@ def view_workers(request, *args, **kwargs):
         # serialized_data = WorkersSerializer(workers, many=True).data
         
         return Response({"message":"OK success","Workers":serialized_data}, status=status.HTTP_200_OK)
-    except :
-        return Response({"message":"No workers awailable in your area"}, status=status.HTTP_400_BAD_REQUEST)
-
-
+    except Exception as e:
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def view_worker(request, *args, **kwargs):
@@ -356,8 +363,29 @@ def view_worker(request, *args, **kwargs):
         
         serialized_data = WorkersSerializer(worker ).data
         return Response({"message":"got the worker data","worker":serialized_data}, status=status.HTTP_200_OK)
-    except: 
-        return Response({"message":"There are No workers with this id"}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e: 
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def review_booking(request, *args, **kwargs):
+    
+    try:
+        booking_id = request.data.get('id')
+        rating = request.data.get('rating')
+        title = request.data.get('title')
+        description = request.data.get('description')
+        
+        booking = Booking.objects.get(id=booking_id)
+        
+        review = Review.objects.create( user=booking.user, worker=booking.worker, booking=booking, rating=rating, title=title, description=description )
+        
+        
+        return Response({"message":"Your review has been posted"}, status=status.HTTP_201_CREATED)
+    
+    except Exception as e: 
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -440,6 +468,7 @@ def book_worker (request, *args, **kwargs):
             previousIssues = request.data.get('previousIssues')
             damagedParts = request.data.get('damagedParts')
             issueDescription = request.data.get('issueDescription')
+            title = request.data.get('title')
             duration = int(request.data.get('duration'))
             total = int(request.data.get('total'))
             
@@ -482,6 +511,7 @@ def book_worker (request, *args, **kwargs):
             duration=str(duration),
             status='created',
             total=total,
+            title=title,
             )
             
             image = request.data.get('photo')
@@ -509,7 +539,7 @@ def view_bookings(request, *args, **kwargs):
         decoded = jwt.decode(token, JWT_SECRET_KEY, algorithms=['HS256'])
         user_id = decoded['user_id']
         user = User.objects.get(id=user_id)
-        bookings = Booking.objects.filter(user=user)
+        bookings = Booking.objects.filter(user=user).order_by('-id')
         
         serialized_data = BookingSerializer(bookings, many=True).data
         

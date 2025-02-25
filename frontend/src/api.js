@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { store } from './store'
-
-
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const API = axios.create({
@@ -12,13 +10,11 @@ const API = axios.create({
     },
 });
 
-
-
-
 API.interceptors.request.use(
     (config) =>{
         const token = store.getState().auth.accessToken
         if (token) {
+            console.log(token)
             config.headers.Authorization = `Bearer ${token}`
         }
         return config

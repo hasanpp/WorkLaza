@@ -4,7 +4,7 @@ import './Profile.css'
 import "cropperjs/dist/cropper.css";
 import user_icone from '../../../assets/user.png'
 import { useEffect, useState, useRef, useContext } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import API from '../../../api';
 import { Modal, Button, Form } from "react-bootstrap";
 import { X, PencilSquare,CloudUpload } from 'react-bootstrap-icons'
@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../../authSlice';
 import { getAddressFromCoordinates,getGeolocation } from '../../../Compenets/Address/GetAddress'
 import { LoadingContext } from '../../../App';
+
 
 const Profile = () => {
 
@@ -263,7 +264,7 @@ const Profile = () => {
             </div>
             <div className="form-group last_buttons">
               <br />
-              <button className='ch_location' onClick={handleChangeLocation}>Change location to heare</button>
+              <button className='ch_location' onClick={handleChangeLocation}>Change location to here</button>
               <br /><br />
               <button className='save_details' onClick={handleSaveworker}>Save details</button>
             </div>

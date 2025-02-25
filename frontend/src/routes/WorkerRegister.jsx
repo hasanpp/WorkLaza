@@ -2,7 +2,7 @@ import './WorkerRegister.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { CloudUpload } from 'react-bootstrap-icons'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
 import API from '../api';
 import { logout } from '../authSlice';

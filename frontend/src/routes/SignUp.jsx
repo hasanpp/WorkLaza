@@ -4,8 +4,7 @@ import logo from '../assets/logo.png';
 import { useEffect, useState, useContext } from 'react';
 import './SignUP.css';
 import API from '../api';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 import { useSelector } from 'react-redux';
 import { LoadingContext } from '../App';
 

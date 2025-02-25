@@ -6,6 +6,7 @@ urlpatterns = [
     path('view_users/', view_users, name='view_users'),
     path('view_requests/', view_requests, name='view_requests'),
     path('view_workers/', view_workers, name='view_workers'),
+    path('view_bookings/', view_bookings, name='view_bookings'),
     path('restrict_user/', restrict_user, name='restrict_user'),
     path('restrict_job/', restrict_job, name='restrict_job'),
     path('restrict_worker/', restrict_worker, name='restrict_worker'),

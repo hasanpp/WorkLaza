@@ -3,8 +3,7 @@ import API from '../../api';
 import {useNavigate} from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import './EnterOTP.css';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 import { LoadingContext } from '../../App';
 import { useSelector } from 'react-redux';
 const EnterOTP = () => {

@@ -11,6 +11,7 @@ urlpatterns = [
     path('view_workers/', view_workers, name='view_workers'),
     path('view_bookings/', view_bookings, name='view_bookings'),
     path('view_booking/<int:booking_id>', view_booking, name='view_booking'),
+    path('review_booking/', review_booking, name='review_booking'),
     path('book_worker/', book_worker, name='book_worker'),
     path('cancel_booking/<int:booking_id>', cancel_booking, name='cancel_booking'),
     path('view_worker/', view_worker, name='view_worker'),

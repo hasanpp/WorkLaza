@@ -4,11 +4,11 @@ import Loader from './Compenets/Loader/Loader';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { createContext, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Provider } from 'react-redux';
 import { store, persistor } from './store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { Toaster } from 'sonner'
 
 export const LoadingContext = createContext();
 
@@ -26,7 +26,7 @@ function App() {
               <RouteSets />
             </LoadingContext.Provider>
             {isLoading && <Loader />}
-            <ToastContainer theme='dark' />
+            <Toaster position="top-right" theme="dark" richColors={true}/>
           </GoogleOAuthProvider>
         </PersistGate>
       </Provider>

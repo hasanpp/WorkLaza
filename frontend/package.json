@@ -10,6 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.5",
+    "@mui/material": "^6.4.5",
+    "@mui/styled-engine-sc": "^6.4.3",
     "@radix-ui/react-popover": "^1.1.6",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.5.1",
@@ -33,6 +38,8 @@
     "react-toastify": "^11.0.3",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "sonner": "^2.0.1",
+    "styled-components": "^6.1.15",
     "sweetalert2": "^11.6.13"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { LoadingContext } from '../../App';
 import { useContext, useState, useEffect } from 'react';
 import logo from '../../assets/logo.png'
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import API from '../../api';
 import { useDispatch,useSelector } from 'react-redux';
 import { login } from '../../authSlice';

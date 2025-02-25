@@ -4,7 +4,6 @@ import logo from '../../assets/logo.png'
 import { Person } from 'react-bootstrap-icons';
 import { useContext } from 'react'; 
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { PageContext } from '../../Layout/Layout';
 import PropTypes from 'prop-types';
