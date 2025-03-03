@@ -33,7 +33,7 @@ const ChangePassword = () => {
 
                 const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
                 toast.success('Password changed successfully');
-                dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.username, first_name: data_res.first_name, last_name: data_res.last_name, role: data_res.role}))
+                dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.username, user_id: data_res.id, first_name: data_res.first_name, last_name: data_res.last_name, role: data_res.role}))
             }
             catch(err) {
                 toast(err.response.data.message)

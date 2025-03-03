@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './Bookings.css';
 import user_icone from '../../assets/user.png';
 import { ChatLeftDots, X, StarFill, Star, StarHalf } from 'react-bootstrap-icons';
@@ -10,7 +11,7 @@ import Swal from "sweetalert2";
 import { Modal, Button } from 'react-bootstrap';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
-import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 
 const Bookings = () => {
 
@@ -27,7 +28,8 @@ const Bookings = () => {
     const feachData = async () => {
       setIsLoading(true)
       try {
-        const res = await API.get('user/view_bookings/')
+        const res = await API.get('/user/view_bookings/')
+        console.log(res?.data?.Bookings)
         setBookings(res?.data?.Bookings)
       } catch (err) {
         toast.error(err?.response?.data?.message)
@@ -42,7 +44,7 @@ const Bookings = () => {
     setIsLoading(true);
     try {
       await secureRequest(async () => {
-        const res = await API.post('user/review_booking/', formData);
+        const res = await API.post('/user/review_booking/', formData);
         toast.success(res?.data?.message);
         setShowModal(false);
         setTb(!tb);
@@ -103,7 +105,7 @@ const Bookings = () => {
         setIsLoading(true)
         try {
           await secureRequest(async () => {
-            const res = await API.patch(`user/cancel_booking/${booking_id}`)
+            const res = await API.patch(`/user/cancel_booking/${booking_id}`)
             setTb(!tb)
             toast.success(res?.data?.message);
           });
@@ -114,6 +116,13 @@ const Bookings = () => {
         }
       }
     });
+  };
+
+  const handleChatOpen = (workerId, bookingId) => {
+    setPage(`Chat`); 
+    localStorage.setItem('page', `Chat`);
+    localStorage.setItem("chatWorkerId", workerId); 
+    localStorage.setItem("bookingId", bookingId);
   };
 
   return (
@@ -142,7 +151,7 @@ const Bookings = () => {
                   {booking?.status == 'created' && <button onClick={() => showConfirmAlert(booking?.id)}>Cancel now</button>}
                 </div>
                 <div className="col-lg-3 col-6">
-                  <ChatLeftDots />
+                  <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.id,booking?.id)}/>
                   <button onClick={() => { setPage(`Booking_details/${booking?.id}`), localStorage.setItem('page', `Booking_details/${booking?.id}`) }} >View Details</button>
                 </div>
                 <div className="col-lg-3 col-6 last_part">

@@ -1,0 +1,31 @@
+.payments_div{
+    margin: 0% 5%;
+    padding: 0% 0%;
+}
+.payments_div span{
+    color: #98989a;
+}
+.payments_div .top_row{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: white;
+}
+.payments_div .top_row h2 {
+    margin: 0%;
+}
+.payments_div .top_row button{
+    border-radius: 5px;
+    cursor: pointer;
+}
+.payments_div .top_row h2 span{
+    color: red;
+    font-weight: 600;
+}
+.payments_div h1{
+    color: var(--icon-color);
+    text-align: center;
+    margin: 0%;
+    align-content: center
+}

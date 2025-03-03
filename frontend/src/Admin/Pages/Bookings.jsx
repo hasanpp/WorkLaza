@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
-import './Bookings.css'
+import './Bookings.css';
 import { useEffect, useState, useContext } from 'react';
 import { SearchContext } from '../Admin';
 import API from '../../api';
 import { toast } from 'sonner';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { X } from 'react-bootstrap-icons'
+import { X } from 'react-bootstrap-icons';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
+
 
 const Bookings = () => {
   const [bookings, setBookings] = useState();
@@ -24,9 +26,12 @@ const Bookings = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await API.get('admin_view/view_bookings/');
-        setBookings(res?.data?.Bookings);
-        setSortedBookings(res?.data?.Bookings);
+        await secureRequest(async () => {
+
+          const res = await API.get('/admin_view/view_bookings/');
+          setBookings(res?.data?.Bookings);
+          setSortedBookings(res?.data?.Bookings);
+        });
       } catch (error) {
         toast.error(error?.response?.data?.message);
       }
@@ -83,7 +88,8 @@ const Bookings = () => {
 
 
   return (
-    <div>
+    <div className="content-admin">
+      <div>
       <div className="top_row">
         <h1>Bookings</h1>
       </div>
@@ -232,6 +238,8 @@ const Bookings = () => {
 
 
     </div>
+    </div>
+    
   )
 }
 

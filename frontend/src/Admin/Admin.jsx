@@ -7,10 +7,10 @@ import Users from "./Pages/Users";
 import Workers from "./Pages/Workers";
 import Chats from "./Pages/Chats";
 import Bookings from "./Pages/Bookings";
-import Files from "./Pages/Files";
 import Requests from "./Pages/Requests";
-import Settings from "./Pages/Settings";
 import Categoryes from "./Pages/Categoryes";
+import Wallet from './Pages/Wallet'
+import ProtectedRoute from '../Compenets/ProtectedRoute/ProtectedRoute'
 import { useSelector } from 'react-redux';
 import './Admin.css'
 
@@ -57,19 +57,16 @@ const Admin = () => {
       <PageContext.Provider value={setPage}>
         <Top/>
         <Left page={page} />
-        <div className="content-admin">
-          {page == 'Dash' && <Dashboard />}
-          {page == 'Categoryes' && <Categoryes />}
-          {page == 'Users' && <Users/>}
-          {page == 'Workers' && <Workers/>}
-          {page == 'Chats' && <Chats/>}
-          {page == 'Bookings' && <Bookings/>}
-          {page == 'Files' && <Files/>}
-          {page == 'Settings' && <Settings/>}
-          {page == 'Requests' && <Requests/>}
-          <br /><br /><br /><br /><br /><br /><br /><br /><br />
-          <br /><br /><br /><br /><br /><br /><br /><br /><br />
-        </div>
+        
+        {page == 'Dash' && <ProtectedRoute><Dashboard/></ProtectedRoute>}
+        {page == 'Categoryes' && <ProtectedRoute><Categoryes /></ProtectedRoute>}
+        {page == 'Users' && <ProtectedRoute><Users/></ProtectedRoute>}
+        {page == 'Workers' && <ProtectedRoute><Workers/></ProtectedRoute>}
+        {page == 'Chats' && <ProtectedRoute><Chats/></ProtectedRoute>}
+        {page == 'Bookings' && <ProtectedRoute><Bookings/></ProtectedRoute>}
+        {page == 'Wallet' && <ProtectedRoute><Wallet/></ProtectedRoute>}
+        {page == 'Requests' && <ProtectedRoute><Requests/></ProtectedRoute>}
+        
       </PageContext.Provider>
     </SearchContext.Provider>
   )

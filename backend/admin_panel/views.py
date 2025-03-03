@@ -2,12 +2,16 @@ from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer
+from .serializers import UserSerializer,WalletSerializer
 from rest_framework.permissions import IsAuthenticated
 from worker.serializers import WorkerSerializer,JobSerializer
 from booking.serializers import BookingSerializer
 from worker.models import *
+from .models import Wallet
 from booking.models import Booking
+from django.db.models import Sum
+from django.utils import timezone
+from datetime import timedelta
 from .utils import send_rejection_email
 
 User = get_user_model()
@@ -30,6 +34,19 @@ def view_bookings(*args, **kwargs):
         return Response({"message":"OK success","Bookings":serialized_data}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_wallet(*args, **kwargs):
+    try:
+        wallet = Wallet.objects.all()
+        balence = Wallet.objects.filter(status="success",type="credit").aggregate(Sum('amount'))
+        serialized_data = WalletSerializer(wallet, many=True).data
+        return Response({"message":"OK success","Wallet":serialized_data, "balence":(balence['amount__sum']/100)}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -285,3 +302,26 @@ def process_worker_request(request,*args, **kwargs):
         return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_dash_board(*args, **kwargs):
+    try:
+        start_of_week = timezone.now() - timedelta(days=timezone.now().weekday())
+        start_of_last_week = start_of_week - timedelta(days=7)
+        end_of_last_week = start_of_week - timedelta(seconds=1)
+        
+        new_users = User.objects.filter(date_joined__gte=start_of_week).count()
+        new_users_last_week = User.objects.filter(date_joined__range=(start_of_last_week, end_of_last_week)).count()
+        new_bookings = Booking.objects.filter(booking_date__gte=start_of_week).count()
+        new_bookings_last_week = Booking.objects.filter(booking_date__range=(start_of_last_week, end_of_last_week)).count()
+        new_workers =  Worker.objects.filter(user__date_joined__gte=start_of_week).count()
+        new_workers_last_week =  Worker.objects.filter(user__date_joined__range=(start_of_last_week, end_of_last_week)).count()
+        
+        difference_new_users = new_users - new_users_last_week
+        difference_new_bookings = new_bookings - new_bookings_last_week
+        difference_new_workers = new_workers - new_workers_last_week
+        
+        
+        return Response({'message': "Data feached successfully!", "new_users":new_users, "difference_new_users": difference_new_users, "new_bookings":new_bookings, "difference_new_bookings":difference_new_bookings, "new_workers":new_workers, "difference_new_workers":difference_new_workers }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)

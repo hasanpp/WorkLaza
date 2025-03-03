@@ -2,11 +2,13 @@ import './Banner.css';
 import profetionals from '../../assets/profetionsls.png'
 import right_top_arrow from '../../assets/right-top-arrow.png'
 import { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { PageContext } from '../../Layout/Layout';
 
-const Banner = () => {
+const Banner = (props) => {
 
     const setPage = useContext(PageContext);
+    
     
 
     return (
@@ -25,22 +27,22 @@ const Banner = () => {
                     </p>
                     <div className="row left_b_under">
                         <div className="left-b-spetial">
-                            <h4>500<span>+</span></h4>
+                            <h4>{props?.siteData?.servicesDelivered}<span>+</span></h4>
                             <span>Services Delivered</span>
                         </div>
                         <div className="left-b-spetial">
-                            <h4>15k<span>+</span></h4>
+                            <h4>{props?.siteData?.registeredCustomers}<span>+</span></h4>
                             <span>Registered Customers</span>
                         </div>
                         <div className="left-b-spetial  ">
-                            <h4>8k<span>+</span></h4>
+                            <h4>{props?.siteData?.verifiedWorkers}<span>+</span></h4>
                             <span>Verified Workers</span>
                         </div>
                     </div>
                 </div>
                 <div className="col-12 col-md-12 col-lg-5 right-b">
                     <img src={profetionals} alt="" />
-                    <h2>Connect with 500+ Skilled Workers</h2>
+                    <h2>Connect with {props?.siteData?.verifiedWorkers}+ Skilled Workers</h2>
                     <p>Discover trusted professionals for all your needs, from home<    br/>repairs to specialized services.</p>
                     <button onClick={()=>{setPage('Workers') ,localStorage.setItem('page','Workers')}}>Find Services Now <img src={right_top_arrow} alt="" /></button>
                     <br />
@@ -73,4 +75,14 @@ const Banner = () => {
     )
 }
 
+Banner.propTypes = {
+    siteData: PropTypes.object
+};
+
+Banner.defaultProps = {
+    siteData: {servicesDelivered:50,registeredCustomers:50,verifiedWorkers:50}
+};
+
 export default Banner
+
+

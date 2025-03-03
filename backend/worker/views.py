@@ -1,15 +1,26 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.conf import settings
 from .models import Worker,Jobs, WorkerAvailability as Slots
 from .serializers import WorkerSerializer,JobSerializer, SlotSerializer
-from booking.models import Booking
+from booking.models import Booking, Review
 from booking.serializers import BookingSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
-from django.conf import settings
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.http import JsonResponse
+from rest_framework.permissions import IsAuthenticated , AllowAny
+from datetime import datetime
+from admin_panel.models import Wallet
+from admin_panel.serializers import WalletSerializer
+from django.views.decorators.csrf import csrf_exempt
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 import jwt
+import stripe
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 User = get_user_model()
 
@@ -86,7 +97,12 @@ def view_details(request,*args, **kwargs):
         job_title = worker.job.title
         seriloised_data = WorkerSerializer(worker).data
         seriloised_data.update({'job':job_title})
-        return Response({'messages':"Data featch successfully",'worker':seriloised_data },status=status.HTTP_200_OK)
+        reviews_count = Review.objects.filter(worker=worker).count()
+        today_date = datetime.today().date()
+        new_bookings =  Booking.objects.filter(worker=worker, booking_date=today_date).count()
+        today_tasks_count = Booking.objects.filter(worker=worker, booked_date=today_date).exclude(status='completed').count()
+        
+        return Response({'messages':"Data featch successfully",'worker':seriloised_data, 'reviews_count': reviews_count, 'new_bookings': new_bookings, 'today_tasks_count': today_tasks_count },status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'messages':str(e)},status=status.HTTP_401_UNAUTHORIZED)
     
@@ -215,15 +231,117 @@ def delete_slot(request,*args, **kwargs) :
     
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def change_booking_status(request, booking_id, *args, **kwargs) : 
+def change_booking_status(request, booking_id) : 
     try:
         booking_status = request.data.get('status')
         booking =  Booking.objects.get(id=booking_id)
         booking.status = booking_status
+        if booking.status == "accepted":
+            booking.worker.total_fee += 50
+            booking.worker.pending_fee += 50
+            booking.worker.save()
         booking.save()
+        
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+             f"user_{booking.user.id}",
+             {
+                "type":"send_notification",
+                "message":{
+                    "title":"Booking Update",
+                    "body": f"Your booking '{booking.title}' has been updated to '{booking_status}'.",
+                    "status": booking_status,
+                }
+             }
+        )
         return Response({'message':"Booking status updated successfully"},status=status.HTTP_200_OK) 
     
     except Exception as e: 
         return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
     
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def payment_view(request,*args, **kwargs):
+    try :
+        token = request.headers['Authorization'][7:]
+        decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
+        user_id = decoded['user_id']
+        user =  User.objects.get(id=user_id)
+        worker = Worker.objects.get(user=user)
+        wallets = Wallet.objects.filter(worker=worker)
+        serialized_data = WorkerSerializer(worker).data
+        p_seriolized_data =  WalletSerializer(wallets, many=True).data
+        return Response({'message':"Data fetched successfully",'worker':serialized_data,"wallet_rows":p_seriolized_data},status=status.HTTP_200_OK) 
+    except Exception as e: 
+        return Response({'message':str(e)},status=status.HTTP_409_CONFLICT) 
+    
+    
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def create_stripe_checkout_session(request, *args, **kwargs):
+    try:
+        token = request.headers['Authorization'][7:]
+        decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
+        user_id = decoded['user_id']
+        user =  User.objects.get(id=user_id)
+        
+        worker = Worker.objects.get(user=user)
+        
+        if worker.pending_fee <= 0: return Response({"message": "No pending payments"}, status=status.HTTP_400_BAD_REQUEST)
+
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "inr",
+                        "product_data": { "name": "Platform Fee", }, "unit_amount": int(worker.pending_fee * 100), 
+                    }, "quantity": 1,
+                }
+            ],
+            mode="payment",
+            success_url=f"http://localhost:5173/payment-success?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url="http://localhost:5173/payment-failed",
+            customer_email=request.user.email,
+        )
+
+        return Response({"checkout_url": checkout_session.url}, status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    
+@csrf_exempt    
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except ValueError as e:
+        return JsonResponse({"error": "Invalid payload"}, status=400)
+    except stripe.error.SignatureVerificationError as e:
+        return JsonResponse({"error": "Invalid signature"}, status=400)
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        email = session["customer_email"]
+        worker = Worker.objects.get(user__email=email)
+        worker.payed_fee += worker.pending_fee
+        worker.pending_fee = 0
+        worker.save()
+
+        Wallet.objects.create( user=worker.user, worker=worker, amount=session["amount_total"], pyment_id=session["id"], status="success", type="credit", )
+    return JsonResponse({"status": "success"}, status=200)
+
+
+# set PATH=%PATH%;C:\stripe-cli\
+# stripe listen --forward-to http://127.0.0.1:8000/worker/stripe-webhook/
+
+

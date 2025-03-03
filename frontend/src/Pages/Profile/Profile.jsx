@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import './Profile.css';
 import user_icone from '../../assets/user.png'
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import { toast } from 'sonner';
 import API from '../../api';
 import { Modal, Button, Form } from "react-bootstrap";
@@ -9,9 +9,10 @@ import { X, PencilSquare } from 'react-bootstrap-icons'
 import { Cropper } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { useNavigate } from 'react-router-dom';
-import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../authSlice';
+import { LoadingContext } from '../../App';
 
 
 const Profile = () => {
@@ -28,17 +29,20 @@ const Profile = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const cropperRef = useRef(null);
   const [tb , setTb] = useState(false);
+  const setIsLoading =  useContext(LoadingContext)
 
 
   const get_user_details = async () => {
-
+    setIsLoading(true)
     try {
-      const res = await API.get('user/view_profile/')
+      const res = await API.get('/user/view_profile/')
       setUser(res.data.user)
       setFormEditData({ first_name:res.data.user.first_name, last_name:res.data.user.last_name, phone:res.data.user.phone, username:res.data.user.username})
     } catch (error) {
       console.log(error)
       toast.error(error?.response?.data?.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -68,12 +72,13 @@ const Profile = () => {
       return;
     }
 
+    setIsLoading(true)
     try {
       const formData = new FormData();
       formData.append("profile_picture", dataURLtoFile(croppedImage, "profile.jpg"));
 
       await secureRequest(async () => {
-        const res = await API.post("user/upload_profile_picture/", formData, { headers: { "Content-Type": "multipart/form-data" }, });
+        const res = await API.post("/user/upload_profile_picture/", formData, { headers: { "Content-Type": "multipart/form-data" }, });
         toast.success(res.data.message);
         setShow(false);
         setUser((prev) => ({ ...prev, profile_picture: res.data.profile_picture }));
@@ -82,19 +87,24 @@ const Profile = () => {
       console.log(error.response);
 
       toast.error("Failed to update profile picture.");
+    } finally {
+      setIsLoading(false)
     }
   };
 
   const handleEditProfile= async () => {
+    setIsLoading(true)
     try {
       await secureRequest(async () => {
-        const res = await API.post("user/edit_details/",formEditData);
+        const res = await API.post("/user/edit_details/",formEditData);
         toast.success(res?.data?.message)
         setShowEdit(false)
         setTb(!tb)
       });
     } catch (err) {
       toast.warning(err?.response?.data?.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 

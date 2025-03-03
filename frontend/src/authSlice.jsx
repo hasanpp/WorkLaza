@@ -4,6 +4,7 @@ const initialState = {
     accessToken: null,
     refreshToken: null,
     username: null,
+    user_id:null,
     first_name: null,
     last_name: null,
     role: null,
@@ -19,6 +20,7 @@ const authSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.username = action.payload.username;
+            state.user_id = action.payload.user_id;
             state.first_name = action.payload.first_name;
             state.last_name = action.payload.last_name;
             state.role = action.payload.role;
@@ -32,6 +34,7 @@ const authSlice = createSlice({
             state.last_name = null;
             state.role = null;
             state.isAuthenticated = false;
+            state.user_id = null;
         },
     },
 });

@@ -1,30 +1,66 @@
 /* eslint-disable no-unused-vars */
 import './Home.css'
 import Banner from '../../Compenets/Banner/Banner'
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LoadingContext } from '../../App';
-import { StarFill,Star,StarHalf } from 'react-bootstrap-icons'
+import { StarFill, Star, StarHalf } from 'react-bootstrap-icons'
 import stay_conected from '../../assets/stay_conect.png'
 import trusted from '../../assets/trusted.png'
-import profile1 from '../../assets/profile1.png'
-import profile2 from '../../assets/profile2.png'
-import profile3 from '../../assets/profile3.png'
 import logo from "../../assets/logo.png";
 import top_right_arrow from '../../assets/top-right-arrow.png'
- 
+import { toast } from 'sonner';
+import API from '../../api';
+
 
 const Home = () => {
 
-  // const { isAuthenticated, logout } = useAuth();
-  // const navigate = useNavigate();
-
   const setIsLoading = useContext(LoadingContext);
+  const [reviews, setReviews] = useState();
+  const [siteData, setSiteData] = useState();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    try {
+      const res = await API.get('/user/home_view')
+      setSiteData(res?.data)
+      setReviews(res?.data?.top_reviews)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0; 
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<StarFill key={`full-${i}`} />);
+    }
+    if (hasHalfStar) {
+      stars.push(<StarHalf key="half" />);
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<Star key={`empty-${i}`} />);
+    }
+  
+    return stars;
+  };
+  
+
 
 
 
   return (
     <div>
-      <Banner />
+      <Banner siteData={siteData} />
       <div className="conectivity container-fluid">
         <span>Unlock the Power of</span>
         <h2>Work Laza connectivity </h2>
@@ -38,8 +74,8 @@ const Home = () => {
           </div>
           <div className="col-lg-7">
             <div className="box-black">
-              <h5>Over 1,000 Successes</h5>
-              <p>Over 1,000 successful home service requests fulfilled with customer satisfaction.</p>
+              <h5>Over {siteData?.servicesDelivered ? siteData?.servicesDelivered : 10} Successes</h5>
+              <p>Over {siteData?.servicesDelivered ? siteData?.servicesDelivered : 10} successful home service requests fulfilled with customer satisfaction.</p>
             </div>
             <div className="box-black">
               <h5>Wide Range of Services</h5>
@@ -54,7 +90,7 @@ const Home = () => {
               <p>Worklaza services are provided by highly trained professionals with years of expertise</p>
             </div>
           </div>
-        </div> 
+        </div>
         <div className="row second-row">
           <div className="col-lg-5">
             <img src={trusted} alt="" />
@@ -79,7 +115,7 @@ const Home = () => {
               <p>Skilled employees with years of experience, ready to serve you.</p>
             </div>
           </div>
-        </div> 
+        </div>
       </div>
       {/* 
         <div className="conectivity container-fluid">
@@ -92,76 +128,29 @@ const Home = () => {
         <h2>Real Words from Customers</h2>
       </div>
       <div className="customeres_words col-lg-12 row">
-        <div className="col-lg-4">
-          <div className="user_det">
-            <img src={profile1} alt="profile" />
-            <div className="name">
-              <h6>Tom H.</h6>
-              <span>Electrical Services</span>
-            </div>
-          </div>
-          <br />
-          <div className="testimonial-box">
-            <div className="stars">
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-            </div>
-            <br />
-            <p className="review-text">
-                {`"I had an electrical issue with my home wiring, and Worklaza sent an expert electrician who quickly diagnosed the problem and fixed it. Great service!"`}
-            </p>
-          </div>
-        </div>
-        <div className="col-lg-4">
-          <div className="user_det">
-            <img src={profile2} alt="profile" />
-            <div className="name">
-              <h6>John P.</h6>
-              <span>General Home Services</span>
-            </div>
-          </div>
-          <br />
-          <div className="testimonial-box">
-            <div className="stars">
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-                <StarHalf/>
-            </div>
-            <br />
-            <p className="review-text">
-                {`"I love how Worklaza provides a one-stop solution for various home services. Their customer support is also fantastic – easy to reach and very helpful!"`}
-            </p>
-          </div>
-        </div>
-        <div className="col-lg-4">
-          <div className="user_det">
-            <img src={profile3} alt="profile" />
-            <div className="name">
-              <h6>David L</h6>
-              <span>Plumbing Services</span>
-            </div>
-          </div>
-          <br />
-          <div className="testimonial-box">
-            <div className="stars">
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-                <StarFill/>
-                <Star/>
-            </div>
-            <br />
-            <p className="review-text">
-                {`"I needed a repair. The Worklaza team was sent a plumber right to my doorstep. The service was smooth and reasonably priced. Highly recommend!"`}
-            </p>
-          </div>
-        </div>
-      </div> 
+        {
+          reviews?.map(review => (
+            <>
+              <div className="col-lg-4">
+                <div className="user_det">
+                  <img src={`${apiUrl}${review?.user_profile?.profile_picture}`} style={{borderRadius:"100%"}} alt="profile" />
+                  <div className="name">
+                    <h6>{review?.user_profile?.first_name} {review?.user_profile?.last_name}</h6>
+                    <span>{review?.booking_details?.title}</span>
+                  </div>
+                </div>
+                <br />
+                <div className="testimonial-box">
+                  <div className="stars">{renderStars(review?.rating)}</div>
+                  <br />
+                  <p className="review-text"> {review?.description} </p>
+                </div>
+              </div>
+            </>
+          ))
+        }
+
+      </div>
       <div className="be_a_part container-fluid">
         <div className="col-lg-3 col-12">
           <img src={logo} alt="Logo" />
@@ -176,21 +165,21 @@ const Home = () => {
 
         <div className='row'>
           <div className="lar_atr_box">
-            <div className="top">  
+            <div className="top">
               <h5>Resource Access</h5>
               <img src={top_right_arrow} alt="top-right-arrow" />
             </div>
             <p>{`Visitors can access a wide range of resources, including ebooks, whitepapers, reports.`}</p>
           </div>
           <div className="lar_atr_box">
-            <div className="top">  
+            <div className="top">
               <h5>Resource Access</h5>
               <img src={top_right_arrow} alt="top-right-arrow" />
             </div>
             <p>{`Visitors can access a wide range of resources, including ebooks, whitepapers, reports.`}</p>
           </div>
           <div className="lar_atr_box">
-            <div className="top">  
+            <div className="top">
               <h5>Resource Access</h5>
               <img src={top_right_arrow} alt="top-right-arrow" />
             </div>

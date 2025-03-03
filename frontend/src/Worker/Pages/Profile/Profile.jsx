@@ -39,7 +39,7 @@ const Profile = () => {
   const get_user_details = async () => {
     setIsLoading(true)
     try {
-      const res = await API.get('user/view_profile/')
+      const res = await API.get('/user/view_profile/')
       setUser(res.data.user)
       setFormEditData({ first_name: res.data.user.first_name, last_name: res.data.user.last_name, phone: res.data.user.phone, username: res.data.user.username })
     } catch (error) {
@@ -52,7 +52,7 @@ const Profile = () => {
   const get_worker_details = async () => {
     setIsLoading(true)
     try {
-      const res = await API.get('worker/view_details/')
+      const res = await API.get('/worker/view_details/')
       setWorker(res.data.worker)
       let address = await getAddressFromCoordinates(res.data.worker.latitude,res.data.worker.longitude)
       setAddress(address)
@@ -98,7 +98,7 @@ const Profile = () => {
       const formData = new FormData();
       formData.append("profile_picture", dataURLtoFile(croppedImage, "profile.jpg"));
 
-      const res = await API.post("user/upload_profile_picture/", formData, {
+      const res = await API.post("/user/upload_profile_picture/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -117,7 +117,7 @@ const Profile = () => {
   const handleEditProfile = async () => {
     setIsLoading(true)
     try {
-      const res = await API.post("user/edit_details/", formEditData);
+      const res = await API.post("/user/edit_details/", formEditData);
 
       toast.success(res?.data?.message)
       setShowEdit(false)
@@ -171,7 +171,7 @@ const Profile = () => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const res = await API.post('worker/edit_details/',worker)
+      const res = await API.post('/worker/edit_details/',worker)
 
       toast.success(res?.data?.message)
     } catch (err) {

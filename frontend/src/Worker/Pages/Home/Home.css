@@ -10,7 +10,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 15px;
+    
     /* margin: ;
     padding: ; */
 }
@@ -21,6 +21,8 @@
     display: flex;
     justify-content: space-between;
     padding: 10px 10px;
+    gap: 15px;
+    cursor: pointer;
 } 
 .main_worker_home .top_row .new_task svg{
     color: #8D98A9;
@@ -36,12 +38,15 @@
     color: #8C97A8;
     font-weight: 500;
     font-size: 16px;
+    align-content: center;
 }
 
 .main_worker_home .top_row .new_task .count{
     color: var(--primary-color);
     font-weight: 700;
     font-size: 22px;
+    align-content: center;
+    margin: 0%;
 }
 
 

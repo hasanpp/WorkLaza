@@ -31,3 +31,7 @@ body {
 input{
   background-color: transparent;
 }
+
+body::-webkit-scrollbar {
+  display: none;
+}

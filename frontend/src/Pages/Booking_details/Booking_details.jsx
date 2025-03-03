@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import './Booking_details.css'
 import PropTypes from 'prop-types';
 import API from '../../api';
@@ -8,9 +9,10 @@ import user_icone from '../../assets/user.png';
 import Swal from "sweetalert2";
 import { Modal, Button } from 'react-bootstrap';
 import { ChatLeftDots, Star, X } from 'react-bootstrap-icons';
-import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
+import { PageContext } from '../../Layout/Layout';
 
 const Booking_details = ({ booking_id }) => {
 
@@ -21,12 +23,13 @@ const Booking_details = ({ booking_id }) => {
   const [showModal, setShowModal] = useState(false);
   const [hover, setHover] = useState(-1);
   const [formData, setFormData] = useState({ rating: 5, title: 'Amazing experince' });
+  const setPage = useContext(PageContext);
 
   useEffect(()=>{
     const featchData = async() =>{
       setIsLoading(true)
       try {
-        const res = await API.get(`user/view_booking/${booking_id}`)
+        const res = await API.get(`/user/view_booking/${booking_id}`)
         
         console.log(res?.data?.Booking);
         setBooking(res?.data?.Booking)
@@ -43,7 +46,7 @@ const Booking_details = ({ booking_id }) => {
     setIsLoading(true);
     try {
       await secureRequest(async () => {
-        const res = await API.post('user/review_booking/', formData);
+        const res = await API.post('/user/review_booking/', formData);
         toast.success(res?.data?.message);
         setShowModal(false);
         setTb(!tb);
@@ -84,7 +87,7 @@ const Booking_details = ({ booking_id }) => {
         setIsLoading(true)
         try {
           await secureRequest(async () => {
-            const res =  await API.patch(`user/cancel_booking/${booking_id}`)
+            const res =  await API.patch(`/user/cancel_booking/${booking_id}`)
             setTb(!tb)
             toast.success(res?.data?.message);
           });
@@ -97,6 +100,12 @@ const Booking_details = ({ booking_id }) => {
     });
   };
    
+  const handleChatOpen = (workerId, bookingId) => {
+    setPage(`Chat`); 
+    localStorage.setItem('page', `Chat`);
+    localStorage.setItem("chatWorkerId", workerId); 
+    localStorage.setItem("bookingId", bookingId);
+  };
 
   return (
     <div className='booking_details_main'>
@@ -107,7 +116,7 @@ const Booking_details = ({ booking_id }) => {
           <img src={booking?.worker_profile?.profile_picture ? `${apiUrl}${booking?.worker_profile?.profile_picture}`: user_icone } alt="" />
           <h3>{booking?.worker_profile?.full_name}</h3>
           <h3>₹ {booking?.total}</h3>
-          <ChatLeftDots/>
+          <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.id,booking?.id)} />
           <div className={`status ${booking?.status}`}>{booking?.status}</div>
         </div>
         <hr />

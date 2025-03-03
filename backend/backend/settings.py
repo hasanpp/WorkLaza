@@ -19,6 +19,8 @@ ALLOWED_HOSTS = ["*"]
 
 
 INSTALLED_APPS = [
+    'daphne',  
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,6 +31,7 @@ INSTALLED_APPS = [
     'user',
     'admin_panel',
     'booking',
+    'notifications',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'corsheaders',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,6 +83,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+ASGI_APPLICATION = 'backend.asgi.application'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -100,6 +106,15 @@ DATABASES = {
     }
 }
 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer", 
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],
+        # },
+    },
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -179,13 +194,16 @@ ACCOUNT_EMAIL_REQUIRED = True
 SIMPLE_JWT = {
     "SIGNING_KEY": JWT_SECRET_KEY, 
     "ALGORITHM": "HS256",
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
 SITE_ID = 2
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost"]
+CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000", "http://localhost"]
+
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 
-
+STRIPE_WEBHOOK_SECRET = "whsec_43cd9b54529033412ba82e1be9e8046c87ad71627899945623ae0aa88c870324" 

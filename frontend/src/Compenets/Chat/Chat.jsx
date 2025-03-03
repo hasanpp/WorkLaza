@@ -1,0 +1,159 @@
+import { useEffect, useState, useRef } from "react";
+import { useSelector } from 'react-redux';
+import {  Paperclip, Send } from "react-bootstrap-icons";
+import "./Chat.css";
+import API from '../../api'
+import user_icone from '../../assets/user.png'
+import logo from '../../assets/logo.png'
+import secureRequest from "../ProtectedRoute/secureRequest";
+
+const Chat = () => {
+
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [activeReceiver, setActiveReceiver] = useState();
+  const [chatRooms, setChatRooms] = useState();
+  const [socket, setSocket] = useState(null);
+  const { user_id } = useSelector((state) => state.auth)
+  const api_url = import.meta.env.VITE_API_URL;
+  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
+
+  const fetchData = async (chatWorkerId=null) =>{
+
+    chatWorkerId = chatWorkerId == null ? localStorage.getItem("chatWorkerId") || 3 : chatWorkerId;
+    await secureRequest(async () => {
+      API.post(`/chat/get_chats/`, {"user_id":user_id, "workerId":chatWorkerId})
+      .then((res) => {
+        setChatRooms(res?.data?.chats)
+        setActiveReceiver(res?.data?.receiver)
+        setMessages(res?.data?.messages)
+        const chatRoomId = res?.data?.chat_id
+        if (chatRoomId) {
+          openChat(chatRoomId);
+        } else if (res.data?.chats.length > 0) {
+          openChat(res.data.chats[0].id);
+        }
+      })
+      .catch((error) => console.error("Error fetching chats:", error));
+    });
+    
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
+
+  const openChat =async (chatRoomId) => {
+    localStorage.setItem("chatRoomId", chatRoomId);
+    if (socket) socket.close();
+    await secureRequest(async () => {
+      const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
+    newWs.onmessage = (event) => {
+      const data = JSON.parse(event.data);  
+      setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp }]);
+    };
+    setSocket(newWs);
+    })
+    
+  };
+  const sendMessage = async() => {
+    await secureRequest(async () => {
+      if (socket && message.trim()) {
+        socket.send(JSON.stringify({ message: message, sender: user_id }));
+        setMessage("");
+      }
+    })
+  };
+
+  function extractTime(timestampString) {
+    const date = new Date(timestampString);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  }
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+
+  return (
+    <div className="chat-container">
+      <div className="chat-sidebar">
+        <div className="sidebar-header">
+          <h1 className="sidebar-title">Chats</h1>
+        </div>
+        <div className="users-list">
+        {chatRooms?.map(chatRoom => {
+          const opponet = chatRoom?.user2_profile.id == user_id ? chatRoom?.user1_profile : chatRoom?.user2_profile;
+          return (
+            <div  key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id )} >
+              <div className="avatar-container">
+                {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`${api_url}${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+                
+                {opponet?.active && <span className="status-indicator"></span>}
+              </div>
+              <div className="user-details">
+                {opponet.id == 3 ?<span className="user-name">Chat with admin</span> :<span className="user-name">{opponet?.first_name} {opponet?.last_name}</span>}
+                {opponet?.unread > 0 && (
+                   <span className="unread-badge">{opponet?.unread}</span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+        </div>
+      </div>
+      
+      
+      <div className="chat-main">
+        <div className="chat-header">
+          {activeReceiver?.id == 3 ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}} className="current-user-avatar"></img> :activeReceiver?.profile_picture? <img  src={`${api_url}${activeReceiver?.profile_picture}`}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+          <div className="current-user-info">
+            {activeReceiver?.id == 3 ? <h5 className="current-user-name">Admin user</h5> :<h5 className="current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>} 
+          </div>
+        </div>
+        
+        <div className="messages-container" ref={messagesContainerRef}>
+          {messages?.map(msg => (
+            <>
+            <div  key={msg.id}  className={`message-wrapper ${msg.sender == user_id ? 'user-message' : 'other-message'}`} >
+              <div className={`message-bubble ${msg.sender == user_id ?'user-bubble' : 'other-bubble'}`}>
+                <p className="message-content">{msg.text}</p>
+                <span className="message-timestamp">{extractTime(msg.timestamp)}</span>
+              </div>
+            </div>
+            <div ref={messagesEndRef}></div>
+            </>
+          ))}
+        </div>
+        
+        <div className="message-input-container">
+          <div className="message-input-wrapper">
+            
+            <Paperclip className="input-icon" />
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder="Write a message..."
+              className="message-input"
+            />
+            <button  onClick={sendMessage} className="send-button" >
+              <Send className="send-icon" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+export default Chat;

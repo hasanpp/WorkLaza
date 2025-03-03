@@ -13,11 +13,14 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.db.models import F
 from django.conf import settings
+from django.http import JsonResponse
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from  worker.models import *
 from datetime import datetime,timedelta
 from  booking.models import Booking, Review
-from booking.serializers import BookingSerializer
+from booking.serializers import BookingSerializer, ReviewSerializer
 from math import sin, cos, sqrt, atan2, radians
 import jwt
 import requests
@@ -304,7 +307,7 @@ def token_data(request, *args, **kwargs):
     else :
         role = 'user'
     
-    return Response({"username":user.username,"first_name":user.first_name,"last_name":user.last_name,"role":role}, status=status.HTTP_200_OK)
+    return Response({"username":user.username,"first_name":user.first_name,"last_name":user.last_name,"role":role,"id":user.id}, status=status.HTTP_200_OK)
 
 
 def haversine(lat1, lon1, lat2, lon2):
@@ -360,9 +363,10 @@ def view_worker(request, *args, **kwargs):
     try:
         worker_id = request.data.get('id')
         worker = Worker.objects.filter(id=worker_id).select_related('job', 'user').prefetch_related('availabilities').first()
-        
+        reviews = Review.objects.filter(worker=worker)
         serialized_data = WorkersSerializer(worker ).data
-        return Response({"message":"got the worker data","worker":serialized_data}, status=status.HTTP_200_OK)
+        review_serialized = ReviewSerializer(reviews, many=True).data
+        return Response({"message":"got the worker data","worker":serialized_data,"reviews":review_serialized}, status=status.HTTP_200_OK)
     except Exception as e: 
         return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -567,3 +571,32 @@ def cancel_booking(request, booking_id, *args, **kwargs):
         return Response({"message": "Booking canceled"}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def home_view(*args, **kwargs):
+    try:
+        servicesDelivered = Booking.objects.filter(status="completed").count()
+        registeredCustomers = User.objects.count()
+        verifiedWorkers = Worker.objects.count()
+        
+        top_reviews = Review.objects.all().order_by('-rating')[:3]
+        
+        reviewSerioliser = ReviewSerializer(top_reviews, many=True).data
+        return Response({"message": "Data fetched ", 'top_reviews': reviewSerioliser,'servicesDelivered':servicesDelivered,'registeredCustomers':registeredCustomers,'verifiedWorkers':verifiedWorkers}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+def send_notification(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "notifications",  
+        {
+            "type": "send_notification",
+            "message": "New order received!"
+        }
+    )
+    return JsonResponse({"status": "Notification sent"})

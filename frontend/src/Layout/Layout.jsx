@@ -12,6 +12,7 @@ import Booking_details from '../Pages/Booking_details/Booking_details';
 import Bookings from '../Pages/Bookings/Bookings'
 import Not_found from '../Pages/Not_found/Not_found';
 import { useNavigate } from 'react-router-dom';
+import Chat from '../Compenets/Chat/Chat'
 import Profile from '../Pages/Profile/Profile';
 import ProtectedRoute from '../Compenets/ProtectedRoute/ProtectedRoute'
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,7 +31,7 @@ const Layout = (props) => {
 
   const user_status_handler= async() =>{
     try {
-      await API.post('token/refresh/', { refresh: refreshToken})
+      await API.post('/token/refresh/', { refresh: refreshToken})
     } catch (err) {
       if(err.response.status==401){
         toast.warning('This account is blocked by the admin!!')
@@ -76,6 +77,7 @@ const Layout = (props) => {
         {page == 'Workers' && <Workers />}
         {page.slice(0,14) == 'Worker_details' &&<Worker_details worker_id={page.slice(15)}/>}
         {page.slice(0,15) == 'Booking_details' &&<ProtectedRoute><Booking_details booking_id={page.slice(16)}/></ProtectedRoute>}
+        {page == 'Chat' &&<ProtectedRoute><Chat/></ProtectedRoute>}
         {page == 'Bookings' && <ProtectedRoute><Bookings /></ProtectedRoute>}
         {page == 'Profile' && <ProtectedRoute><Profile /></ProtectedRoute>}
         {page == 'not' && <Not_found />}

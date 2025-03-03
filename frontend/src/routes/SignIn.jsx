@@ -25,14 +25,14 @@ const SignIn = () => {
     const responseGoogle =  async(response) => {
         setIsLoading(true);
         try {
-                const res =  await API.post('user/google-login/', { access_token: response.credential })
+                const res =  await API.post('/user/google-login/', { access_token: response.credential })
 
                 const username = res.data.username
                 const password = res.data.password
-                const new_res = await API.post('token/',{ username:username, password:password})
-                const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
+                const new_res = await API.post('/token/',{ username:username, password:password})
+                const data_res = await API.post('/user/token_data/',{'token':new_res.data.access})
                 toast.success(res?.data?.message)
-                dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
+                dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, user_id: data_res.data.id, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
                     
         } catch (err) {
             toast.warning(err?.response?.data?.message)
@@ -65,10 +65,10 @@ const SignIn = () => {
             const res = await API.post('/user/signin/', { identifire: formData.identifire, password: formData.password });
 
             const username = res.data.username
-            const new_res = await API.post('token/',{ username:username, password:formData.password})
+            const new_res = await API.post('/token/',{ username:username, password:formData.password})
                 
-            const data_res = await API.post('user/token_data/',{'token':new_res.data.access})
-            dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
+            const data_res = await API.post('/user/token_data/',{'token':new_res.data.access})
+            dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username,  user_id: data_res.data.id, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
             toast.success(res?.data?.message)   
         } catch (error) {
             toast.error(error?.response?.data?.message);

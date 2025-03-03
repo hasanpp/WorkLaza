@@ -70,7 +70,7 @@ const WorkerRegister = () => {
 
         async function fetchData() {
             try {
-                const j_res = await API.get('worker/view_jobs/');
+                const j_res = await API.get('/worker/view_jobs/');
                 setJobs(j_res?.data?.Jobs)
             } catch (error) {
                 toast.error(error.response.data.message);
@@ -118,7 +118,7 @@ const WorkerRegister = () => {
 
 
             try {
-                const response = await API.post('worker/register/', formData, {
+                const response = await API.post('/worker/register/', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

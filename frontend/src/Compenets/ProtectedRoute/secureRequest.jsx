@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
-import API from "../../api";
 import { store } from "../../store";
 import { login, logout } from "../../authSlice";
 import { toast } from "sonner";
@@ -25,12 +24,13 @@ const refreshTokenHandler = async () => {
 
         if (res.status === 200) {
             const newAccessToken = res.data.access;
-            const data_res = await axios.post(`${import.meta.env.VITE_API_URL}user/token_data/`, { token: newAccessToken });
+            const data_res = await axios.post(`${import.meta.env.VITE_API_URL}/user/token_data/`, { token: newAccessToken });
 
             store.dispatch(login({
                 accessToken: newAccessToken,
                 refreshToken: refreshToken,
                 username: data_res.data.username,
+                user_id: data_res.data.id,
                 first_name: data_res.data.first_name,
                 last_name: data_res.data.last_name,
                 role: data_res.data.role
@@ -46,7 +46,7 @@ const refreshTokenHandler = async () => {
 };
 
 
-export const secureRequest = async (requestFn, ...args) => {
+const secureRequest = async (requestFn, ...args) => {
     let { accessToken } = store.getState().auth;
 
     if (!isTokenValid(accessToken)) {
@@ -64,3 +64,6 @@ export const secureRequest = async (requestFn, ...args) => {
         toast.error(err?.response?.data?.message || "Something went wrong");
     }
 };
+
+
+export default secureRequest

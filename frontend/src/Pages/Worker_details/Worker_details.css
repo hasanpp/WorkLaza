@@ -7,7 +7,7 @@
 }
 .main_worker_details .inner_div{
   border: 3px solid var(--strok-color);
-  border-radius: 34px;
+  border-radius: 30px;
    width: 100%;
    
 }
@@ -87,6 +87,78 @@
     width: 100%;
     padding: 0% 4% 0% 5%;
     font-size: 17px;
+}
+
+.revew_div{
+    border: 3px solid var(--strok-color);
+    border-radius: 30px;
+    margin: 45px 0px;
+}
+
+.revew_div .stars {
+    width: 200px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    font-size: 70px;
+    color: var(--icon-color);
+    background: #141414;
+    height: 50px;
+    align-items: center;
+    padding: 5px 15px;
+    border-radius: 30px;
+    border: 3px solid var(--strok-color);
+    margin-top: -23px;
+    position: absolute;
+}
+
+.revew_div .review{
+    padding: 10px 10px;
+    border: 2px solid var(--strok-color);
+    border-radius: 20px;
+    margin-top: 45px;
+    margin-bottom: 15px;
+}
+
+.revew_div .review .stars {
+    width: 110px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    font-size: 20px;
+    color: var(--icon-color);
+    background: #141414;
+    height: 30px;
+    align-items: center;
+    padding: 0px 7px;
+    border-radius: 30px;
+    border: 3px solid var(--strok-color);
+    margin-top: -25px;
+    margin-left: 15px;
+    position: absolute;
+}
+
+.revew_div .review .details{
+    padding: 5px 20px;
+}
+
+.revew_div .review .details .top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.revew_div .review .details .top h3{
+    color: var(--title-color);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 0;
+    margin: 0;
+}
+
+.revew_div .review .details .top img{
+    border-radius: 100%;
+    width: 50px;
 }
 
 

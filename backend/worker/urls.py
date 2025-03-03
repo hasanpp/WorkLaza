@@ -13,4 +13,7 @@ urlpatterns = [
     path('delete_slot/', delete_slot, name='delete_slot'),
     path('ban_slot/', ban_slot, name='ban_slot'),
     path('add_slot/', add_slot, name='add_slot'),
+    path('payment_view/', payment_view, name='payment_view'),
+    path("create-checkout-session/", create_stripe_checkout_session, name="create-checkout-session"),
+    path("stripe-webhook/", stripe_webhook, name="stripe-webhook"),
 ]

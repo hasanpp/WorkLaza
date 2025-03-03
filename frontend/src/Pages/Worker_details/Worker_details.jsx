@@ -6,21 +6,22 @@ import PropTypes from 'prop-types';
 import API from '../../api';
 import { toast } from 'sonner';
 import user_icon from '../../assets/user.png';
-import { X, CloudUpload } from 'react-bootstrap-icons'
+import { X, CloudUpload, Star, StarFill, StarHalf } from 'react-bootstrap-icons'
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
 import { LoadingContext } from '../../App';
-import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 
 
 const Worker_details = ({ worker_id }) => {
 
     const [worker, setWorker] = useState();
+    const [rating, setRating] = useState(0);
+    const [reviews, setReviews] = useState();
     const [availabilities, setAvailabilities] = useState();
     const [formData, setFormData] = useState(null);
     const { isAuthenticated } = useSelector((state) => state.auth)
     const apiUrl = import.meta.env.VITE_API_URL;
     const [showBooking, setShowBooking] = useState(false);
-    const [tb,setTb] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const setIsLoading = useContext(LoadingContext);
 
@@ -70,8 +71,14 @@ const Worker_details = ({ worker_id }) => {
             try {
                 const l_res = await getcords();
                 const a_res = await getAddressFromCoordinates(l_res.latitude, l_res.longitude);
-                const res = await API.post('user/view_worker/', { 'id': worker_id })
-
+                let res = null
+                if (isAuthenticated) {
+                    await secureRequest(async () => {
+                        res = await API.post('/user/view_worker/', { 'id': worker_id })
+                    });
+                } else {
+                    res = await API.post('/user/view_worker/', { 'id': worker_id })
+                }
                 const today = new Date();
                 const currentDay = today.getDay();
         
@@ -85,12 +92,14 @@ const Worker_details = ({ worker_id }) => {
          
                 const formattedDate = `${year}-${month}-${day}`;
                 const formattedTime = `${hours}:${minutes}:${seconds}`;
-        
 
                 setWorker(res?.data?.worker)
                 setAvailabilities(res?.data?.worker?.availabilities)
+                setReviews(res?.data?.reviews)
+                getRating(res?.data?.reviews)
                 setFormData({ ...formData, worker:res?.data?.worker?.id ,latitude: l_res.latitude, longitude:l_res.longitude, address:a_res, bookedDate:formattedDate,bookedTime:formattedTime})
             } catch (err) {
+                console.log(err?.response)
                 toast.error(err?.response?.data?.message)
             } finally {
                 setIsLoading(false)
@@ -166,7 +175,7 @@ const Worker_details = ({ worker_id }) => {
         }
         try {
             await secureRequest(async () => {
-                const res = await API.post('user/save_worker/', { 'worker_id': worker_id })
+                const res = await API.post('/user/save_worker/', { 'worker_id': worker_id })
                 toast.success(res?.data?.message)
             });
         } catch (err) {
@@ -191,7 +200,7 @@ const Worker_details = ({ worker_id }) => {
                 formDataToSend.append(key, formData[key]);
             }
             await secureRequest(async () => {
-                const res = await API.post('user/book_worker/',formDataToSend);
+                const res = await API.post('/user/book_worker/',formDataToSend);
                 toast.success(res?.data?.message);
             });
         } catch (err) {
@@ -202,7 +211,34 @@ const Worker_details = ({ worker_id }) => {
         }
     };
 
+    const renderStars = (rating) => {
+        const stars = [];
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 !== 0; 
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+        for (let i = 0; i < fullStars; i++) {
+          stars.push(<StarFill key={`full-${i}`} />);
+        }
+        if (hasHalfStar) {
+          stars.push(<StarHalf key="half" />);
+        }
+        for (let i = 0; i < emptyStars; i++) {
+          stars.push(<Star key={`empty-${i}`} />);
+        }
+      
+        return stars;
+    };
 
+    const getRating = async (reviews) =>{
+        const total_reviews = reviews?.length
+        let total_rating = 0
+        await reviews.map(review =>{ 
+            total_rating += review?.rating
+        })
+        const avg_rating = total_rating / total_reviews 
+        setRating(avg_rating)
+    }
+      
     return (
         <div className='main_worker_details'>
             <span className='page_name'>Workers/Worker details</span>
@@ -221,7 +257,8 @@ const Worker_details = ({ worker_id }) => {
                                 <br />
                                 <span className="feild">{worker?.experience} + yers of expeexperience</span><br />
                                 <span className="feild">Education : {worker?.qualification} </span><br />
-                                <span className="feild">Age : {worker?.age}  </span>
+                                <span className="feild">Age : {worker?.age}  </span><br />
+                                <span className="feild">Rating : {rating}  </span>
                             </div>
                             <br />
                             <h4>₹ {worker?.salary} / hour</h4>
@@ -237,6 +274,26 @@ const Worker_details = ({ worker_id }) => {
                         <p>{worker?.description}</p>
                     </div>
                     <br />
+                </div>
+                <div className="revew_div col-lg-12 row">
+                    <div className="stars">{renderStars(rating)}</div>
+                    {
+                        reviews?.map(review => {
+                            return(
+                            <div className="review col-12 col-md-6 col-lg-4" key={review?.id}>
+                                <div className="stars">{renderStars(review?.rating)}</div>
+                                <div className="details">
+                                    <div className="top">
+                                        <h3>{review?.title}</h3>
+                                        <img src={`${apiUrl}${review?.user_profile?.profile_picture}`} alt={review?.user_profile?.username} />
+                                    </div>
+                                    <br />
+                                    <p>{`"${review?.description}"`}</p>
+                                </div>
+                            </div>
+                        )})
+                    }
+                    
                 </div>
             </div>
             <Modal show={showBooking} onHide={() => setShowBooking(false)} centered style={{color:'var(--title-color)'}}>

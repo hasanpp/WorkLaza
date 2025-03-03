@@ -4,7 +4,7 @@ import { PageContext } from '../../Layout/Layout';
 import API from '../../api'
 import './Saved.css'
 import user_icon from '../../assets/user.png';
-import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 
 
 const Saved = () => {
@@ -17,7 +17,7 @@ const Saved = () => {
   useEffect(()=>{
     const featc_data = async ()=>{
       try {
-        const res = await API.get('user/view_saved_worker/')
+        const res = await API.get('/user/view_saved_worker/')
         setWorkers(res?.data?.workers)
       } catch (err) {
         toast.error(err?.response?.data?.message)
@@ -29,7 +29,7 @@ const Saved = () => {
   const remove_saved = async (worker_id)=>{
     try {
       await secureRequest(async () => {
-        const res = await API.post('user/remove_saved_worker/',{'worker_id':worker_id})
+        const res = await API.post('/user/remove_saved_worker/',{'worker_id':worker_id})
         toast.success(res?.data?.message)
         setTb(!tb)
       });

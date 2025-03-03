@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Jobs(models.Model):
@@ -30,6 +30,9 @@ class Worker(models.Model):
     longitude = models.FloatField(blank=True, null=True)
     latitude = models.FloatField( blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='worker_profile')
+    total_fee = models.FloatField(default=0.0, null=False, blank=False)
+    payed_fee = models.FloatField(default=0.0, null=False, blank=False)
+    pending_fee = models.FloatField(default=0.0, null=False, blank=False)
     
     def __str__(self):
         return self.full_name

@@ -10,7 +10,7 @@ import { Postage, X } from 'react-bootstrap-icons';
 import { LoadingContext } from '../../App';
 import { PageContext } from '../../Layout/Layout';
 import { useSelector } from "react-redux";
-import { secureRequest } from '../../Compenets/ProtectedRoute/secureRequest';
+import secureRequest  from '../../Compenets/ProtectedRoute/secureRequest';
 import axios from 'axios';
 
 const Workers = () => {
@@ -61,12 +61,13 @@ const Workers = () => {
     }
     try {
       await secureRequest(async () => {
-        const res = await API.post("user/save_worker/", { worker_id });
+        const res = await API.post("/user/save_worker/", { worker_id });
         toast.success(res?.data?.message);
     });
     } catch (err) {
-        console.log(err)
-        toast.error(err?.response?.data?.message)
+        console.log("error",err.response.data)
+        console.log("erooooooooor")
+        toast.error(err?.response?.data?.message||"Something went wrong ")
     }
 }
 
@@ -75,11 +76,12 @@ const Workers = () => {
       setIsLoading(true)
       try {
         const l_res = await getcords();
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}user/view_workers/`,{'longitude':l_res.longitude,'latitude':l_res.latitude});
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/view_workers/`,{'longitude':l_res.longitude,'latitude':l_res.latitude});
         setWorkers(res?.data?.Workers);
         setFilteredWorkers(res?.data?.Workers);
       } catch (err) {
-        toast.error(err?.response?.data?.message);
+        console.log(err)
+        toast.error(err?.response?.data?.message||"Something went wrong");
       }finally{
         setIsLoading(false)
       }

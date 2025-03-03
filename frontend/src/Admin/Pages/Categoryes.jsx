@@ -1,12 +1,14 @@
 /* eslint-disable no-unused-vars */
-import './Categoryes.css'
-import { useEffect,useState,useContext } from 'react';
+import './Categoryes.css';
+import { useEffect, useState, useContext } from 'react';
 import { SearchContext } from '../Admin';
 import { LoadingContext } from '../../App';
 import API from '../../api';
 import { toast } from 'sonner';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Ban, ArrowRepeat, X } from 'react-bootstrap-icons';
+import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
+
 
 const Categoryes = () => {
   const [jobs, setJobs] = useState();
@@ -27,9 +29,11 @@ const Categoryes = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await API.get('admin_view/view_jobs/');
-        setJobs(res.data.Jobs);
-        setSortedJobs(res.data.Jobs);
+        await secureRequest(async () => {
+          const res = await API.get('/admin_view/view_jobs/');
+          setJobs(res.data.Jobs);
+          setSortedJobs(res.data.Jobs);
+        });
       } catch (error) {
         toast.error(error.response.data.message);
       }
@@ -67,7 +71,7 @@ const Categoryes = () => {
     } else {
       setFilteredJobs(sortedJobs);
     }
-  }, [searchQuery, sortedJobs,tb_c]);
+  }, [searchQuery, sortedJobs, tb_c]);
 
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = Math.min(currentPage * rowsPerPage, sortedJobs?.length);
@@ -83,151 +87,160 @@ const Categoryes = () => {
     setShowModal(false)
   };
 
-  const handleCreateJob = async() => {
+  const handleCreateJob = async () => {
     try {
-      const res = await API.post('admin_view/create_job/', formData)
-      console.log(res.data)
-      setShowCreateModal(false)
-      toast.success(res?.data?.message)
+      await secureRequest(async () => {
+        const res = await API.post('/admin_view/create_job/', formData)
+        console.log(res.data)
+        setShowCreateModal(false)
+        toast.success(res?.data?.message)
+      });
     } catch (err) {
       console.log(err?.response?.data)
       toast.error(err?.response?.data?.message)
-    }    
+    }
   };
 
-  const handleSaveJob = async() => {
+  const handleSaveJob = async () => {
     try {
-      const res = await API.post('admin_view/edit_job/', currentJob)
-      console.log(res.data)
-      setShowModal(false)
-      toast.success(res?.data?.message)
+      await secureRequest(async () => {
+
+        const res = await API.post('/admin_view/edit_job/', currentJob)
+        console.log(res.data)
+        setShowModal(false)
+        toast.success(res?.data?.message)
+      });
     } catch (err) {
       console.log(err?.response?.data)
       toast.error(err?.response?.data?.message)
-    }    
+    }
   };
 
-  const handleRestrictJob = async(id,index) => {
+  const handleRestrictJob = async (id, index) => {
     try {
-      const res = await API.post('admin_view/restrict_job/', {'id':id})
-      jobs[index].is_active = !jobs[index].is_active
-      setShowCreateModal(false)
-      setTb_c(!tb_c)
-      toast.success(res?.data?.message)
+      await secureRequest(async () => {
+
+        const res = await API.post('/admin_view/restrict_job/', { 'id': id })
+        jobs[index].is_active = !jobs[index].is_active
+        setShowCreateModal(false)
+        setTb_c(!tb_c)
+        toast.success(res?.data?.message)
+      });
     } catch (err) {
       console.log(err?.response?.data)
       toast.error(err?.response?.data?.message)
-    }    
+    }
   };
 
 
   return (
-    <div>
-      <div className="top_row">
-        <h1>JOB Categores</h1>
-        <button onClick={() => setShowCreateModal(true)}> + Create new JOB </button>
-      </div>
-      <div className="table-container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col" onClick={() => handleSort('id')}>
-                ID {sortConfig.key === 'id' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
-              </th>
-              <th scope="col" onClick={() => handleSort('title')}>
-                JOB TITLE {sortConfig.key === 'title' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
-              </th>
-              <th scope="col" onClick={() => handleSort('description')}>
-                DESCRIPTION {sortConfig.key === 'description' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
-              </th>
-              <th scope="col" className="action-th">
-                ACTION
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedJobs?.map((job, index) => (
-              <tr key={index}>
-                <td>{job.id}</td>
-                <td onClick={() => handleTitleClick(job, index)}>
-                  {job.title}
-                </td>
-                <td>{job.description}</td>
-                <td className="action-td" style={{justifyContent:"center"}}>
-                  <button onClick={() => { handleRestrictJob(job.id,index) }}>{job?.is_active? <Ban color="red"  size={11} />:<ArrowRepeat color="green" size={11} />}</button>
-                  
-                </td>
+    <div className="content-admin">
+      <div>
+        <div className="top_row">
+          <h1>JOB Categores</h1>
+          <button onClick={() => setShowCreateModal(true)}> + Create new JOB </button>
+        </div>
+        <div className="table-container">
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col" onClick={() => handleSort('id')}>
+                  ID {sortConfig.key === 'id' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th scope="col" onClick={() => handleSort('title')}>
+                  JOB TITLE {sortConfig.key === 'title' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th scope="col" onClick={() => handleSort('description')}>
+                  DESCRIPTION {sortConfig.key === 'description' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                </th>
+                <th scope="col" className="action-th">
+                  ACTION
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {paginatedJobs?.map((job, index) => (
+                <tr key={index}>
+                  <td>{job.id}</td>
+                  <td onClick={() => handleTitleClick(job, index)}>
+                    {job.title}
+                  </td>
+                  <td>{job.description}</td>
+                  <td className="action-td" style={{ justifyContent: "center" }}>
+                    <button onClick={() => { handleRestrictJob(job.id, index) }}>{job?.is_active ? <Ban color="red" size={11} /> : <ArrowRepeat color="green" size={11} />}</button>
 
-      <div className="pagination">
-        <span>
-          {startIndex + 1}-{endIndex} of {sortedJobs?.length}
-        </span>&nbsp;&nbsp;&nbsp;
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className='pagination-b'
-        >
-          &lt;
-        </button>&nbsp;&nbsp;&nbsp;
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage * rowsPerPage >= sortedJobs?.length}
-          className='pagination-b'
-        >
-          &gt;
-        </button>
-      </div>
-      <Modal show={showCreateModal} onHide={handleClose}>
-        <Modal.Header >
-          <Modal.Title>Create new JOB Category</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="pagination">
+          <span>
+            {startIndex + 1}-{endIndex} of {sortedJobs?.length}
+          </span>&nbsp;&nbsp;&nbsp;
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className='pagination-b'
+          >
+            &lt;
+          </button>&nbsp;&nbsp;&nbsp;
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage * rowsPerPage >= sortedJobs?.length}
+            className='pagination-b'
+          >
+            &gt;
+          </button>
+        </div>
+        <Modal show={showCreateModal} onHide={handleClose}>
+          <Modal.Header >
+            <Modal.Title>Create new JOB Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
               <Form.Group controlId="formUsername">
                 <Form.Label>JOB Title</Form.Label>
                 <Form.Control type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required />
               </Form.Group>
-            <Form.Group controlId="formdeS">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" value={formData.description} rows={4} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Close</Button>
-          <Button type='submit' variant="primary" onClick={handleCreateJob}> Create JOB </Button>
-        </Modal.Footer>
-      </Modal>
+              <Form.Group controlId="formdeS">
+                <Form.Label>Description</Form.Label>
+                <Form.Control as="textarea" value={formData.description} rows={4} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
+            <Button type='submit' variant="primary" onClick={handleCreateJob}> Create JOB </Button>
+          </Modal.Footer>
+        </Modal>
 
-      <Modal show={showModal} onHide={handleClose}>
-        <Modal.Header >
-          <Modal.Title>Inspect JOB Category</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+        <Modal show={showModal} onHide={handleClose}>
+          <Modal.Header >
+            <Modal.Title>Inspect JOB Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
               <Form.Group controlId="formUsername">
                 <Form.Label>JOB Title</Form.Label>
                 <Form.Control type="text" value={currentJob?.title} onChange={(e) => setCurrentJob({ ...formData, title: e.target.value })} required />
               </Form.Group>
-            <Form.Group controlId="formdeS">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" value={currentJob?.description} rows={4} onChange={(e) => setCurrentJob({ ...formData, description: e.target.value })} required />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Close</Button>
-          <Button type='submit' variant="primary" onClick={handleSaveJob}> Save JOB </Button>
-        </Modal.Footer>
-      </Modal>
-
-
+              <Form.Group controlId="formdeS">
+                <Form.Label>Description</Form.Label>
+                <Form.Control as="textarea" value={currentJob?.description} rows={4} onChange={(e) => setCurrentJob({ ...formData, description: e.target.value })} required />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
+            <Button type='submit' variant="primary" onClick={handleSaveJob}> Save JOB </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     </div>
+
   )
 }
 
