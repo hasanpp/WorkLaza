@@ -304,9 +304,12 @@ def process_worker_request(request,*args, **kwargs):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def view_dash_board(*args, **kwargs):
+def view_dash_board(request, *args, **kwargs):
     try:
-        start_of_week = timezone.now() - timedelta(days=timezone.now().weekday())
+        time_period = request.query_params.get('period', 'week')
+        now = timezone.now()
+        
+        start_of_week = now - timedelta(days=now.weekday())
         start_of_last_week = start_of_week - timedelta(days=7)
         end_of_last_week = start_of_week - timedelta(seconds=1)
         
@@ -314,14 +317,55 @@ def view_dash_board(*args, **kwargs):
         new_users_last_week = User.objects.filter(date_joined__range=(start_of_last_week, end_of_last_week)).count()
         new_bookings = Booking.objects.filter(booking_date__gte=start_of_week).count()
         new_bookings_last_week = Booking.objects.filter(booking_date__range=(start_of_last_week, end_of_last_week)).count()
-        new_workers =  Worker.objects.filter(user__date_joined__gte=start_of_week).count()
-        new_workers_last_week =  Worker.objects.filter(user__date_joined__range=(start_of_last_week, end_of_last_week)).count()
-        
+        new_workers = Worker.objects.filter(user__date_joined__gte=start_of_week).count()
+        new_workers_last_week = Worker.objects.filter(user__date_joined__range=(start_of_last_week, end_of_last_week)).count()
+
         difference_new_users = new_users - new_users_last_week
         difference_new_bookings = new_bookings - new_bookings_last_week
         difference_new_workers = new_workers - new_workers_last_week
         
+        booking_data = []
         
-        return Response({'message': "Data feached successfully!", "new_users":new_users, "difference_new_users": difference_new_users, "new_bookings":new_bookings, "difference_new_bookings":difference_new_bookings, "new_workers":new_workers, "difference_new_workers":difference_new_workers }, status=status.HTTP_200_OK)
+        if time_period == 'day':
+            for i in range(6, -1, -1):
+                date = now.date() - timedelta(days=i)
+                count = Booking.objects.filter(booking_date=date).count()
+                booking_data.append({ 'label': date.strftime('%a'), 'date': date.strftime('%Y-%m-%d'), 'count': count })
+                
+        elif time_period == 'month':
+            current_month = now.month
+            current_year = now.year
+            for i in range(5, -1, -1):
+                month = (current_month - i) % 12
+                if month == 0:
+                    month = 12
+                year = current_year - ((current_month - month) // 12)
+                month_start = timezone.datetime(year, month, 1, tzinfo=timezone.get_current_timezone()).date()
+                if month == 12:
+                    month_end = timezone.datetime(year + 1, 1, 1, tzinfo=timezone.get_current_timezone()).date() - timedelta(days=1)
+                else:
+                    month_end = timezone.datetime(year, month + 1, 1, tzinfo=timezone.get_current_timezone()).date() - timedelta(days=1)
+                count = Booking.objects.filter(booking_date__range=(month_start, month_end)).count()
+                booking_data.append({
+                    'label': timezone.datetime(year, month, 1).strftime('%b'), 'date':timezone.datetime(year, month, 1).strftime('%Y-%m'), 'count':count })
+                
+        elif time_period == 'year':
+            current_year = now.year
+            for i in range(5, -1, -1):
+                year = current_year - i
+                year_start = timezone.datetime(year, 1, 1, tzinfo=timezone.get_current_timezone()).date()
+                year_end = timezone.datetime(year, 12, 31, tzinfo=timezone.get_current_timezone()).date()
+                
+                count = Booking.objects.filter( booking_date__range=(year_start, year_end) ).count()
+                booking_data.append({ 'label': str(year), 'date': str(year), 'count': count })
+                
+        else:
+            for i in range(7):
+                day = (start_of_week + timedelta(days=i)).date()
+                count = Booking.objects.filter(booking_date=day).count()
+                booking_data.append({ 'label': day.strftime('%a'), 'date': day.strftime('%Y-%m-%d'), 'count': count })
+        
+        
+        return Response({'message': "Data feached successfully!", "new_users":new_users, "difference_new_users": difference_new_users, "new_bookings":new_bookings, "difference_new_bookings":difference_new_bookings, "new_workers":new_workers, "difference_new_workers":difference_new_workers, "booking_data": booking_data, "period": time_period}, status=status.HTTP_200_OK)
     except Exception as e:
-        return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -3,8 +3,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import ChatRoom,Message
-from asgiref.sync import sync_to_async
-
+from asgiref.sync import sync_to_async, async_to_sync
+from channels.layers import get_channel_layer
 
 
 class NotificationConsumer(AsyncWebsocketConsumer):
@@ -47,11 +47,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data["message"]
+        image_data = data.get("image")
         sender_id  = data["sender"]
         sender = await sync_to_async(User.objects.get)(id=sender_id)
         chat = await sync_to_async(ChatRoom.objects.get)(id=self.room_name)
         
         new_message = await sync_to_async(Message.objects.create)( chat_room=chat, sender=sender, text=message )
+        
+        if image_data:
+            from django.core.files.base import ContentFile
+            import base64
+            format, imgstr = image_data.split(";base64,")
+            ext = format.split("/")[-1]
+            image_name = f"chat_{new_message.id}.{ext}"
+            
+            await sync_to_async(new_message.image.save, thread_sensitive=True)( image_name, ContentFile(base64.b64decode(imgstr)), save=True )    
+        
+        user1, user2 = await sync_to_async(lambda: (chat.user1, chat.user2))()
+        resiver = user2 if user1 == sender else user1
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -59,10 +72,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'message': new_message.text,
                 'sender': sender.id,
-                'timestamp': str(new_message.timestamp)
+                'timestamp': str(new_message.timestamp),
+                "image": new_message.image.url if new_message.image else None,
             }
+        )
+        
+        channel_layer = get_channel_layer()
+        await channel_layer.group_send(
+             f"user_{resiver.id}",
+             {
+                "type":"send_notification",
+                "message":{
+                    "title":"New message",
+                    "body": f"Your have a new message from '{sender.username}'."
+                }
+             }
         )
 
 
     async def chat_message(self, event):
-        await self.send(text_data=json.dumps({"message": event["message"], "sender": event["sender"], "timestamp": event["timestamp"]}))
+        await self.send(text_data=json.dumps({"message": event["message"], "sender": event["sender"], "timestamp": event["timestamp"], "image": event["image"]}))

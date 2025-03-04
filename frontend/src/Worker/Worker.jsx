@@ -90,7 +90,7 @@ const Worker = () => {
     <div>
       <PageContext.Provider value={setPage}>
         <Navbar page={page} />
-        <div className='content'>
+        <div className={`content-${page} content `} >
           {page == 'Home' && <ProtectedRoute><Home/></ProtectedRoute>}
           {page == 'Schedule' && <ProtectedRoute><Schedule/></ProtectedRoute>}
           {page == 'Chats' && <ProtectedRoute><Chats/></ProtectedRoute>}

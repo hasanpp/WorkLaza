@@ -1,3 +1,7 @@
+.content-Home{
+    padding: 6% 0%;
+}
+
 .main_worker_home{
     margin: 1% 5%;
 }
@@ -49,7 +53,24 @@
     margin: 0%;
 }
 
+.main_worker_home .period-selector .active {
+    font-family: 'DM Sans';
+    font-weight: 500;
+    color: var(--icon-color);
+    border-bottom: 3px solid var(--icon-color);
+    border-top: none;
+    outline: none;
+}
 
+.main_worker_home .booking-graph-header h2{
+    color: var(--icon-color);
+}
+
+.main_worker_home .booking-graph-card{
+    background: #3A3A3A;
+    border-radius: 20px;
+    margin: 50px 0px;
+}
 
 
 @media screen and (max-width: 1000px) { 

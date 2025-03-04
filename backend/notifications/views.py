@@ -38,7 +38,7 @@ def get_chat_messages(request, chat_id):
 
     return JsonResponse({
         "messages": [
-            {"sender": msg.sender.id, "text": msg.text, "timestamp": msg.timestamp.strftime("%H:%M")}
+            {"sender": msg.sender.id, "text": msg.text, "timestamp": msg.timestamp.strftime("%H:%M"), "image": msg.image.url if msg.image else None, }
             for msg in messages
         ]
     })

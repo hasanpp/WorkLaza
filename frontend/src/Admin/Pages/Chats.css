@@ -279,6 +279,32 @@
   color: #8899A8;
 }
 
+
+.ad-chat-image{
+  border-radius: 10px;
+  border: none;
+  margin-top: 2px;
+}
+
+.ad-message-input-container .ad-image-preview{
+  width: 40%;
+}
+
+.ad-image-preview .ad-remove_selected{
+  font-size: 40px;
+  color: red;
+  border: none;
+  background: none;
+  position: absolute;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.ad-image-preview .ad-preview-img{
+  border-radius: 10px;
+  margin: 12px;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   /* .ad-chat-container {
@@ -301,7 +327,7 @@
     
   }
   .ad-users-list{
-    padding: 15px 10px;
+    padding: 15px 75px;
   }
   .ad-user-item:hover  {
     width: 200px;

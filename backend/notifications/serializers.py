@@ -23,6 +23,7 @@ class ChatSerializer(serializers.ModelSerializer):
             return None
 
 class MessageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False, allow_null=True)
     
     class Meta:
         model = Message

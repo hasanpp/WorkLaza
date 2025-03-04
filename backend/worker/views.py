@@ -15,6 +15,8 @@ from admin_panel.serializers import WalletSerializer
 from django.views.decorators.csrf import csrf_exempt
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.utils import timezone
+from datetime import timedelta
 import jwt
 import stripe
 
@@ -102,7 +104,57 @@ def view_details(request,*args, **kwargs):
         new_bookings =  Booking.objects.filter(worker=worker, booking_date=today_date).count()
         today_tasks_count = Booking.objects.filter(worker=worker, booked_date=today_date).exclude(status='completed').count()
         
-        return Response({'messages':"Data featch successfully",'worker':seriloised_data, 'reviews_count': reviews_count, 'new_bookings': new_bookings, 'today_tasks_count': today_tasks_count },status=status.HTTP_200_OK)
+        time_period = request.query_params.get('period', 'week')
+        now = timezone.now()
+        
+        start_of_week = now - timedelta(days=now.weekday())
+        start_of_last_week = start_of_week - timedelta(days=7)
+        end_of_last_week = start_of_week - timedelta(seconds=1)
+        
+        
+        booking_data = []
+        
+        if time_period == 'day':
+            for i in range(6, -1, -1):
+                date = now.date() - timedelta(days=i)
+                count = Booking.objects.filter(booking_date=date, worker=worker).count()
+                booking_data.append({ 'label': date.strftime('%a'), 'date': date.strftime('%Y-%m-%d'), 'count': count })
+                
+        elif time_period == 'month':
+            current_month = now.month
+            current_year = now.year
+            for i in range(5, -1, -1):
+                month = (current_month - i) % 12
+                if month == 0:
+                    month = 12
+                year = current_year - ((current_month - month) // 12)
+                month_start = timezone.datetime(year, month, 1, tzinfo=timezone.get_current_timezone()).date()
+                if month == 12:
+                    month_end = timezone.datetime(year + 1, 1, 1, tzinfo=timezone.get_current_timezone()).date() - timedelta(days=1)
+                else:
+                    month_end = timezone.datetime(year, month + 1, 1, tzinfo=timezone.get_current_timezone()).date() - timedelta(days=1)
+                count = Booking.objects.filter(booking_date__range=(month_start, month_end), worker=worker).count()
+                booking_data.append({
+                    'label': timezone.datetime(year, month, 1).strftime('%b'), 'date':timezone.datetime(year, month, 1).strftime('%Y-%m'), 'count':count })
+                
+        elif time_period == 'year':
+            current_year = now.year
+            for i in range(5, -1, -1):
+                year = current_year - i
+                year_start = timezone.datetime(year, 1, 1, tzinfo=timezone.get_current_timezone()).date()
+                year_end = timezone.datetime(year, 12, 31, tzinfo=timezone.get_current_timezone()).date()
+                
+                count = Booking.objects.filter( booking_date__range=(year_start, year_end), worker=worker).count()
+                booking_data.append({ 'label': str(year), 'date': str(year), 'count': count })
+                
+        else:
+            for i in range(7):
+                day = (start_of_week + timedelta(days=i)).date()
+                count = Booking.objects.filter(booking_date=day, worker=worker).count()
+                booking_data.append({ 'label': day.strftime('%a'), 'date': day.strftime('%Y-%m-%d'), 'count': count })
+        
+        
+        return Response({'messages':"Data featch successfully",'worker':seriloised_data, 'reviews_count': reviews_count, 'new_bookings': new_bookings, 'today_tasks_count': today_tasks_count, "booking_data": booking_data, "period": time_period},status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'messages':str(e)},status=status.HTTP_401_UNAUTHORIZED)
     

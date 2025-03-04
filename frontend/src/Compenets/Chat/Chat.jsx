@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from 'react-redux';
-import {  Paperclip, Send } from "react-bootstrap-icons";
+import {  Paperclip, Send, X } from "react-bootstrap-icons";
 import "./Chat.css";
 import API from '../../api'
 import user_icone from '../../assets/user.png'
@@ -14,6 +14,7 @@ const Chat = () => {
   const [activeReceiver, setActiveReceiver] = useState();
   const [chatRooms, setChatRooms] = useState();
   const [socket, setSocket] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { user_id } = useSelector((state) => state.auth)
   const api_url = import.meta.env.VITE_API_URL;
   const messagesEndRef = useRef(null);
@@ -29,7 +30,7 @@ const Chat = () => {
         setChatRooms(res?.data?.chats)
         setActiveReceiver(res?.data?.receiver)
         setMessages(res?.data?.messages)
-        const chatRoomId = res?.data?.chat_id
+        const chatRoomId = res?.data?.chat_id 
         if (chatRoomId) {
           openChat(chatRoomId);
         } else if (res.data?.chats.length > 0) {
@@ -53,17 +54,20 @@ const Chat = () => {
       const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
     newWs.onmessage = (event) => {
       const data = JSON.parse(event.data);  
-      setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp }]);
+      setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
     };
     setSocket(newWs);
     })
     
   };
+
+  
   const sendMessage = async() => {
     await secureRequest(async () => {
-      if (socket && message.trim()) {
-        socket.send(JSON.stringify({ message: message, sender: user_id }));
+      if (socket && (message.trim() || selectedImage ) ) {
+        socket.send(JSON.stringify({ message: message || null, sender: user_id, image: selectedImage || null, }));
         setMessage("");
+        setSelectedImage(null);
       }
     })
   };
@@ -121,30 +125,36 @@ const Chat = () => {
         
         <div className="messages-container" ref={messagesContainerRef}>
           {messages?.map(msg => (
-            <>
             <div  key={msg.id}  className={`message-wrapper ${msg.sender == user_id ? 'user-message' : 'other-message'}`} >
               <div className={`message-bubble ${msg.sender == user_id ?'user-bubble' : 'other-bubble'}`}>
-                <p className="message-content">{msg.text}</p>
+                {msg.image && <img src={`${api_url}${msg.image}`} alt="Sent Image" className="chat-image" />}
+                {msg.text && <p className="message-content">{msg.text}</p>}
                 <span className="message-timestamp">{extractTime(msg.timestamp)}</span>
               </div>
             </div>
-            <div ref={messagesEndRef}></div>
-            </>
           ))}
+          <div ref={messagesEndRef}></div>
         </div>
         
         <div className="message-input-container">
+          {selectedImage && (
+              <div className="image-preview">
+                <button onClick={() => setSelectedImage(null)} className="remove_selected"><X/></button>
+                <img src={selectedImage} alt="Preview" className="preview-img" />
+              </div>
+            )}
           <div className="message-input-wrapper">
-            
-            <Paperclip className="input-icon" />
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Write a message..."
-              className="message-input"
+            <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" 
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) { const reader = new FileReader(); reader.onloadend = () => { setSelectedImage(reader.result) }; reader.readAsDataURL(file); }
+            }}
             />
+            <label htmlFor="fileInput" className="Paperclip_label">
+              <Paperclip className="input-icon" style={{width:"25px",height:"25px"}}/>
+            </label>
+            
+            <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Write a message..." className="message-input" />
             <button  onClick={sendMessage} className="send-button" >
               <Send className="send-icon" />
             </button>

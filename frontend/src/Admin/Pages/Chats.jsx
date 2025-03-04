@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from 'react-redux';
-import { Send, Paperclip } from "react-bootstrap-icons";
+import { Send, Paperclip, X } from "react-bootstrap-icons";
 import "./Chats.css";
 import API from '../../api'
 import user_icone from '../../assets/user.png'
@@ -14,6 +14,7 @@ const Chats = () => {
   const [activeReceiver, setActiveReceiver] = useState();
   const [chatRooms, setChatRooms] = useState();
   const [socket, setSocket] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { user_id } = useSelector((state) => state.auth)
   const api_url = import.meta.env.VITE_API_URL;
   const messagesEndRef = useRef(null);
@@ -46,30 +47,28 @@ const Chats = () => {
   }, []);
 
 
-  const openChat = async (chatRoomId) => {
-
+  const openChat =async (chatRoomId) => {
     localStorage.setItem("chatRoomId", chatRoomId);
-
     if (socket) socket.close();
     await secureRequest(async () => {
       const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
-      newWs.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp: data.timestamp }]);
-      };
-      setSocket(newWs);
+    newWs.onmessage = (event) => {
+      const data = JSON.parse(event.data);  
+      setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
+    };
+    setSocket(newWs);
     })
-
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async() => {
     await secureRequest(async () => {
-      if (socket && message.trim()) {
-        socket.send(JSON.stringify({ message: message, sender: user_id }));
+      if (socket && (message.trim() || selectedImage ) ) {
+        socket.send(JSON.stringify({ message: message || null, sender: user_id, image: selectedImage || null, }));
         setMessage("");
+        setSelectedImage(null);
       }
     })
-  };
+  };;
 
   function extractTime(timestampString) {
     const date = new Date(timestampString);
@@ -96,7 +95,7 @@ const Chats = () => {
             {chatRooms?.map(chatRoom => {
               const opponet = chatRoom?.user2_profile.id == user_id ? chatRoom?.user1_profile : chatRoom?.user2_profile;
               return (
-                <div key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id)} >
+                <div key={chatRoom.id} className={`ad-user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id)} >
                   <div className="ad-avatar-container">
                     {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="ad-user-avatar"></img> : opponet?.profile_picture ? <img src={`${api_url}${opponet?.profile_picture}`} alt={opponet?.name} className="ad-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
 
@@ -125,32 +124,34 @@ const Chats = () => {
 
           <div className="ad-messages-container" ref={messagesContainerRef}>
             {messages?.map(msg => (
-              <>
-                <div key={msg.id} className={`ad-message-wrapper ${msg.sender == user_id ? 'ad-user-message' : 'ad-other-message'}`} >
-                  <div className={`ad-message-bubble ${msg.sender == user_id ? 'ad-user-bubble' : 'ad-other-bubble'}`}>
-                    <p className="ad-message-content">{msg.text}</p>
-                    <span className="ad-message-timestamp">{extractTime(msg.timestamp)}</span>
-                  </div>
+              <div key={msg.id} className={`ad-message-wrapper ${msg.sender == user_id ? 'ad-user-message' : 'ad-other-message'}`} >
+                <div className={`ad-message-bubble ${msg.sender == user_id ? 'ad-user-bubble' : 'ad-other-bubble'}`}>
+                  {msg.image && <img src={`${api_url}${msg.image}`} alt="Sent Image" className="ad-chat-image" />}
+                  {msg.text && <p className="ad-message-content">{msg.text}</p>}
+                  <span className="ad-message-timestamp">{extractTime(msg.timestamp)}</span>
                 </div>
-                <div ref={messagesEndRef}></div>
-              </>
+              </div>
             ))}
+            <div ref={messagesEndRef}></div>
           </div>
 
           <div className="ad-message-input-container">
+            {selectedImage && (
+              <div className="ad-image-preview">
+                <button onClick={() => setSelectedImage(null)} className="ad-remove_selected"><X/></button>
+                <img src={selectedImage} alt="Preview" className="ad-preview-img" />
+              </div>
+            )}
             <div className="ad-message-input-wrapper">
-            <Paperclip className="ad-input-icon" />
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="Write a message..."
-                className="ad-message-input"
-              />
-              <button onClick={sendMessage} className="ad-send-button" >
-                <Send className="ad-send-icon" />
-              </button>
+              <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) { const reader = new FileReader(); reader.onloadend = () => { setSelectedImage(reader.result) }; reader.readAsDataURL(file); }
+              }} />
+              <label htmlFor="fileInput" className="Paperclip_label">
+                <Paperclip className="input-icon" style={{width:"25px",height:"25px"}}/>
+              </label>
+              <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Write a message..." className="ad-message-input" />
+              <button onClick={sendMessage} className="ad-send-button"><Send className="ad-send-icon"/></button>
             </div>
           </div>
         </div>
