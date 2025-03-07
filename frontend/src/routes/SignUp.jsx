@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useEffect, useState, useContext } from 'react';
-import './SignUP.css';
+import './SignUp.css';
 import API from '../api';
 import { toast } from 'sonner';
 import { useSelector } from 'react-redux';
