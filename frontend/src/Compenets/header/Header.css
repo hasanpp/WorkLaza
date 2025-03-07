@@ -226,5 +226,7 @@
     .dropdown-menu{
         margin-left: 0%;
     }
+    .notification-dropdown .notification-icon{
+      width: 80px;
+    }
   }
-

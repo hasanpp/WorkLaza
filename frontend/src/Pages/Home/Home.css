@@ -298,3 +298,26 @@
     }
 
   }
+
+  
+@media screen and (max-width: 380px) {
+    .conectivity {
+        width: 100%;
+        padding: 30px 0px 20px 40px;
+    }
+    .conectivity h2 {
+        font-size: 38px;
+        line-height: 60px;
+    }
+    .be_a_part .row {
+        margin: 0px 15px;
+    }
+
+    .be_a_part .row .lar_atr_box{
+        width: 100%;
+        padding: 10px 15px;
+    }
+    .be_a_part .col-lg-3 img {
+        display: none;
+    }
+  }

@@ -149,3 +149,9 @@ p{
         border-bottom: 2px solid var(--strok-color);
     }
   }
+
+@media screen and (max-width: 380px) {
+    .banner-heading{
+        font-size: 23px;
+    }
+  }

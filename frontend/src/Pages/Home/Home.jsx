@@ -163,7 +163,7 @@ const Home = () => {
           <p>{`Join a thriving team that is reshaping the home service industry. Explore endless opportunities to grow, connect with passionate professionals, and make a real impact in people's lives. Be part of a dynamic and innovative community that's dedicated to delivering top-quality services and excellence every day.`}</p>
         </div>
 
-        <div className='row'>
+        <div className='row max-wid-fetures'>
           <div className="lar_atr_box">
             <div className="top">
               <h5>Resource Access</h5>
