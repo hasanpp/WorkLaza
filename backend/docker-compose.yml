@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13
+    container_name: worklaza_db
+    restart: always
+    environment:
+      POSTGRES_DB: worklaza
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: hasa
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: worklaza-container
+    command: >
+      sh -c "
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        daphne -b 0.0.0.0 -p 8000 backend.asgi:application
+      "
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: backend.settings
+      DATABASE_NAME: worklaza_db
+      DATABASE_USER: worklaza_user
+      DATABASE_PASSWORD: worklaza_pass
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

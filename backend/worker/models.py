@@ -1,8 +1,6 @@
 from django.db import models
 from datetime import datetime
-
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from user.models import CustomUser as User
 
 class Jobs(models.Model):
     title = models.CharField(max_length=100, blank=False, null=False)

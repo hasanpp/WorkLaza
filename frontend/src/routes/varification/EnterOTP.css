@@ -8,3 +8,31 @@
     border-radius: 35px;
     padding: 40px 55px;
 }
+
+.otp-varificatio-row{
+    display: flex;
+    align-items: center ;
+}
+
+.otp-input-container {
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+    margin: 50px 0px;
+}
+
+.otp-input-colum {
+    background-color: transparent;
+    border: 2px solid var(--strok-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    color: #98989a;
+    font-size: 30px;
+    text-align: center;
+    align-items: center;
+}
+
+.otp_dis{
+    display: none;
+}

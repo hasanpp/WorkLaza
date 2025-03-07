@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from django.contrib.auth import get_user_model
+from user.models import CustomUser as User
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer,WalletSerializer
@@ -14,7 +14,6 @@ from django.utils import timezone
 from datetime import timedelta
 from .utils import send_rejection_email
 
-User = get_user_model()
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

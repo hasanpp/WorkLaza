@@ -1,7 +1,6 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+from user.models import CustomUser as User
 from worker.models import Worker,Jobs, WorkerAvailability as Slot
-User = get_user_model()
 
 
 class Booking(models.Model):

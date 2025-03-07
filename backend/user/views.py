@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from dj_rest_auth.registration.views import SocialLoginView
-from django.contrib.auth import get_user_model
+from .models import CustomUser as User
 from django.contrib.auth import authenticate
 from django.db.models import F
 from django.conf import settings
@@ -29,7 +29,6 @@ import hashlib
 import base64
 
 
-User = get_user_model()
 JWT_SECRET_KEY = settings.JWT_SECRET_KEY
 
 def encrypt_deterministic(text):

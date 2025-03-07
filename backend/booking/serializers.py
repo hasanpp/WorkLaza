@@ -1,9 +1,7 @@
 from rest_framework import serializers
 from .models import Booking, Review
-from django.contrib.auth import get_user_model
+from user.models import CustomUser as User
 from worker.models import Worker, Jobs, WorkerAvailability as Slot
-
-User = get_user_model()
 
     
 class ReviewSerializer(serializers.ModelSerializer):

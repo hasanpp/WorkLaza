@@ -1,14 +1,12 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from rest_framework.decorators import api_view,permission_classes
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from .models import ChatRoom, Message
 from worker.models import Worker
-from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from .serializers import ChatSerializer, MessageSerializer
 from user.serializers import UserSerializer
-User = get_user_model()
+from user.models import CustomUser as User
 from django.db.models import Q
 from rest_framework import status
 from django.conf import settings

@@ -5,7 +5,7 @@ from .models import Worker,Jobs, WorkerAvailability as Slots
 from .serializers import WorkerSerializer,JobSerializer, SlotSerializer
 from booking.models import Booking, Review
 from booking.serializers import BookingSerializer
-from django.contrib.auth import get_user_model
+from user.models import CustomUser as User
 from rest_framework.decorators import api_view, permission_classes
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated , AllowAny
@@ -23,8 +23,6 @@ import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-
-User = get_user_model()
 
 JWT_SECRET_KEY = settings.JWT_SECRET_KEY
 @api_view(['POST'])

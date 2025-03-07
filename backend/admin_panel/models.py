@@ -1,10 +1,6 @@
 from django.db import models
 from worker.models import Worker
-from django.contrib.auth import get_user_model
-
-
-User = get_user_model()
-
+from user.models import CustomUser as User
 
 # Create your models here.
 

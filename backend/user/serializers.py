@@ -1,10 +1,8 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from .models import CustomUser as User
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 import re
-
-User = get_user_model()
 
 def validate_phone(value):
     if len(value) < 10:
