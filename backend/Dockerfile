@@ -21,7 +21,7 @@ COPY . /app/
 
 EXPOSE 8000
 
-RUN mkdir -p /app/staticfiles /app/media
+RUN mkdir -p /app/staticfiles /app/mediafiles
 
 
 CMD ["gunicorn","daphne", "-b", "0.0.0.0", "-p", "8000", "backend.asgi:application"]

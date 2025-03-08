@@ -20,7 +20,7 @@ class CustomUser(AbstractUser):
     
     def generate_otp(self):
         import random
-        self.otp = str(random.randint(1000, 999999))
+        self.otp = str(random.randint(100000, 999999))
         self.otp_expiration = now() + timedelta(minutes=5)
         self.save()
         

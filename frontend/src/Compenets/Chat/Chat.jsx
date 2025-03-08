@@ -27,6 +27,7 @@ const Chat = () => {
     await secureRequest(async () => {
       API.post(`/chat/get_chats/`, {"user_id":user_id, "workerId":chatWorkerId})
       .then((res) => {
+        console.log(res?.data)
         setChatRooms(res?.data?.chats)
         setActiveReceiver(res?.data?.receiver)
         setMessages(res?.data?.messages)

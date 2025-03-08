@@ -71,7 +71,7 @@ def get_chats(request):
     
     receiver = None
     
-    all_chats = ChatRoom.objects.filter(Q(user1=user1) | Q(user2=user1)).order_by('-user1__is_superuser', '-user2__is_superuser')
+    all_chats = ChatRoom.objects.filter((Q(user1=user1) & Q(user2=user2)) | (Q(user1=user2) & Q(user2=user1)) ).order_by('-user1__is_superuser', '-user2__is_superuser')
     
     if user_for_id == user1.id:
         receiver = user2
