@@ -24,7 +24,8 @@ EXPOSE 8000
 RUN mkdir -p /app/staticfiles /app/media
 
 
-CMD [ "daphne", "-b", "0.0.0.0", "manage.py", "runserver", "-p", "8000", "petsphere.asgi:application" ]
+CMD ["gunicorn","daphne", "-b", "0.0.0.0", "-p", "8000", "backend.asgi:application"]
+
 
 
 

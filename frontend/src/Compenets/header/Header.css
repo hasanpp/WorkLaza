@@ -116,6 +116,7 @@
   .notification-icon {
     position: relative;
     cursor: pointer;
+    z-index: 100;
   }
   
   .badge {
