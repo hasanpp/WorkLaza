@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { store } from './store'
 // const apiUrl = import.meta.env.VITE_API_URL;
-const apiUrl = "https://13.55.64.93/"
+// const apiUrl = "https://13.55.64.93/"
 
 const API = axios.create({
     baseURL: apiUrl,
