@@ -203,7 +203,7 @@ SIMPLE_JWT = {
 
 SITE_ID = 2
 
-CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000", "http://localhost"]
+CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000", "http://localhost","https://www.worklaza.site"]
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
