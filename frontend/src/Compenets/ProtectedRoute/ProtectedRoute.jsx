@@ -23,7 +23,6 @@ function ProtectedRoute({children}){
     
     const refreshTokenHandler  = async () =>{
         try {
-            console.log('refreshing the token ...')
             const res = await axios.post(`${import.meta.env.VITE_API_URL}/token/refresh/`, { refresh: refreshToken });
             if (res.status === 200){
                 const data_res = await axios.post(`${import.meta.env.VITE_API_URL}/user/token_data/`,{'token':res.data.access})
@@ -49,7 +48,6 @@ function ProtectedRoute({children}){
             setPage('Home')
             localStorage.setItem('page','Home')
             toast.warning('Please signIn to visit this page')
-            //
             setIsAuthorized(false)
             return
         }

@@ -17,7 +17,6 @@ const Home = () => {
   const setIsLoading = useContext(LoadingContext);
   const [reviews, setReviews] = useState();
   const [siteData, setSiteData] = useState();
-  const apiUrl = import.meta.env.VITE_API_URL;
 
   const fetchData = async () => {
     setIsLoading(true)
@@ -133,7 +132,7 @@ const Home = () => {
             <>
               <div className="col-lg-4">
                 <div className="user_det">
-                  <img src={`${apiUrl}${review?.user_profile?.profile_picture}`} style={{borderRadius:"100%"}} alt="profile" />
+                  <img src={`${review?.user_profile?.profile_picture}`} style={{borderRadius:"100%"}} alt="profile" />
                   <div className="name">
                     <h6>{review?.user_profile?.first_name} {review?.user_profile?.last_name}</h6>
                     <span>{review?.booking_details?.title}</span>

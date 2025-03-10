@@ -1,5 +1,6 @@
 .main_workers_div{
     margin: 1% 1%;
+    min-height: 86vh;
 }
 
 .main_workers_div .sub_workers_div{

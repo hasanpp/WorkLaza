@@ -2,6 +2,8 @@ asgiref==3.8.1
 attrs==25.1.0
 autobahn==24.4.2
 Automat==24.8.1
+boto3==1.37.9
+botocore==1.37.9
 certifi==2024.12.14
 cffi==1.17.1
 channels==4.2.0
@@ -15,11 +17,13 @@ dj-rest-auth==7.0.1
 Django==5.1.5
 django-allauth==65.3.1
 django-cors-headers==4.6.0
+django-storages==1.14.5
 djangorestframework==3.15.2
 djangorestframework_simplejwt==5.4.0
 hyperlink==21.0.0
 idna==3.10
 incremental==24.7.2
+jmespath==1.0.1
 msgpack==1.1.0
 oauthlib==3.2.2
 pillow==11.1.0
@@ -29,14 +33,17 @@ pyasn1_modules==0.4.1
 pycparser==2.22
 PyJWT==2.10.1
 pyOpenSSL==25.0.0
+python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python3-openid==3.2.0
 pytz==2024.2
 redis==5.2.1
 requests==2.32.3
 requests-oauthlib==2.0.0
+s3transfer==0.11.4
 service-identity==24.2.0
 setuptools==75.8.2
+six==1.17.0
 social-auth-app-django==5.4.2
 social-auth-core==4.5.4
 sqlparse==0.5.3
@@ -47,4 +54,3 @@ typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.3.0
 zope.interface==7.2
-gunicorn==20.0.4

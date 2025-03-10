@@ -1,5 +1,6 @@
 .main_saved{
     margin: 8% 5%;
+    min-height: 57vh;
 }
 .main_saved span{
     color: #98989A;

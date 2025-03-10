@@ -24,7 +24,6 @@ const Workers = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [currentWorker, setCurrentWorker] = useState(null);
   const [formData, setFormData] = useState({});
-  const apiUrl = import.meta.env.VITE_API_URL;
   const setPage = useContext(PageContext);
 
   const restrict_worker = async (id, index) => {
@@ -300,12 +299,12 @@ const Workers = () => {
                   {currentWorker?.certificate &&
                     <Form.Group controlId="formCertificate" style={{ width: '48%', height: 'auto' }}>
                       <Form.Label>Certificate</Form.Label><br />
-                      <img src={`${apiUrl}${currentWorker.certificate}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
+                      <img src={`${currentWorker.certificate}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
                     </Form.Group>}
                   {currentWorker?.id_prof &&
                     <Form.Group controlId="formId_prof" style={{ width: '48%', height: 'auto' }}>
                       <Form.Label>Id proff</Form.Label><br />
-                      <img src={`${apiUrl}${currentWorker.id_prof}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
+                      <img src={`${currentWorker.id_prof}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
                     </Form.Group>
                   }
 

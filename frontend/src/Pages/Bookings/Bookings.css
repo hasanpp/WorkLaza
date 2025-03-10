@@ -1,6 +1,7 @@
 .main_booking{
     margin: 8% 0%;
     padding: 0% 6%;
+    min-height: 18vh;
 }
 .main_booking span{
     color: #98989A;

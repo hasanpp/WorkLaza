@@ -16,7 +16,6 @@ import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 const Bookings = () => {
 
   const setIsLoading = useContext(LoadingContext);
-  const apiUrl = import.meta.env.VITE_API_URL;
   const [bookings, setBookings] = useState(null);
   const setPage = useContext(PageContext);
   const [tb, setTb] = useState(false)
@@ -130,12 +129,12 @@ const Bookings = () => {
       <div className="main_booking container-fluid">
         <span>Bookings</span>
 
-        {
+        {bookings?.length > 0 ?
           bookings?.map((booking, index) => {
             return (
               <div className="col-lg-12 col-12 row booking_div" key={index}>
                 <div className="col-lg-2 col-5">
-                  <img src={booking?.worker_profile?.profile_picture ? `${apiUrl}${booking?.worker_profile?.profile_picture}` : user_icone} alt="" />
+                  <img src={booking?.worker_profile?.profile_picture ? `${booking?.worker_profile?.profile_picture}` : user_icone} alt="" />
                   <h5>{booking?.worker_profile?.full_name}</h5>
                   <p>₹ {booking?.total} </p>
                 </div>
@@ -177,6 +176,8 @@ const Bookings = () => {
               </div>
             )
           })
+          :
+          <><div><br /><br /><br /><span style={{color:"#fff", textAlign:"center", fontSize:"20px"}}>{`You don't have any bookings..`}</span></div></>
         }
         <Modal show={showModal} onHide={() => setShowModal(false)}>
           <Modal.Header>

@@ -20,7 +20,6 @@ const Bookings = () => {
   const [tb_c, setTb_c] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [currentBooking, setCurrentBooking] = useState(null);
-  const apiUrl = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {
@@ -224,7 +223,7 @@ const Bookings = () => {
                 currentBooking?.photo && (
                   <Form.Group controlId="formdeS" style={{ width: '49%' }}>
                     <Form.Label>Photo</Form.Label>
-                    <img src={`${apiUrl}${currentBooking?.photo}`} alt="" style={{width:'100%'}}/>
+                    <img src={`${currentBooking?.photo}`} alt="" style={{width:'100%'}}/>
                   </Form.Group>
                 )
               }

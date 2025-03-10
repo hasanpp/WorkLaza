@@ -7,7 +7,7 @@ const Not_found = () => {
 
     return (
 
-        <div>
+        <div style={{minHeight:"73vh"}}>
             <div className="container">
                 <div className="rows">
                     <br /><br /><br /><br />

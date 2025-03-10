@@ -26,7 +26,6 @@ const Profile = () => {
   const [croppedImage, setCroppedImage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const apiUrl = import.meta.env.VITE_API_URL;
   const cropperRef = useRef(null);
   const [tb , setTb] = useState(false);
   const setIsLoading =  useContext(LoadingContext)
@@ -132,7 +131,7 @@ const Profile = () => {
             <br />
             <h1 style={{ textAlign: 'center' }} className='phone_user_name'>{`${user?.first_name} ${user?.last_name}`}</h1>
             <br />
-            <img src={user?.profile_picture && `${apiUrl}${user.profile_picture}` || user?.profile_picture_g && user.le_picture_g || user_icone} alt="" /><br />
+            <img src={user?.profile_picture && `${user.profile_picture}` || user?.profile_picture_g && user.le_picture_g || user_icone} alt="" /><br />
             <button onClick={() => setShow(true)}>Add/Change image</button>
             <br />
           </div>

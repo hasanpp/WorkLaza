@@ -27,7 +27,6 @@ const Requests = () => {
   const [currentWorker, setCurrentWorker] = useState(null);
   const [jobs, setJobs] = useState();
   const setIsLoading = useContext(LoadingContext);
-  const apiUrl = import.meta.env.VITE_API_URL;
 
   const process_request = async (id, index, accept) => {
     if (!accept && !reason.trim()) {
@@ -238,11 +237,11 @@ const Requests = () => {
                 <Form.Group controlId="formImages" style={{ width: '100%', height: 'auto', display: 'flex', justifyContent: 'space-between' }}>
                   <Form.Group controlId="formCertificate" style={{ width: '48%', height: 'auto' }}>
                     <Form.Label>Certificate</Form.Label><br />
-                    <img src={`${apiUrl}${currentWorker.certificate}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
+                    <img src={`${currentWorker.certificate}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
                   </Form.Group>
                   <Form.Group controlId="formId_prof" style={{ width: '48%', height: 'auto' }}>
                     <Form.Label>Id proff</Form.Label><br />
-                    <img src={`${apiUrl}${currentWorker.id_prof}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
+                    <img src={`${currentWorker.id_prof}`} alt="Worker" style={{ width: '100%', height: 'auto', }} />
                   </Form.Group>
                 </Form.Group>
 

@@ -56,22 +56,25 @@ def get_chats(request):
         user2 = User.objects.get(id=workerId)
     if worker: 
         user2 = worker.user
-
-    chat = ChatRoom.objects.filter( (Q(user1=user1) & Q(user2=user2)) | (Q(user1=user2) & Q(user2=user1)) ).first()
-    admin_user = User.objects.filter(is_superuser=True).first()
-    if admin_user and not ChatRoom.objects.filter( (Q(user1=user1) & Q(user2=admin_user)) | (Q(user1=admin_user) & Q(user2=user1)) ).exists():
-        admin_chat = ChatRoom.objects.create(user1=user1, user2=admin_user)
         
- 
+    if user1 == user2:
+        return Response({"message": "You cannot create a chat with yourself."}, status=status.HTTP_409_CONFLICT)
+
+    if user1.id > user2.id:
+        user1, user2 = user2, user1  
+
+    chat = ChatRoom.objects.filter(user1=user1, user2=user2).first()
+    admin_user = User.objects.filter(is_superuser=True).first()
+    if admin_user and not ChatRoom.objects.filter(user1=user1, user2=admin_user).exists():
+        admin_chat = ChatRoom.objects.create(user1=user1, user2=admin_user)
     if not chat:
         chat = ChatRoom.objects.create(user1=user1,user2=user2)
-       
     
     messages = chat.messages
     
     receiver = None
     
-    all_chats = ChatRoom.objects.filter((Q(user1=user1) & Q(user2=user2)) | (Q(user1=user2) & Q(user2=user1)) ).order_by('-user1__is_superuser', '-user2__is_superuser')
+    all_chats = ChatRoom.objects.filter(Q(user1=user1) | Q(user2=user1)).distinct().order_by('-user1__is_superuser', '-user2__is_superuser')
     
     if user_for_id == user1.id:
         receiver = user2

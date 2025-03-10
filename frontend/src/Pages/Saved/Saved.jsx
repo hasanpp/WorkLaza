@@ -12,7 +12,6 @@ const Saved = () => {
   const [workers, setWorkers] = useState();
   const [tb, setTb] =useState(false);
   const setPage = useContext(PageContext);
-  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(()=>{
     const featc_data = async ()=>{
@@ -43,9 +42,9 @@ const Saved = () => {
       <span>Saved</span>
 
       <div className="workers_dis">
-                { workers? workers.map(worker => (
+                { workers?.length > 0  ? workers?.map(worker => (
                   <div key={worker?.id} className="worker_card" style={{cursor:'pointer'}}>
-                    <img src={worker?.profile_pic ? `${apiUrl}${worker?.profile_pic}` : user_icon} alt="Profile" />
+                    <img src={worker?.profile_pic ? `${worker?.profile_pic}` : user_icon} alt="Profile" />
                     <h3>{worker?.full_name}</h3>
                     <span>{worker?.job_title}</span>
                     <h4>₹ {worker?.salary}/hour</h4>
@@ -55,7 +54,7 @@ const Saved = () => {
                       <button className='Book_btn' onClick={()=>remove_saved(worker?.id)} style={{zIndex:'100'}}>Remove saved</button>
                     </div>
                   </div>
-                )) : <div><br /><br /><br /><span>There are no data to your requirment</span></div>}
+                )) : <div><br /><br /><br /><span  style={{color:"#fff", textAlign:"center", fontSize:"20px"}}>There are no saved profiles</span></div>}
               </div>
     </div>
   )

@@ -16,7 +16,6 @@ const Chat = () => {
   const [socket, setSocket] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const { user_id } = useSelector((state) => state.auth)
-  const api_url = import.meta.env.VITE_API_URL;
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
@@ -99,7 +98,7 @@ const Chat = () => {
           return (
             <div  key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id )} >
               <div className="avatar-container">
-                {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`${api_url}${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+                {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`$${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
                 
                 {opponet?.active && <span className="status-indicator"></span>}
               </div>
@@ -118,9 +117,9 @@ const Chat = () => {
       
       <div className="chat-main">
         <div className="chat-header">
-          {activeReceiver?.id == 3 ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}} className="current-user-avatar"></img> :activeReceiver?.profile_picture? <img  src={`${api_url}${activeReceiver?.profile_picture}`}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+          {activeReceiver?.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}} className="current-user-avatar"></img> :activeReceiver?.profile_picture? <img  src={`${activeReceiver?.profile_picture}`}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
           <div className="current-user-info">
-            {activeReceiver?.id == 3 ? <h5 className="current-user-name">Admin user</h5> :<h5 className="current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>} 
+            {activeReceiver?.is_superuser ? <h5 className="current-user-name">Admin user</h5> :<h5 className="current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>} 
           </div>
         </div>
         
@@ -128,7 +127,7 @@ const Chat = () => {
           {messages?.map(msg => (
             <div  key={msg.id}  className={`message-wrapper ${msg.sender == user_id ? 'user-message' : 'other-message'}`} >
               <div className={`message-bubble ${msg.sender == user_id ?'user-bubble' : 'other-bubble'}`}>
-                {msg.image && <img src={`${api_url}${msg.image}`} alt="Sent Image" className="chat-image" />}
+                {msg.image && <img src={`${msg.image}`} alt="Sent Image" className="chat-image" />}
                 {msg.text && <p className="message-content">{msg.text}</p>}
                 <span className="message-timestamp">{extractTime(msg.timestamp)}</span>
               </div>

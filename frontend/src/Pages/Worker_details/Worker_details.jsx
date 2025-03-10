@@ -20,7 +20,6 @@ const Worker_details = ({ worker_id }) => {
     const [availabilities, setAvailabilities] = useState();
     const [formData, setFormData] = useState(null);
     const { isAuthenticated } = useSelector((state) => state.auth)
-    const apiUrl = import.meta.env.VITE_API_URL;
     const [showBooking, setShowBooking] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const setIsLoading = useContext(LoadingContext);
@@ -246,7 +245,7 @@ const Worker_details = ({ worker_id }) => {
                 <div className="inner_div">
                     <div className="first_row">
                         <div className="left_side">
-                            <img src={worker?.profile_pic ? `${apiUrl}${worker?.profile_pic}` : user_icon} alt="" />
+                            <img src={worker?.profile_pic ? `${worker?.profile_pic}` : user_icon} alt="" />
                         </div>
                         <div className="right_side">
                             <br />
@@ -285,7 +284,7 @@ const Worker_details = ({ worker_id }) => {
                                 <div className="details">
                                     <div className="top">
                                         <h3>{review?.title}</h3>
-                                        <img src={`${apiUrl}${review?.user_profile?.profile_picture}`} alt={review?.user_profile?.username} />
+                                        <img src={`${review?.user_profile?.profile_picture}`} alt={review?.user_profile?.username} />
                                     </div>
                                     <br />
                                     <p>{`"${review?.description}"`}</p>

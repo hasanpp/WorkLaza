@@ -15,8 +15,7 @@ const Chats = () => {
   const [chatRooms, setChatRooms] = useState();
   const [socket, setSocket] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const { user_id } = useSelector((state) => state.auth)
-  const api_url = import.meta.env.VITE_API_URL;
+  const { user_id } = useSelector((state) => state.auth);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
@@ -97,7 +96,7 @@ const Chats = () => {
               return (
                 <div key={chatRoom.id} className={`ad-user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id)} >
                   <div className="ad-avatar-container">
-                    {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="ad-user-avatar"></img> : opponet?.profile_picture ? <img src={`${api_url}${opponet?.profile_picture}`} alt={opponet?.name} className="ad-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
+                    {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="ad-user-avatar"></img> : opponet?.profile_picture ? <img src={`${opponet?.profile_picture}`} alt={opponet?.name} className="ad-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
 
                     {opponet?.active && <span className="ad-status-indicator"></span>}
                   </div>
@@ -116,7 +115,7 @@ const Chats = () => {
 
         <div className="ad-chat-main">
           <div className="ad-chat-header">
-            {activeReceiver?.id == 3 ? <img src={logo} alt="you" style={{ borderRadius: "0%" }} className="ad-current-user-avatar"></img> : activeReceiver?.profile_picture ? <img src={`${api_url}${activeReceiver?.profile_picture}`} alt={activeReceiver?.first_name} className="ad-current-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
+            {activeReceiver?.id == 3 ? <img src={logo} alt="you" style={{ borderRadius: "0%" }} className="ad-current-user-avatar"></img> : activeReceiver?.profile_picture ? <img src={`${activeReceiver?.profile_picture}`} alt={activeReceiver?.first_name} className="ad-current-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
             <div className="ad-current-user-info">
               {activeReceiver?.id == 3 ? <h5 className="ad-current-user-name">You</h5> : <h5 className="ad-current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>}
             </div>
@@ -126,7 +125,7 @@ const Chats = () => {
             {messages?.map(msg => (
               <div key={msg.id} className={`ad-message-wrapper ${msg.sender == user_id ? 'ad-user-message' : 'ad-other-message'}`} >
                 <div className={`ad-message-bubble ${msg.sender == user_id ? 'ad-user-bubble' : 'ad-other-bubble'}`}>
-                  {msg.image && <img src={`${api_url}${msg.image}`} alt="Sent Image" className="ad-chat-image" />}
+                  {msg.image && <img src={`${msg.image}`} alt="Sent Image" className="ad-chat-image" />}
                   {msg.text && <p className="ad-message-content">{msg.text}</p>}
                   <span className="ad-message-timestamp">{extractTime(msg.timestamp)}</span>
                 </div>

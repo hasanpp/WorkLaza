@@ -5,6 +5,14 @@ class ChatRoom(models.Model):
     user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chat_user1")
     user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chat_user2")
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user1', 'user2'],
+                name='unique_chatroom_users'
+            )
+        ]
 
     def __str__(self):
         return f"Chat between {self.user1} and {self.user2}"

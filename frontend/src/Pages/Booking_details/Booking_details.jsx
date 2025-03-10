@@ -17,7 +17,6 @@ import { PageContext } from '../../Layout/Layout';
 const Booking_details = ({ booking_id }) => {
 
   const [booking, setBooking] = useState();
-  const apiUrl = import.meta.env.VITE_API_URL;
   const setIsLoading = useContext(LoadingContext);
   const [ tb, setTb] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -113,7 +112,7 @@ const Booking_details = ({ booking_id }) => {
       <br /><br />
       <div className="details col-12 clo-lg-12">
         <div className="row">
-          <img src={booking?.worker_profile?.profile_picture ? `${apiUrl}${booking?.worker_profile?.profile_picture}`: user_icone } alt="" />
+          <img src={booking?.worker_profile?.profile_picture ? `${booking?.worker_profile?.profile_picture}`: user_icone } alt="" />
           <h3>{booking?.worker_profile?.full_name}</h3>
           <h3>₹ {booking?.total}</h3>
           <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.id,booking?.id)} />
@@ -122,7 +121,7 @@ const Booking_details = ({ booking_id }) => {
         <hr />
         <div className="bootam_part">
           <div className="left col-12 col-lg-6">
-            <img src={`${apiUrl}${booking?.photo}`} alt="" />
+            <img src={`${booking?.photo}`} alt="" />
           </div>
           <div className="right col-12 col-lg-6">
             <h4>Details of Booking</h4>
