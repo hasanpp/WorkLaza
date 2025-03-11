@@ -38,7 +38,7 @@ const Requests = () => {
     setIsLoading(true)
     try {
       await secureRequest(async () => {
-        const response = await API.post(`/admin_view/process_worker_request/`, { 'id': id, 'accept': accept, 'reason': reason });
+        const response = await API.post(`/admin_view/requests_view/`, { 'id': id, 'accept': accept, 'reason': reason });
         if (accept) {
           toast.success('Request rejected')
         } else {
@@ -59,8 +59,8 @@ const Requests = () => {
     async function fetchData() {
       try {
         await secureRequest(async () => {
-          const res = await API.get('/admin_view/view_requests/');
-          const j_res = await API.get('/admin_view/view_jobs/');
+          const res = await API.get('/admin_view/requests_view/');
+          const j_res = await API.get('/admin_view/job_view/');
           setWorkers(res?.data?.workers);
           setJobs(j_res?.data?.Jobs)
           setSortedWorkers(res?.data?.workers);

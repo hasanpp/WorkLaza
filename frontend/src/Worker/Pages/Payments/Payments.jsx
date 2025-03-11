@@ -15,7 +15,7 @@ const Payments = () => {
     const fetchData = async () => {
         try {
             await secureRequest(async () => {
-                const res = await API.get('/worker/payment_view')
+                const res = await API.get('/worker/payments_view')
                 setWrokerData(res?.data?.worker)
                 setWalletData(res?.data?.wallet_rows)
             });
@@ -32,7 +32,7 @@ const Payments = () => {
     const handlePayment = async () => {
         setIsLoading(true)
         try {
-            const res = await API.post("/worker/create-checkout-session/");
+            const res = await API.post("/worker/payments_view/");
             window.location.href = res.data.checkout_url;
         } catch (err) {
             toast.error(err?.response?.data?.message || "Payment failed");

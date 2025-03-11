@@ -29,7 +29,7 @@ const Workers = () => {
   const restrict_worker = async (id, index) => {
     try {
       await secureRequest(async () => {
-        const response = await API.post(`/admin_view/restrict_worker/`, { id });
+        const response = await API.patch(`/admin_view/workers_view/`, { id });
         workers[index].is_active = !workers[index].is_active
         setTb_c(!tb_c)
         toast.success(response.data.message);
@@ -43,8 +43,8 @@ const Workers = () => {
     async function fetchData() {
       try {
         await secureRequest(async () => {
-          const res = await API.get('/admin_view/view_workers/');
-          const j_res = await API.get('/admin_view/view_jobs/');
+          const res = await API.get('/admin_view/workers_view/');
+          const j_res = await API.get('/admin_view/job_view/');
           setWorkers(res?.data?.workers);
           setJobs(j_res?.data?.Jobs)
           setSortedWorkers(res.data.workers);
@@ -60,7 +60,7 @@ const Workers = () => {
     async function fetchData() {
       try {
         await secureRequest(async () => {
-          const res = await API.get('/admin_view/view_users/');
+          const res = await API.get('/admin_view/users_view/');
           res?.data?.Users?.forEach((user) => { if (!user.is_worker) { setUsers(users => [...users, user]) } })
         });
       } catch (error) {
@@ -127,7 +127,7 @@ const Workers = () => {
       });
       if (obj) {
         await secureRequest(async () => {
-          const res = await API.post('/admin_view/edit_worker/', worker);
+          const res = await API.put('/admin_view/workers_view/', worker);
           setTb_c(!tb_c)
           toast.success(res.data.message)
         });
@@ -156,7 +156,7 @@ const Workers = () => {
     try {
       if (ok) {
         await secureRequest(async () => {
-          const res = await API.post('/admin_view/create_worker/', formData);
+          const res = await API.post('/admin_view/workers_view/', formData);
           setTb_c(!tb_c)
           setShowCreateModal(false)
           toast.success(res.data.message)

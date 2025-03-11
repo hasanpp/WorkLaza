@@ -30,7 +30,7 @@ const Categoryes = () => {
     async function fetchData() {
       try {
         await secureRequest(async () => {
-          const res = await API.get('/admin_view/view_jobs/');
+          const res = await API.get('/admin_view/job_view/');
           setJobs(res.data.Jobs);
           setSortedJobs(res.data.Jobs);
         });
@@ -90,7 +90,7 @@ const Categoryes = () => {
   const handleCreateJob = async () => {
     try {
       await secureRequest(async () => {
-        const res = await API.post('/admin_view/create_job/', formData)
+        const res = await API.post('/admin_view/job_view/', formData)
         console.log(res.data)
         setShowCreateModal(false)
         toast.success(res?.data?.message)
@@ -105,7 +105,7 @@ const Categoryes = () => {
     try {
       await secureRequest(async () => {
 
-        const res = await API.post('/admin_view/edit_job/', currentJob)
+        const res = await API.put('/admin_view/job_view/', currentJob)
         console.log(res.data)
         setShowModal(false)
         toast.success(res?.data?.message)
@@ -120,7 +120,7 @@ const Categoryes = () => {
     try {
       await secureRequest(async () => {
 
-        const res = await API.post('/admin_view/restrict_job/', { 'id': id })
+        const res = await API.patch('/admin_view/job_view/', { 'id': id })
         jobs[index].is_active = !jobs[index].is_active
         setShowCreateModal(false)
         setTb_c(!tb_c)

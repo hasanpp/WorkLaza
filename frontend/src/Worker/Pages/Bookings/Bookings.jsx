@@ -19,7 +19,7 @@ const Bookings = () => {
 
   const view_bookings = async () => {
     try {
-      const res = await API.get('/worker/view_bookings/')
+      const res = await API.get('/worker/bookings_view/')
       setBookings(res?.data?.Bookings);
     } catch (err) {
       toast.error(err?.response?.data?.message)
@@ -31,7 +31,7 @@ const Bookings = () => {
       status_f = status
     }
     try {
-      const res = await API.patch(`/worker/change_booking_status/${booking_id}`, { status: status_f })
+      const res = await API.patch(`/worker/bookings_view/${booking_id}`, { status: status_f })
       toast.success(res?.data?.message)
       handleClose()
       setTB(!tb)

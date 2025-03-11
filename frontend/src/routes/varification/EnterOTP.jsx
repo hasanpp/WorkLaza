@@ -47,7 +47,7 @@ const EnterOTP = () => {
             const otpValue = otp.join("");
             console.log("Email:", localStorage.getItem("email"));
             console.log(otpValue)
-            const response = await API.post('/user/verifyotp/', {
+            const response = await API.patch('/user/otp_view/', {
                 email: localStorage.getItem('email'),
                 otp: otpValue
             });
@@ -74,7 +74,7 @@ const EnterOTP = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await API.post('/user/sendotp/', { email: localStorage.getItem('email') });
+            await API.post('/user/otp_view/', { email: localStorage.getItem('email') });
             toast.success("OTP resent successfully!");
             setResendTimer(60);
         } catch (err) {

@@ -27,8 +27,7 @@ const Bookings = () => {
     const feachData = async () => {
       setIsLoading(true)
       try {
-        const res = await API.get('/user/view_bookings/')
-        console.log(res?.data?.Bookings)
+        const res = await API.patch('/user/bookings_view/')
         setBookings(res?.data?.Bookings)
       } catch (err) {
         toast.error(err?.response?.data?.message)
@@ -43,7 +42,7 @@ const Bookings = () => {
     setIsLoading(true);
     try {
       await secureRequest(async () => {
-        const res = await API.post('/user/review_booking/', formData);
+        const res = await API.put('/user/bookings_view/', formData);
         toast.success(res?.data?.message);
         setShowModal(false);
         setTb(!tb);
@@ -104,7 +103,7 @@ const Bookings = () => {
         setIsLoading(true)
         try {
           await secureRequest(async () => {
-            const res = await API.patch(`/user/cancel_booking/${booking_id}`)
+            const res = await API.delete(`/user/bookings_view/${booking_id}`)
             setTb(!tb)
             toast.success(res?.data?.message);
           });

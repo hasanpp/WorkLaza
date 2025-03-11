@@ -24,7 +24,7 @@ const refreshTokenHandler = async () => {
 
         if (res.status === 200) {
             const newAccessToken = res.data.access;
-            const data_res = await axios.post(`${import.meta.env.VITE_API_URL}/user/token_data/`, { token: newAccessToken });
+            const data_res = await axios.post(`${import.meta.env.VITE_API_URL}/user/featch_user_data/`, { token: newAccessToken });
 
             store.dispatch(login({
                 accessToken: newAccessToken,

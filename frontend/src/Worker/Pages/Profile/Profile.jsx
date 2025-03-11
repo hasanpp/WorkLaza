@@ -39,7 +39,7 @@ const Profile = () => {
   const get_user_details = async () => {
     setIsLoading(true)
     try {
-      const res = await API.get('/user/view_profile/')
+      const res = await API.get('/user/profile_view/')
       setUser(res.data.user)
       setFormEditData({ first_name: res.data.user.first_name, last_name: res.data.user.last_name, phone: res.data.user.phone, username: res.data.user.username })
     } catch (error) {
@@ -52,7 +52,7 @@ const Profile = () => {
   const get_worker_details = async () => {
     setIsLoading(true)
     try {
-      const res = await API.get('/worker/view_details/')
+      const res = await API.get('/worker/details_view/')
       setWorker(res.data.worker)
       let address = await getAddressFromCoordinates(res.data.worker.latitude,res.data.worker.longitude)
       setAddress(address)
@@ -92,17 +92,17 @@ const Profile = () => {
       toast.error("Please crop the image before saving.");
       return;
     }
+    setShow(false);
     setIsLoading(true)
     try {
       const formData = new FormData();
       formData.append("profile_picture", dataURLtoFile(croppedImage, "profile.jpg"));
 
-      const res = await API.post("/user/upload_profile_picture/", formData, {
+      const res = await API.post("/user/profile_view/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       toast.success(res.data.message);
-      setShow(false);
       setUser((prev) => ({ ...prev, profile_picture: res.data.profile_picture }));
     } catch (error) {
       console.log(error.response);
@@ -114,12 +114,11 @@ const Profile = () => {
   };
 
   const handleEditProfile = async () => {
+    setShowEdit(false)
     setIsLoading(true)
     try {
-      const res = await API.post("/user/edit_details/", formEditData);
-
+      const res = await API.patch("/user/profile_view/", formEditData);
       toast.success(res?.data?.message)
-      setShowEdit(false)
       setTb(!tb)
     } catch (err) {
       toast.warning(err?.response?.data?.message)
@@ -170,7 +169,7 @@ const Profile = () => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const res = await API.post('/worker/edit_details/',worker)
+      const res = await API.patch('/worker/details_view/',worker)
 
       toast.success(res?.data?.message)
     } catch (err) {

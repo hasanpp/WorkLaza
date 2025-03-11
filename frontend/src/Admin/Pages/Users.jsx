@@ -27,7 +27,7 @@ const Users = () => {
   const restrict_user = async (id, index) => {
     try {
       await secureRequest(async () => {
-        const response = await API.post(`/admin_view/restrict_user/`, { id });
+        const response = await API.patch(`/admin_view/users_view/`, { id });
         users[index].is_active = !users[index].is_active
         setTb_c(!tb_c)
         toast.success(response.data.message);
@@ -42,7 +42,7 @@ const Users = () => {
     async function fetchData() {
       try {
         await secureRequest(async () => {
-          const res = await API.get('/admin_view/view_users/');
+          const res = await API.get('/admin_view/users_view/');
           setUsers(res.data.Users);
           setSortedUsers(res.data.Users);
         });
@@ -111,7 +111,7 @@ const Users = () => {
       });
       if (obj) {
         await secureRequest(async () => {
-          const res = await API.post('/admin_view/edit_user/', user);
+          const res = await API.put('/admin_view/users_view/', user);
           setTb_c(!tb_c)
           toast.success(res.data.message)
         });
@@ -145,7 +145,7 @@ const Users = () => {
     try {
       if (ok) {
         await secureRequest(async () => {
-          const res = await API.post('/admin_view/create_user/', formData);
+          const res = await API.post('/admin_view/users_view/', formData);
           setTb_c(!tb_c)
           setShowCreateModal(false)
           toast.success(res.data.message)

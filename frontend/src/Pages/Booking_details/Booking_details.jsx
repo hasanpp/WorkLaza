@@ -28,7 +28,7 @@ const Booking_details = ({ booking_id }) => {
     const featchData = async() =>{
       setIsLoading(true)
       try {
-        const res = await API.get(`/user/view_booking/${booking_id}`)
+        const res = await API.get(`/user/bookings_view/${booking_id}`)
         
         console.log(res?.data?.Booking);
         setBooking(res?.data?.Booking)
@@ -45,7 +45,7 @@ const Booking_details = ({ booking_id }) => {
     setIsLoading(true);
     try {
       await secureRequest(async () => {
-        const res = await API.post('/user/review_booking/', formData);
+        const res = await API.put('/user/bookings_view/', formData);
         toast.success(res?.data?.message);
         setShowModal(false);
         setTb(!tb);
@@ -86,7 +86,7 @@ const Booking_details = ({ booking_id }) => {
         setIsLoading(true)
         try {
           await secureRequest(async () => {
-            const res =  await API.patch(`/user/cancel_booking/${booking_id}`)
+            const res =  await API.delete(`/user/bookings_view/${booking_id}`)
             setTb(!tb)
             toast.success(res?.data?.message);
           });

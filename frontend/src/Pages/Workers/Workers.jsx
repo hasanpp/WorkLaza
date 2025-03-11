@@ -60,7 +60,7 @@ const Workers = () => {
     }
     try {
       await secureRequest(async () => {
-        const res = await API.post("/user/save_worker/", { worker_id });
+        const res = await API.post("/user/saved_workers_view/", { worker_id });
         toast.success(res?.data?.message);
     });
     } catch (err) {
@@ -75,7 +75,7 @@ const Workers = () => {
       setIsLoading(true)
       try {
         const l_res = await getcords();
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/view_workers/`,{'longitude':l_res.longitude,'latitude':l_res.latitude});
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/workers_view/`,{'longitude':l_res.longitude,'latitude':l_res.latitude});
         setWorkers(res?.data?.Workers);
         setFilteredWorkers(res?.data?.Workers);
       } catch (err) {

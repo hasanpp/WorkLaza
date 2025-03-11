@@ -73,10 +73,10 @@ const Worker_details = ({ worker_id }) => {
                 let res = null
                 if (isAuthenticated) {
                     await secureRequest(async () => {
-                        res = await API.post('/user/view_worker/', { 'id': worker_id })
+                        res = await API.get(`/user/workers_view/${worker_id}`)
                     });
                 } else {
-                    res = await API.post('/user/view_worker/', { 'id': worker_id })
+                    res = await API.get(`/user/workers_view/${worker_id}`)
                 }
                 const today = new Date();
                 const currentDay = today.getDay();
@@ -174,7 +174,7 @@ const Worker_details = ({ worker_id }) => {
         }
         try {
             await secureRequest(async () => {
-                const res = await API.post('/user/save_worker/', { 'worker_id': worker_id })
+                const res = await API.post('/user/saved_workers_view/', { 'worker_id': worker_id })
                 toast.success(res?.data?.message)
             });
         } catch (err) {
@@ -199,7 +199,7 @@ const Worker_details = ({ worker_id }) => {
                 formDataToSend.append(key, formData[key]);
             }
             await secureRequest(async () => {
-                const res = await API.post('/user/book_worker/',formDataToSend);
+                const res = await API.post('/user/bookings_view/',formDataToSend);
                 toast.success(res?.data?.message);
             });
         } catch (err) {

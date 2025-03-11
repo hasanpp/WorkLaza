@@ -30,7 +30,7 @@ const SignIn = () => {
                 const username = res.data.username
                 const password = res.data.password
                 const new_res = await API.post('/token/',{ username:username, password:password})
-                const data_res = await API.post('/user/token_data/',{'token':new_res.data.access})
+                const data_res = await API.post('/user/featch_user_data/',{'token':new_res.data.access})
                 toast.success(res?.data?.message)
                 dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, user_id: data_res.data.id, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
                     
@@ -67,7 +67,7 @@ const SignIn = () => {
             const username = res.data.username
             const new_res = await API.post('/token/',{ username:username, password:formData.password})
                 
-            const data_res = await API.post('/user/token_data/',{'token':new_res.data.access})
+            const data_res = await API.post('/user/featch_user_data/',{'token':new_res.data.access})
             dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username,  user_id: data_res.data.id, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
             toast.success(res?.data?.message)   
         } catch (error) {
@@ -76,7 +76,7 @@ const SignIn = () => {
             
             if (error?.response?.data?.email_varify){
                 try{
-                    const get_email = await  API.post('/user/get_emaiil_from_id/', { identifire: formData.identifire,});  
+                    const get_email = await  API.patch('/user/featch_user_data/', { identifire: formData.identifire,});  
                     toast.info('This email is not verified please verify it by otp')
                     localStorage.setItem('email', get_email.data.email);
                     navigate('/signup/enterotp');

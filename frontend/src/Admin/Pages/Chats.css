@@ -284,6 +284,8 @@
   border-radius: 10px;
   border: none;
   margin-top: 2px;
+  height: auto;
+  max-width: 100%;
 }
 
 .ad-message-input-container .ad-image-preview{
@@ -303,6 +305,8 @@
 .ad-image-preview .ad-preview-img{
   border-radius: 10px;
   margin: 12px;
+  max-width: 300px;
+  max-height: 300px;
 }
 
 /* Responsive Styles */

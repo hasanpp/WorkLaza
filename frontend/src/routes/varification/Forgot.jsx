@@ -24,8 +24,8 @@ const Forgot = () => {
         setIsLoading(true);
         
         try {
-            const get_email = await  API.post('/user/get_emaiil_from_id/', { identifire: identifire,});  
-            const res= await API.post('/user/sendotp/', { email:get_email.data.email });
+            const get_email = await  API.patch('/user/featch_user_data/', { identifire: identifire,});  
+            const res= await API.post('/user/otp_view/', { email:get_email.data.email });
             localStorage.setItem('email', get_email.data.email);
             localStorage.setItem('forgot_password', true);
 

@@ -286,6 +286,8 @@
 .chat-image{
   border-radius: 10px;
   margin-top: 2px;
+  height: auto;
+  max-width: 100%;
 }
 /* Responsive Styles */
 @media (max-width: 768px) {

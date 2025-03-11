@@ -19,7 +19,7 @@ const Home = () => {
   const worker_view = async (selectedPeriod = 'week') => {
     try {
       await secureRequest(async () => {
-        const res = await API.get(`/worker/view_details?period=${selectedPeriod}`)
+        const res = await API.get(`/worker/details_view?period=${selectedPeriod}`)
         console.log(res?.data)
         setWorker({ ...res?.data?.worker, new_bookings: res?.data?.new_bookings, reviews_count: res?.data?.reviews_count, today_tasks_count: res?.data?.today_tasks_count })
         setBookingData({ booking_data: res?.data?.booking_data || [], period: res?.data?.period || 'week' });

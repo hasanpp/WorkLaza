@@ -14,7 +14,7 @@ const Schedule = () => {
 
   const view_slots = async ()=>{
     try {
-      const res = await API.get('/worker/view_slot/')
+      const res = await API.get('/worker/slot_view/')
 
       const sortedSlots = res?.data?.slots.sort((a, b) => {
 
@@ -40,7 +40,7 @@ const Schedule = () => {
       return
     }
     try {
-      const res = await API.post('/worker/add_slot/',{'week':selectedDay,'from':fromTime,'to':toTime})
+      const res = await API.post('/worker/slot_view/',{'week':selectedDay,'from':fromTime,'to':toTime})
       toast.success(res?.data?.message)
       setTB(!tb)
     } catch (err) {
@@ -50,7 +50,7 @@ const Schedule = () => {
 
   const change_slot_status = async (slot_id)=>{
     try {
-      const res = await API.post('/worker/ban_slot/',{'id':slot_id})
+      const res = await API.patch('/worker/slot_view/',{'id':slot_id})
       toast.success(res?.data?.message)
       setTB(!tb)
     } catch (err) {
@@ -60,7 +60,7 @@ const Schedule = () => {
 
   const delete_slot = async (slot_id)=>{
     try {
-      const res = await API.post('/worker/delete_slot/',{'id':slot_id})
+      const res = await API.put('/worker/slot_view/',{'id':slot_id})
       toast.success(res?.data?.message)
       setTB(!tb)
     } catch (err) {

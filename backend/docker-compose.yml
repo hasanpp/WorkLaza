@@ -6,9 +6,9 @@ services:
     container_name: worklaza_db
     restart: always
     environment:
-      POSTGRES_DB: worklaza
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: hasa
+      POSTGRES_DB: ${DATABASES_NAME}
+      POSTGRES_USER: ${DATABASES_USER}
+      POSTGRES_PASSWORD: ${DATABASES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:

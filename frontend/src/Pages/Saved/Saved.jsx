@@ -16,7 +16,7 @@ const Saved = () => {
   useEffect(()=>{
     const featc_data = async ()=>{
       try {
-        const res = await API.get('/user/view_saved_worker/')
+        const res = await API.get('/user/saved_workers_view/')
         setWorkers(res?.data?.workers)
       } catch (err) {
         toast.error(err?.response?.data?.message)
@@ -28,7 +28,7 @@ const Saved = () => {
   const remove_saved = async (worker_id)=>{
     try {
       await secureRequest(async () => {
-        const res = await API.post('/user/remove_saved_worker/',{'worker_id':worker_id})
+        const res = await API.delete(`/user/saved_workers_view/${worker_id}`)
         toast.success(res?.data?.message)
         setTb(!tb)
       });

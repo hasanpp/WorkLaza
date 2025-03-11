@@ -70,7 +70,7 @@ const WorkerRegister = () => {
 
         async function fetchData() {
             try {
-                const j_res = await API.get('/worker/view_jobs/');
+                const j_res = await API.get('/worker/register/');
                 setJobs(j_res?.data?.Jobs)
             } catch (error) {
                 toast.error(error.response.data.message);
