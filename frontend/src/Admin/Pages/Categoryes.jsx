@@ -35,7 +35,7 @@ const Categoryes = () => {
           setSortedJobs(res.data.Jobs);
         });
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
     fetchData();
@@ -93,11 +93,10 @@ const Categoryes = () => {
         const res = await API.post('/admin_view/job_view/', formData)
         console.log(res.data)
         setShowCreateModal(false)
-        toast.success(res?.data?.message)
+        toast.success(res?.data?.message || "Something went wrong")
       });
     } catch (err) {
-      console.log(err?.response?.data)
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }
   };
 
@@ -111,8 +110,7 @@ const Categoryes = () => {
         toast.success(res?.data?.message)
       });
     } catch (err) {
-      console.log(err?.response?.data)
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }
   };
 
@@ -127,8 +125,7 @@ const Categoryes = () => {
         toast.success(res?.data?.message)
       });
     } catch (err) {
-      console.log(err?.response?.data)
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }
   };
 

@@ -6,15 +6,10 @@ import os
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 SECRET_KEY = os.getenv('SECRET_KEY')
-
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-
-DEBUG = True
-
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1')
 ALLOWED_HOSTS = ["*"]
-
 
 INSTALLED_APPS = [
     'daphne',
@@ -44,7 +39,6 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -59,10 +53,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [ "http://localhost:5173" ]
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
-
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -82,9 +74,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
 ASGI_APPLICATION = 'backend.asgi.application'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -97,11 +87,13 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.{}'.format(
+             os.getenv('DATABASE_ENGINE', 'postgresql')
+         ),
         'NAME': os.getenv('DATABASES_NAME'),  
         'USER': os.getenv('DATABASES_USER'),  
         'PASSWORD': os.getenv('DATABASES_PASSWORD'),  
-        # 'HOST': os.getenv('DATABASE_HOST', 'localhost'),
         'HOST': os.getenv('DATABASE_HOST'), 
         'PORT': os.getenv('DATABASES_PORT'),
     }
@@ -150,25 +142,17 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
-STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
 AUTH_USER_MODEL = 'user.CustomUser'
 
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
+STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, "/staticfiles")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_ID = 1
 
@@ -181,12 +165,10 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
 
-
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = f"http://localhost:8000/user/auth/google/callback/"
 SOCIALACCOUNT_LOGIN_ON_GET = True
-
 
 REST_USE_JWT = True 
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -202,19 +184,13 @@ SIMPLE_JWT = {
 SITE_ID = 2
 
 CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000", "http://localhost","https://www.worklaza.site"]
-
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
-
-
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-
-
 
 # production based settigns
 
 if not DEBUG:
-
     CORS_ALLOWED_ORIGINS = [ "http://localhost:5173" ]
 
     # ---- STATIC FILES (Whitenoise) ----
@@ -223,15 +199,13 @@ if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
     
     # ---- AWS S3 Bucket ----
-    
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
     AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
-    AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
-
-    # Django-storages settings for S3
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     
+    # Django-storages settings for S3
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
@@ -242,9 +216,7 @@ if not DEBUG:
     }
 
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-
     REST_USE_JWT = True
     SOCIALACCOUNT_QUERY_EMAIL = True
     ACCOUNT_EMAIL_REQUIRED = True
-
     CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000", "http://localhost"]

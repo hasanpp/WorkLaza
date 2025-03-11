@@ -33,7 +33,7 @@ const Booking_details = ({ booking_id }) => {
         console.log(res?.data?.Booking);
         setBooking(res?.data?.Booking)
       } catch (err) {
-        toast.error(err?.response?.data?.message)
+        toast.error(err?.response?.data?.message || "Something went wrong")
       } finally {
         setIsLoading(false)
       }
@@ -51,7 +51,7 @@ const Booking_details = ({ booking_id }) => {
         setTb(!tb);
       });
     } catch (err) {
-      toast.error(err?.response?.data?.message);
+      toast.error(err?.response?.data?.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +91,7 @@ const Booking_details = ({ booking_id }) => {
             toast.success(res?.data?.message);
           });
         } catch (err) {
-          toast.error(err?.response?.data?.message)
+          toast.error(err?.response?.data?.message || "Something went wrong")
         }finally {
           setIsLoading(false)
         }

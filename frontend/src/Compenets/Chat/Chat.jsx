@@ -97,12 +97,12 @@ const Chat = () => {
           return (
             <div  key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id )} >
               <div className="avatar-container">
-                {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`$${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+                {opponet.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`$${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
                 
                 {opponet?.active && <span className="status-indicator"></span>}
               </div>
               <div className="user-details">
-                {opponet.id == 3 ?<span className="user-name">Chat with admin</span> :<span className="user-name">{opponet?.first_name} {opponet?.last_name}</span>}
+                {opponet.is_superuser ?<span className="user-name">Chat with admin</span> :<span className="user-name">{opponet?.first_name} {opponet?.last_name}</span>}
                 {opponet?.unread > 0 && (
                    <span className="unread-badge">{opponet?.unread}</span>
                 )}

@@ -30,7 +30,7 @@ const Bookings = () => {
         const res = await API.patch('/user/bookings_view/')
         setBookings(res?.data?.Bookings)
       } catch (err) {
-        toast.error(err?.response?.data?.message)
+        toast.error(err?.response?.data?.message || "Something went wrong")
       } finally {
         setIsLoading(false)
       }
@@ -48,7 +48,7 @@ const Bookings = () => {
         setTb(!tb);
       });
     } catch (err) {
-      toast.error(err?.response?.data?.message);
+      toast.error(err?.response?.data?.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +108,7 @@ const Bookings = () => {
             toast.success(res?.data?.message);
           });
         } catch (err) {
-          toast.error(err?.response?.data?.message)
+          toast.error(err?.response?.data?.message || "Something went wrong")
         } finally {
           setIsLoading(false)
         }

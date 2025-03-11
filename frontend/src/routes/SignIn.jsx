@@ -35,7 +35,7 @@ const SignIn = () => {
                 dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, user_id: data_res.data.id, username: data_res.data.username, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
                     
         } catch (err) {
-            toast.warning(err?.response?.data?.message)
+            toast.warning(err?.response?.data?.message || "Something went wrong")
         }finally {
             setIsLoading(false);
           }
@@ -71,7 +71,7 @@ const SignIn = () => {
             dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username,  user_id: data_res.data.id, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
             toast.success(res?.data?.message)   
         } catch (error) {
-            toast.error(error?.response?.data?.message);
+            toast.error(error?.response?.data?.message || "Something went wrong");
             console.log(error);
             
             if (error?.response?.data?.email_varify){
@@ -81,7 +81,7 @@ const SignIn = () => {
                     localStorage.setItem('email', get_email.data.email);
                     navigate('/signup/enterotp');
                 } catch {
-                    toast.error('plese try later');
+                    toast.error("Something went wrong");
                 }
                 
             }

@@ -96,12 +96,12 @@ const Chats = () => {
               return (
                 <div key={chatRoom.id} className={`ad-user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id)} >
                   <div className="ad-avatar-container">
-                    {opponet.id == 3 ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="ad-user-avatar"></img> : opponet?.profile_picture ? <img src={`${opponet?.profile_picture}`} alt={opponet?.name} className="ad-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
+                    {opponet.is_superuser ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="ad-user-avatar"></img> : opponet?.profile_picture ? <img src={`${opponet?.profile_picture}`} alt={opponet?.name} className="ad-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
 
                     {opponet?.active && <span className="ad-status-indicator"></span>}
                   </div>
                   <div className="ad-user-details">
-                    {opponet.id == 3 ? <span className="ad-user-name">You</span> : <span className="ad-user-name">{opponet?.first_name} {opponet?.last_name}</span>}
+                    {opponet.is_superuser ? <span className="ad-user-name">You</span> : <span className="ad-user-name">{opponet?.first_name} {opponet?.last_name}</span>}
                     {opponet?.unread > 0 && (
                       <span className="ad-unread-badge">{opponet?.unread}</span>
                     )}
@@ -115,9 +115,9 @@ const Chats = () => {
 
         <div className="ad-chat-main">
           <div className="ad-chat-header">
-            {activeReceiver?.id == 3 ? <img src={logo} alt="you" style={{ borderRadius: "0%" }} className="ad-current-user-avatar"></img> : activeReceiver?.profile_picture ? <img src={`${activeReceiver?.profile_picture}`} alt={activeReceiver?.first_name} className="ad-current-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
+            {activeReceiver?.is_superuser ? <img src={logo} alt="you" style={{ borderRadius: "0%" }} className="ad-current-user-avatar"></img> : activeReceiver?.profile_picture ? <img src={`${activeReceiver?.profile_picture}`} alt={activeReceiver?.first_name} className="ad-current-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
             <div className="ad-current-user-info">
-              {activeReceiver?.id == 3 ? <h5 className="ad-current-user-name">You</h5> : <h5 className="ad-current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>}
+              {activeReceiver?.is_superuser ? <h5 className="ad-current-user-name">You</h5> : <h5 className="ad-current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>}
             </div>
           </div>
 

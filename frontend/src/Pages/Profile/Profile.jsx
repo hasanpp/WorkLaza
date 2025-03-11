@@ -100,7 +100,7 @@ const Profile = () => {
         setTb(!tb)
       });
     } catch (err) {
-      toast.warning(err?.response?.data?.message)
+      toast.warning(err?.response?.data?.message || "Something went wrong")
     } finally {
       setIsLoading(false)
     }

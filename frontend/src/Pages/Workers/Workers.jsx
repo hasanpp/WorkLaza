@@ -42,7 +42,7 @@ const Workers = () => {
             resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude });
           },
           (error) => {
-            toast.error("Error getting geolocation:", error);
+            toast.error("Error getting geolocation :", error);
             resolve({ latitude: 0, longitude: 0 });
           }
         );

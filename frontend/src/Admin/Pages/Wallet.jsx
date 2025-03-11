@@ -4,8 +4,6 @@ import { useEffect, useState, useContext } from 'react';
 import { SearchContext } from '../Admin';
 import API from '../../api';
 import { toast } from 'sonner';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { X } from 'react-bootstrap-icons';
 import secureRequest from '../../Compenets/ProtectedRoute/secureRequest';
 
 
@@ -28,7 +26,7 @@ const Wallet = () => {
           setBalence(res?.data?.balence);
         });
       } catch (error) {
-        toast.error(error?.response?.data?.message);
+        toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
     fetchData();

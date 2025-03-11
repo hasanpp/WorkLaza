@@ -1,0 +1,45 @@
+# --- Backend ---
+    """ If you made changes or starting the project, use """
+        docker-compose up --build -d
+
+
+    """ Stop and remove everything (if needed before restart) """
+        docker-compose down -v
+
+    """ Check Running Containers """
+        docker ps
+
+    """ Check All Containers (including stopped ones) """
+        docker ps -a
+
+    """ Restart Your Django Container """
+        docker restart django-docker
+
+    """ docker stop django-docker """
+        docker stop django-docker
+
+    """ Remove a Stopped Container """
+        docker rm django-docker
+
+    """ Access the Running Container (for debugging) """
+        docker exec -it django-docker bash
+    
+    """" Check Logs for Errors  """
+        docker logs django-docker
+
+    """ Follow Logs in Real-Time """"
+        docker logs -f django-docker
+
+    """ Rebuilding the Project """
+        docker-compose down -v
+        docker-compose up --build -d
+
+# --- Frontend ---
+
+    """ To initiate or setup """
+        npm install
+
+    """ also setup a .env file in frontend folder"""
+
+    """ to run """
+        react run dev

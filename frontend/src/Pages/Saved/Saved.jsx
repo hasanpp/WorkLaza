@@ -19,7 +19,7 @@ const Saved = () => {
         const res = await API.get('/user/saved_workers_view/')
         setWorkers(res?.data?.workers)
       } catch (err) {
-        toast.error(err?.response?.data?.message)
+        toast.error(err?.response?.data?.message || "Something went wrong")
       }
     }
     featc_data();
@@ -33,7 +33,7 @@ const Saved = () => {
         setTb(!tb)
       });
     } catch (err) {
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }
   }
 

@@ -34,7 +34,7 @@ const Users = () => {
       });
     } catch (err) {
       console.log(err);
-      toast.error(err.response?.data?.message || "An error occurred");
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -47,7 +47,7 @@ const Users = () => {
           setSortedUsers(res.data.Users);
         });
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
     fetchData();
@@ -113,11 +113,11 @@ const Users = () => {
         await secureRequest(async () => {
           const res = await API.put('/admin_view/users_view/', user);
           setTb_c(!tb_c)
-          toast.success(res.data.message)
+          toast.success(res?.data?.message)
         });
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
     setShowModal(false);
   }
@@ -152,7 +152,7 @@ const Users = () => {
         });
       }
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error(err.response.data.message || "Something went wrong");
     }
   }
 

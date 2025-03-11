@@ -43,7 +43,7 @@ const Profile = () => {
       setUser(res.data.user)
       setFormEditData({ first_name: res.data.user.first_name, last_name: res.data.user.last_name, phone: res.data.user.phone, username: res.data.user.username })
     } catch (error) {
-      toast.error(error?.response?.data?.message)
+      toast.error(error?.response?.data?.message || "Something went wrong")
     } finally{
       setIsLoading(false)
     }
@@ -57,7 +57,7 @@ const Profile = () => {
       let address = await getAddressFromCoordinates(res.data.worker.latitude,res.data.worker.longitude)
       setAddress(address)
     } catch (error) {
-      toast.error(error?.response?.data?.message)
+      toast.error(error?.response?.data?.message || "Something went wrong")
     }
     finally{
       setIsLoading(false)
@@ -121,7 +121,7 @@ const Profile = () => {
       toast.success(res?.data?.message)
       setTb(!tb)
     } catch (err) {
-      toast.warning(err?.response?.data?.message)
+      toast.warning(err?.response?.data?.message || "Something went wrong")
     } finally{
       setIsLoading(false)
     }
@@ -147,7 +147,7 @@ const Profile = () => {
           toast.err("Geolocation is not supported by this browser.");
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     } finally {
       setIsLoading(false)
     }
@@ -171,9 +171,9 @@ const Profile = () => {
     try {
       const res = await API.patch('/worker/details_view/',worker)
 
-      toast.success(res?.data?.message)
+      toast.success(res?.data?.message || "Something went wrong")
     } catch (err) {
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }finally{
       setIsLoading(false)
     }

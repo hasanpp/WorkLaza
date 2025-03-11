@@ -35,7 +35,7 @@ const Workers = () => {
         toast.success(response.data.message);
       });
     } catch (err) {
-      toast.error(err.response?.data?.message || "An error occurred");
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -50,7 +50,7 @@ const Workers = () => {
           setSortedWorkers(res.data.workers);
         });
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
     fetchData();
@@ -64,7 +64,7 @@ const Workers = () => {
           res?.data?.Users?.forEach((user) => { if (!user.is_worker) { setUsers(users => [...users, user]) } })
         });
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
     fetchData();
@@ -129,11 +129,11 @@ const Workers = () => {
         await secureRequest(async () => {
           const res = await API.put('/admin_view/workers_view/', worker);
           setTb_c(!tb_c)
-          toast.success(res.data.message)
+          toast.success(res?.data?.message)
         });
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message);
     }
     setShowModal(false);
   }
@@ -159,11 +159,11 @@ const Workers = () => {
           const res = await API.post('/admin_view/workers_view/', formData);
           setTb_c(!tb_c)
           setShowCreateModal(false)
-          toast.success(res.data.message)
+          toast.success(res?.data?.message)
         });
       }
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error(err?.response?.data?.message || "Something went wrong");
     }
   }
   const handleChatOpen = (userId) => {

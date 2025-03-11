@@ -22,7 +22,7 @@ const Bookings = () => {
       const res = await API.get('/worker/bookings_view/')
       setBookings(res?.data?.Bookings);
     } catch (err) {
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }
   }
 
@@ -36,7 +36,7 @@ const Bookings = () => {
       handleClose()
       setTB(!tb)
     } catch (err) {
-      toast.error(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message || "Something went wrong")
     }
   }
 

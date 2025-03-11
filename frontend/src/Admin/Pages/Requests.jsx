@@ -45,7 +45,7 @@ const Requests = () => {
           setReason('Id proof is not valid')
         }
         setTb_c(!tb_c)
-        toast.success(response?.data?.message);
+        toast.success(response?.data?.message || "Something went wrong");
       });
     } catch (err) {
       console.log(err);
@@ -66,7 +66,7 @@ const Requests = () => {
           setSortedWorkers(res?.data?.workers);
         });
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message || "Something went wrong");
       }
     }
     fetchData();
