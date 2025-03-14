@@ -46,10 +46,10 @@ export const { login, logout, restoreSession  } = authSlice.actions;
 export const restoreUserSession = async (dispatch, refreshToken) => {
     try {
         if (!refreshToken) return;
-        const res = await axios.post(`${import.meta.env.VITE_API_URL}/token/refresh/`, { refresh: refreshToken });
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}token/refresh/`, { refresh: refreshToken });
         if (res.status === 200) {
             const newAccessToken = res.data.access;
-            const data_res = await axios.post(`${import.meta.env.VITE_API_URL}/user/featch_user_data/`, { token: newAccessToken });
+            const data_res = await axios.post(`${import.meta.env.VITE_API_URL}user/featch_user_data/`, { token: newAccessToken });
             console.log(data_res.data)
             dispatch(login({ accessToken: newAccessToken, refreshToken: refreshToken, username: data_res.data.username, user_id: data_res.data.id, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role }));
         }
