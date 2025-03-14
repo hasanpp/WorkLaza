@@ -130,10 +130,13 @@ hr{
 .form-input-2{
     margin-bottom: 30px;
 }
+
+/* google-siing-customisation */
 .google_sign_in{
     padding-top: 20px;
+    width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 .google_sign_in svg{
     width: 30px;
@@ -147,6 +150,36 @@ hr{
     border: none;
     width: 45px;
 }
+
+.google_sign_in div{
+    height: 40px;
+    width: 100%;
+}
+
+.google_sign_in iframe{
+    display: block;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    height: 44px;
+    width: 229px;
+    border: 0px;
+    margin: 0px 0px;
+    width: 100%;
+}
+
+.haAclf {
+    padding: 0px 0px;
+    width: 100%;
+}
+.nsm7Bb-HzV7m-LgbsSe {
+    max-width: 400px;
+    min-width: 200px;
+    padding: 20px 20px;
+    border: 2px solid var(--icon-color);
+}
+
+
 
 @media screen and (max-width: 991.5px) {
     .logo-class {

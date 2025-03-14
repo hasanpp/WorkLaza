@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 const EnterOTP = () => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef([]);
-    const [resendTimer, setResendTimer] = useState(60);
+    const [resendTimer, setResendTimer] = useState(180);
     const navigate = useNavigate();
     const { isAuthenticated } = useSelector((state) => state.auth);
     const setIsLoading = useContext(LoadingContext);
@@ -76,7 +76,7 @@ const EnterOTP = () => {
         try {
             await API.post('/user/otp_view/', { email: localStorage.getItem('email') });
             toast.success("OTP resent successfully!");
-            setResendTimer(60);
+            setResendTimer(180);
         } catch (err) {
             console.log(err);
             toast.error("Failed to resend OTP.");

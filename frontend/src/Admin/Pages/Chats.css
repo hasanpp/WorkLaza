@@ -309,6 +309,49 @@
   max-height: 300px;
 }
 
+
+.ad-loading-bubble {
+  padding: 10px;
+  height: 30px;
+}
+
+.ad-loading-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0px 10px;
+}
+
+.ad-loading-dots .dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.ad-loading-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.ad-loading-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { 
+    transform: scale(0);
+  } 40% { 
+    transform: scale(1);
+  }
+}
+
+.ad-user-bubble .dot {
+  background-color: white;
+}
+
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   /* .ad-chat-container {

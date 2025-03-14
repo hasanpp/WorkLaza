@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1')
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1","api.worklaza.site", '3.27.255.100']
 
 INSTALLED_APPS = [
     'daphne',
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'corsheaders',
+    'background_task',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [ "http://localhost:5173" ]
+CORS_ALLOWED_ORIGINS = [ "http://localhost:5173","https://www.api.worklaza.site", "https://api.worklaza.site", "https://www.worklaza.site", "https://worklaza.site"]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'backend.urls'
@@ -103,6 +104,7 @@ DATABASES = {
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer", 
+        "CONFIG": {"expiry": 3600},
         # "CONFIG": {
         #     "hosts": [("127.0.0.1", 6379)],
         # },
@@ -160,7 +162,7 @@ SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com' 
 EMAIL_PORT = 587  
-EMAIL_USE_TLS = True  
+EMAIL_USE_TLS = True 
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
@@ -188,10 +190,17 @@ STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
+
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")  
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
 # production based settigns
 
 if not DEBUG:
-    CORS_ALLOWED_ORIGINS = [ "http://localhost:5173" ]
+    CORS_ALLOWED_ORIGINS = [ "http://localhost:5173","https://www.api.worklaza.site", "https://api.worklaza.site", "https://www.worklaza.site", "https://worklaza.site"]
+
 
     # ---- STATIC FILES (Whitenoise) ----
     STATIC_URL = '/static/'
@@ -219,4 +228,4 @@ if not DEBUG:
     REST_USE_JWT = True
     SOCIALACCOUNT_QUERY_EMAIL = True
     ACCOUNT_EMAIL_REQUIRED = True
-    CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000", "http://localhost"]
+    CSRF_TRUSTED_ORIGINS = ["https://api.stripe.com","http://127.0.0.1:8000",  "http://localhost:5173","https://www.api.worklaza.site", "https://api.worklaza.site", "https://www.worklaza.site", "https://worklaza.site" ]

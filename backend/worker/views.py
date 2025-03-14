@@ -307,8 +307,8 @@ class PaymentsView(APIView):
                     }
                 ],
                 mode="payment",
-                success_url=f"http://localhost:5173/payment-success?session_id={{CHECKOUT_SESSION_ID}}",
-                cancel_url="http://localhost:5173/payment-failed",
+                success_url=f"https://worklaza.site/payment-success?session_id={{CHECKOUT_SESSION_ID}}",
+                cancel_url="https://worklaza.site/payment-failed",
                 customer_email=request.user.email,
             )
             return Response({"checkout_url": checkout_session.url}, status=status.HTTP_200_OK)

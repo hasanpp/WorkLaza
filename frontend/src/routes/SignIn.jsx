@@ -133,14 +133,14 @@ const SignIn = () => {
                                 <input type="password" className="form-input form-input-2" id="password" value={formData.password} required onChange={handleChange}/>
                             </div>
                             <hr />
+                            <div className='google_sign_in' >
+                                <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
+                            </div>
                             <button type="submit" className="form_submit_btn" onClick={handleSubmit}>Sign In</button>
                         </form>
                         <div className="sign_up">
-                            <p className='label' onClick={()=>navigate('/signUP')} style={{lineHeight:'10px'}}>{`Don't Have an account?`}<a>Please Sign Up</a></p>
-                            <p className='label' onClick={()=>navigate('/Forgot')} style={{textAlign:'end'}}><a>Forgot Password?</a></p>
-                        </div>
-                        <div className='google_sign_in' >
-                            <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
+                            <p className='label' onClick={()=>navigate('/signUP')} style={{lineHeight:'16px'}}>{`Don't Have an account?`}<br/>Please Sign Up</p>
+                            <p className='label' onClick={()=>navigate('/Forgot')} style={{textAlign:'end'}}>Forgot Password?</p>
                         </div>
                     </div>
                 </div>

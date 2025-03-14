@@ -15,6 +15,7 @@ const Chats = () => {
   const [chatRooms, setChatRooms] = useState();
   const [socket, setSocket] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [chatLoading, setChatLoading] = useState(false);
   const { user_id } = useSelector((state) => state.auth);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -51,11 +52,15 @@ const Chats = () => {
     if (socket) socket.close();
     await secureRequest(async () => {
       const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
-    newWs.onmessage = (event) => {
-      const data = JSON.parse(event.data);  
-      setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
-    };
-    setSocket(newWs);
+      newWs.onmessage = (event) => {
+        setChatLoading(true);
+        const data = JSON.parse(event.data);  
+        setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
+        setTimeout(() => { 
+          setChatLoading(false);
+        }, 50);
+      };
+      setSocket(newWs);
     })
   };
 
@@ -131,6 +136,17 @@ const Chats = () => {
                 </div>
               </div>
             ))}
+              {chatLoading && (
+              <div className="ad-message-wrapper ad-user-message" >
+                <div className="ad-message-bubble ad-user-bubble ad-loading-bubble">
+                  <div className="ad-loading-dots">
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                    <span className="dot"></span>
+                  </div>
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef}></div>
           </div>
 

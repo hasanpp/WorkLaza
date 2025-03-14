@@ -1,9 +1,8 @@
 from .serializers import SignUpSerializer,UserSerializer,ProfilePictureSerializer
-from worker.serializers import WorkerSerializer, WorkersSerializer
-from .utils import send_otp_email
+from worker.serializers import WorkersSerializer
+from .tasks import send_otp_email
 from .models import Saved_Workers
 from django.utils import timezone
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,14 +10,10 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from dj_rest_auth.registration.views import SocialLoginView
 from .models import CustomUser as User
 from django.contrib.auth import authenticate
-from django.db.models import F
 from django.conf import settings
-from django.http import JsonResponse
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from  worker.models import *
-from datetime import datetime,timedelta
+from datetime import datetime
 from  booking.models import Booking, Review
 from booking.serializers import BookingSerializer, ReviewSerializer
 from math import sin, cos, sqrt, atan2, radians
@@ -32,7 +27,8 @@ JWT_SECRET_KEY = settings.JWT_SECRET_KEY
 
 # --- Some functions other than API fFunctions ----
 class ProgramFunctions:
-    def encrypt_deterministic(self, text):
+    @staticmethod
+    def encrypt_deterministic(text):
         key = settings.SECRET_KEY.encode()
         hashed = hmac.new(key, text.encode(), hashlib.sha256).digest()
         return base64.urlsafe_b64encode(hashed).decode()
@@ -75,13 +71,14 @@ class SignupView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             user.generate_otp() 
-            send_otp_email(user)
+            send_otp_email.delay(user.id)
             return Response({'message': 'User created successfully! Please verify your email.'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 # --- User sign in view ----
 class SignInView(APIView):
     permission_classes = [AllowAny]
+    
     def get_user_by_identifier(self, identifier):
         user = User.objects.filter(username=identifier).first() or \
                User.objects.filter(email=identifier).first() or \
@@ -91,7 +88,7 @@ class SignInView(APIView):
         if not user.is_active:
             return Response({'message': 'This user is blocked by the admin'},status=status.HTTP_401_UNAUTHORIZED)
         if not user.is_authenticated:
-            send_otp_email(user)
+            send_otp_email.delay(user.id)
             return Response({'message': 'User is not authenticated Please verify email with otp','email_varify':True}, status=status.HTTP_401_UNAUTHORIZED)
         authenticated_user = authenticate(username=user.username, password=password)
         if authenticated_user:
@@ -125,7 +122,7 @@ class CustomGoogleOAuth2Adapter(GoogleOAuth2Adapter):
 class GoogleLogin(SocialLoginView): 
     permission_classes=[AllowAny]
     adapter_class = CustomGoogleOAuth2Adapter
-    callback_url = "http://localhost:5173/"
+    callback_url = "https://worklaza.site"
     permission_classes = [AllowAny]
     
     def post(self, request, *args, **kwargs):
@@ -164,11 +161,12 @@ class OtpView(APIView):
         try:
             user = User.objects.get(email=email)
             user.generate_otp()
-            send_otp_email(user)
+            send_otp_email.delay(user.id)
             return Response({'message': 'OTP sent successfully!'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'No user exists with this email'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            print("EXCEPT : ", str(e))
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self, request, *args, **kwargs):

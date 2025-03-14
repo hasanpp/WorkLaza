@@ -3,6 +3,7 @@ from django.conf import settings
 from datetime import datetime
 
 def send_otp_email(user):
+    print("lalalalallala    ")
     subject = "Your OTP Verification Code"
     message = f"""
     Hi {f'{user.first_name} {user.last_name}'},

@@ -214,10 +214,9 @@ class WalletView(APIView):
         try:
             wallet = Wallet.objects.all()
             balence = Wallet.objects.filter(status="success",type="credit").aggregate(Sum('amount'))
+            total_balance = balence.get('amount__sum') or 0
             serialized_data = WalletSerializer(wallet, many=True).data
-            if balence == None or not balence:
-                balence['amount__sum'] = 0
-            return Response({"message":"OK success","Wallet":serialized_data, "balence":(balence['amount__sum']/100)}, status=status.HTTP_200_OK)
+            return Response({"message":"OK success","Wallet":serialized_data, "balence":total_balance / 100 }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

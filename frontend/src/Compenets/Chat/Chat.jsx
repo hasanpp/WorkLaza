@@ -15,6 +15,7 @@ const Chat = () => {
   const [chatRooms, setChatRooms] = useState();
   const [socket, setSocket] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [chatLoading, setChatLoading] = useState(false);
   const { user_id } = useSelector((state) => state.auth)
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -51,24 +52,27 @@ const Chat = () => {
     if (socket) socket.close();
     await secureRequest(async () => {
       const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
-    newWs.onmessage = (event) => {
-      const data = JSON.parse(event.data);  
-      setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
-    };
-    setSocket(newWs);
+      newWs.onmessage = (event) => {
+        setChatLoading(true);
+        const data = JSON.parse(event.data);  
+        setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
+        setTimeout(() => { 
+          setChatLoading(false);
+        }, 50);
+      };
+      setSocket(newWs);
     })
-    
   };
 
   
   const sendMessage = async() => {
-    await secureRequest(async () => {
-      if (socket && (message.trim() || selectedImage ) ) {
-        socket.send(JSON.stringify({ message: message || null, sender: user_id, image: selectedImage || null, }));
-        setMessage("");
-        setSelectedImage(null);
-      }
-    })
+    if (socket && (message.trim() || selectedImage ) ) {
+      await secureRequest(async () => {
+        await socket.send(JSON.stringify({ message: message || null, sender: user_id, image: selectedImage || null, }));
+      });
+      setMessage("");
+      setSelectedImage(null);
+    }
   };
 
   function extractTime(timestampString) {
@@ -132,6 +136,17 @@ const Chat = () => {
               </div>
             </div>
           ))}
+          {chatLoading && (
+            <div className="message-wrapper user-message" >
+              <div className="message-bubble user-bubble loading-bubble">
+                <div className="loading-dots">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                </div>
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef}></div>
         </div>
         

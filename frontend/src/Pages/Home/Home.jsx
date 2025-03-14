@@ -20,7 +20,6 @@ const Home = () => {
 
   const fetchData = async () => {
     setIsLoading(true)
-    console.log('API URL:',import.meta.env.VITE_API_URL);
     try {
       const res = await API.get('/user/home_view')
       setSiteData(res?.data)

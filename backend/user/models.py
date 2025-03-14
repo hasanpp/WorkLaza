@@ -21,10 +21,11 @@ class CustomUser(AbstractUser):
     def generate_otp(self):
         import random
         self.otp = str(random.randint(100000, 999999))
-        self.otp_expiration = now() + timedelta(minutes=5)
+        self.otp_expiration = now() + timedelta(minutes=10)
         self.save()
         
     def verify_otp(self, otp):
+        print(f"Stored OTP: {self.otp} {self.otp == otp}, Expiry: {self.otp_expiration > now()}")
         if self.otp == otp and self.otp_expiration > now():
             self.is_authenticated = True
             self.otp = None

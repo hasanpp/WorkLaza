@@ -33,9 +33,8 @@ const Forgot = () => {
 
             
         } catch (err) {
-            console.log(err.response.data);
-            
-            toast.error('Invalid identifire. Please try again.');
+            console.log(err);
+            toast.error(err?.response?.data?.message);
         } finally {
             setIsLoading(false);
           }
