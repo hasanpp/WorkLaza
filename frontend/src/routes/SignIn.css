@@ -132,7 +132,7 @@ hr{
 }
 
 /* google-siing-customisation */
-/* .google_sign_in{
+.google_sign_in{
     padding-top: 20px;
     width: 100%;
     display: flex;
@@ -180,65 +180,6 @@ hr{
 }
 
 
-.custom-google-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: white;
-    color: black;
-    border: 2px solid var(--icon-color);
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease-in-out;
-}
-
-.custom-google-button:hover {
-    background-color: #f1f1f1;
-}
-
-.custom-google-button img {
-    width: 20px;
-} */
-
-.google_sign_in {
-    padding-top: 20px;
-    width: 100%;
-    display: flex;
-    justify-content: center;  /* Centers the button */
-    align-items: center;
-}
-
-.google_sign_in div {
-    height: 50px !important;
-    width: 250px !important;  /* Adjust button width */
-    border-radius: 8px;
-    border: 2px solid var(--icon-color);
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.google_sign_in iframe {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-    border: none;
-    filter: brightness(90%); /* Optional: Darken the button */
-}
-
-
-.google_sign_in div:hover {
-    background-color: #f1f1f1;
-    border-color: #007bff;
-    transition: all 0.3s ease-in-out;
-}
-
-
 @media screen and (max-width: 991.5px) {
     .logo-class {
         width: 0%;
@@ -258,11 +199,19 @@ hr{
 
 @media screen and (max-width: 400px) {
     .cols-grid .sign_form {
-        width: 100%;
-        padding: 30px 30px;
+        width: 96%;
+        padding: 30px 7%;
+        margin-top: 0%;
     }
     .sign-in-main-div{
         height: 100vh;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+    .form-div{
+        display: flex;
+        justify-content: center;
     }
     .sign_up .label{
         font-size: 10px;

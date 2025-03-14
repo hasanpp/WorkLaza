@@ -9,13 +9,14 @@ import { useNavigate } from 'react-router-dom';
 
 
 const ChangePassword = () => {
-
     const setIsLoading = useContext(LoadingContext);
     const [password,setPassword] = useState('');
     const [cpassword,setCpassword] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isAuthenticated } = useSelector((state) => state.auth)
+    const isOtpVerified = useSelector((state) => state.otp.isOtpVerified);
+    const userEmail = useSelector((state) => state.otp.userEmail);
 
     const handleSubmit = async(e) =>{
 
@@ -27,7 +28,7 @@ const ChangePassword = () => {
         else {
             setIsLoading(true);
             try{
-                const res = await API.patch('/user/password_view/', { email:localStorage.getItem('email'), password:password });
+                const res = await API.patch('/user/password_view/', { email:userEmail, password:password });
                 const username = res.data.username
                 const new_res = await API.post('token/',{ username:username, password:password})
 
@@ -45,10 +46,18 @@ const ChangePassword = () => {
     }
 
     useEffect(() => {
-            if (isAuthenticated) {
-                navigate('/');
-            }
-    }, [navigate, isAuthenticated]);
+        if (isAuthenticated) {
+            navigate('/');
+        }
+        if (!isOtpVerified) {
+            navigate('/Forgot'); 
+        }
+        if (!userEmail) {
+            toast.error('Something went wrong. Please try again.');
+            navigate('/forgot');
+            return;
+        }
+    }, [navigate, isAuthenticated, isOtpVerified, userEmail]);
 
     return (
         <div className="container">

@@ -6,7 +6,8 @@ import logo from '../../assets/logo.png';
 import './EnterOTP.css';
 import { toast } from 'sonner';
 import { LoadingContext } from '../../App';
-import {useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserEmail } from '../../otpSlice';
 
 
 
@@ -17,7 +18,7 @@ const Forgot = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useSelector((state) => state.auth)
     const setIsLoading = useContext(LoadingContext);
-
+    const dispatch = useDispatch();
 
     const handleSubmit = async (e)=>{
         e.preventDefault();
@@ -26,9 +27,8 @@ const Forgot = () => {
         try {
             const get_email = await  API.patch('/user/featch_user_data/', { identifire: identifire,});  
             const res= await API.post('/user/otp_view/', { email:get_email.data.email });
-            localStorage.setItem('email', get_email.data.email);
+            dispatch(setUserEmail(get_email.data.email));
             localStorage.setItem('forgot_password', true);
-
             navigate('/signup/enterotp');
 
             

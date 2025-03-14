@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import './Header.css'
 import logo from '../../assets/logo.png'
-import { Person, Bell, Pass } from 'react-bootstrap-icons';
+import { Person, Bell, Pass, ChatLeftDots, PersonFill } from 'react-bootstrap-icons';
 import { useState, useContext, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ const Header = ({ page }) => {
   const [ws, setWs] = useState(null);
   const web_socket_url = import.meta.env.VITE_WEBSOCKET_URL;
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropDwon, setIsDropDwon] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleLogout = () => {
@@ -78,7 +79,7 @@ const Header = ({ page }) => {
 
   return (
     <div className="container">
-      <nav className="navbar navbar-expand-lg navbar-light">
+      <nav className="navbar navbar-expand-lg navbar-light" >
         <a className="navbar-brand" href="#">
           <img src={logo} alt="" />
           <h4>Work Laza</h4>
@@ -100,29 +101,31 @@ const Header = ({ page }) => {
             </li>
           </ul>
         </div>
-
-        <div className="dropdown">
-          <button className='btn btn-info' type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span>{username ? `${first_name} ${last_name}` : 'user'}</span> &nbsp;
-            <Person color="white" size={20} />
+        <div className="header-icones">
+          <ChatLeftDots color="#AFDDE5" style={{ color: 'white', cursor: 'pointer', fontSize: '25px' }} onClick={() => { setPage('Chat'), localStorage.setItem('page', 'Chat') }}/>
+          <button className='user-icone-heder' type="button" onClick={()=>setIsDropDwon(!isDropDwon)}>
+            <PersonFill color="#AFDDE5" size={25} style={{ color: 'white', cursor: 'pointer', fontSize: '25px'}}/>
           </button>
-          <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div className="notification-icon" >
+            <Bell style={{ color: '#AFDDE5', cursor: 'pointer', fontSize: '25px' }} onClick={toggleDropdown}/>
+            {notifications.length > 0 && <span className="badge">{notifications.length}</span>}
+          </div>
+        </div>
+        {
+          isDropDwon && <div className={`custom-dropdown ${isAuthenticated? "blue": "not-isauth" }`}>
+          <div className="custom-dropdown-menu" >
 
-            {!isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signin')}>Sign In</a> : null}
-            {!isAuthenticated ? <a className="dropdown-item" onClick={() => navigate('/signup')}>Sign Up</a> : null}
-            {isAuthenticated ? <a className="dropdown-item" onClick={() => { setPage('Profile'), localStorage.setItem('page', 'Profile') }}>View profile</a> : null}
-            {isAuthenticated ? <a className="dropdown-item" onClick={() => { setPage('Chat'), localStorage.setItem('page', 'Chat') }} >Chat</a> : null}
-            {role == "user" ? <a className="dropdown-item" onClick={() => navigate('/worker_register')}>Register as a worker</a> : null}
-            {isAuthenticated ? <a style={{ color: "red" }} className="dropdown-item dropdown-item-red" onClick={handleLogout}>Log out</a> : null}
+            {!isAuthenticated ? <a className="custom-dropdown-item" onClick={() => {setIsDropDwon(!isDropDwon),navigate('/signin')}}>Sign In</a> : null}
+            {!isAuthenticated ? <a className="custom-dropdown-item" onClick={() => {setIsDropDwon(!isDropDwon),navigate('/signup')}}>Sign Up</a> : null}
+            {isAuthenticated ? <a className="custom-dropdown-item" onClick={() => {setIsDropDwon(!isDropDwon), setPage('Profile'), localStorage.setItem('page', 'Profile') }}>View profile</a> : null}
+            {role == "user" ? <a className="custom-dropdown-item" onClick={() =>{setIsDropDwon(!isDropDwon), navigate('/worker_register')}}>Register as a worker</a> : null}
+            {isAuthenticated ? <a style={{ color: "red" }} className="custom-dropdown-item dropdown-item-red" onClick={()=>{setIsDropDwon(!isDropDwon), handleLogout()}}>Log out</a> : null}
 
           </div>
         </div>
-        &nbsp;&nbsp;&nbsp;
+        }
+        
         <div className="notification-dropdown" ref={dropdownRef}>
-          <div className="notification-icon" onClick={toggleDropdown}>
-            <Bell style={{ color: 'white', cursor: 'pointer', fontSize: '25px' }} />
-            {notifications.length > 0 && <span className="badge">{notifications.length}</span>}
-          </div>
           {isOpen && (
 
             <div className="dropdown-content">

@@ -1,4 +1,4 @@
-.cols-grid .sign_form {
+.enter-otp-main .cols-grid .sign_form {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -38,9 +38,29 @@
 }
 
 @media screen and (max-width: 400px) {
-    .cols-grid .sign_form {
+    .enter-otp-main{
+        height: 100vh;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+    }
+    .otp-input-colum {
+        background-color: transparent;
+        border: 2px solid var(--strok-color);
+        width: 28px;
+        height: 30px;
+        border-radius: 5px;
+        color: #98989a;
+        font-size: 30px;
+        text-align: center;
+        align-items: center;
+    }
+    .enter-otp-main .cols-grid .sign_form {
         width: 100%;
-        padding: 30px 10%;
+        padding: 30px 7%;
+        margin-top: 0%;
     }
     .sign_up .label{
         font-size: 10px;

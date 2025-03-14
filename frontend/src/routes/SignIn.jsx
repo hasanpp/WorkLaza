@@ -111,7 +111,7 @@ const SignIn = () => {
         window.location.replace(`${apiUrl}user/auth/google/`); 
     };
     return (
-        <div className="container sign-in-main-dive">
+        <div className="container sign-in-main-div">
             
             <div className="row">
                 <div className="col-lg-6 col-md-12 col-12 col-sm-12 cols-grid logo-class">

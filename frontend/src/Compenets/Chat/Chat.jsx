@@ -22,8 +22,8 @@ const Chat = () => {
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
 
   const fetchData = async (chatWorkerId=null) =>{
-
     chatWorkerId = chatWorkerId == null ? localStorage.getItem("chatWorkerId") || 3 : chatWorkerId;
+    console.log(user_id)
     await secureRequest(async () => {
       API.post(`/chat/get_chats/`, {"user_id":user_id, "workerId":chatWorkerId})
       .then((res) => {

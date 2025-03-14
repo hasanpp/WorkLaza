@@ -15,7 +15,35 @@
     border-bottom: 2px solid var(--strok-color);
 }
 
+.navbar .user-icone-heder{
+  border: none;
+  border-radius: 100%;
+  width: 35px;
+  padding: 0px;
+  height: 35px;
+  background: transparent;
+  background-color: none;
+  color: var(--icon-color);
+  margin: 0;
+}
 
+.navbar .header-icones{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 140px;
+  align-items: center;
+  border: 2px solid var(--strok-color);
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  padding: 4px 15px;
+  border-radius: 8px;
+  background-color: var(--secondary-icon-color);
+  cursor: pointer;
+  z-index: 100;
+}
 
 .navbar .navbar-brand{
     display: flex;
@@ -85,22 +113,43 @@
     cursor: pointer;
 }
 
-.dropdown-menu{
-    background-color: var(--icon-color);
+.custom-dropdown{
+  margin-left: 81%;
+  margin-top: 225px;
+  position: absolute;
 }
 
-.dropdown-menu .dropdown-item{
-    background-color: var(--icon-color);
+
+.navbar .not-isauth{
+  margin-left: 85%;
+  margin-top: 190px;
+  position: absolute;
+}
+
+.custom-dropdown-menu{
+    background-color: var(--secondary-color);
+    border: 2px solid var(--strok-color);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.custom-dropdown .custom-dropdown-menu .custom-dropdown-item{
+    background-color: var(--secondary-color);
     border-bottom: 1px solid var(--strok-color);
-    color: #ffffff;
+    color: #98989A;
     cursor: pointer;
+    border-radius: 10px;
+    padding: 10px 10px;
 }
 
-.dropdown-menu .dropdown-item:hover{
-    background-color: var(--icon-color);
+.custom-dropdown .custom-dropdown-menu .custom-dropdown-item:hover{
+    background-color: var(--secondary-icon-color);
     border-bottom: 1px solid var(--strok-color);
     filter: saturate(0.5);
     cursor: pointer;
+    color: #98989a;
 }
 
 .navbar-collapse{
@@ -194,6 +243,18 @@
   }
   
 
+@media screen and (max-width: 1000px) {
+  .custom-dropdown{
+    margin-left: 30%;
+    margin-top: 225px;
+    position: absolute;
+  }
+  .navbar .not-isauth{
+    margin-left: 35%;
+    margin-top: 190px;
+    position: absolute;
+  }
+}
 @media screen and (max-width: 500px) {
     .navbar{
         padding: 8px 10px ;
@@ -229,7 +290,7 @@
         margin-right: 33px;
         z-index: 50;
     }
-    .dropdown-menu{
+    .custom-dropdown-menu{
         margin-left: 0%;
     }
     .notification-dropdown .notification-icon{

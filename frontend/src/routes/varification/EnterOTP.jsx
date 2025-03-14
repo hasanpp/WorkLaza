@@ -5,7 +5,8 @@ import logo from '../../assets/logo.png';
 import './EnterOTP.css';
 import { toast } from 'sonner';
 import { LoadingContext } from '../../App';
-import { useSelector } from 'react-redux';
+import { verifyOtp } from '../../otpSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 const EnterOTP = () => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -14,6 +15,9 @@ const EnterOTP = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useSelector((state) => state.auth);
     const setIsLoading = useContext(LoadingContext);
+    const dispatch = useDispatch();
+    const userEmail = useSelector((state) => state.otp.userEmail);
+
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -45,16 +49,17 @@ const EnterOTP = () => {
         setIsLoading(true);
         try {
             const otpValue = otp.join("");
-            console.log("Email:", localStorage.getItem("email"));
             console.log(otpValue)
             const response = await API.patch('/user/otp_view/', {
-                email: localStorage.getItem('email'),
+                email: userEmail,
                 otp: otpValue
             });
 
             if (response.status === 200) {
                 toast.success("OTP verified successfully!");
                 if (localStorage.getItem('forgot_password')) {
+                    localStorage.removeItem('forgot_password')
+                    dispatch(verifyOtp());
                     navigate('/change_password');
                 } else {
                     toast.success("Email verification completed, please sign in.");
@@ -74,7 +79,7 @@ const EnterOTP = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await API.post('/user/otp_view/', { email: localStorage.getItem('email') });
+            await API.post('/user/otp_view/', { email: userEmail });
             toast.success("OTP resent successfully!");
             setResendTimer(180);
         } catch (err) {
@@ -85,13 +90,15 @@ const EnterOTP = () => {
         }
     };
 
-    if (isAuthenticated) {
-        navigate('/');
-        return null;
-    }
+    
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [navigate, isAuthenticated, ]);
 
     return (
-        <div className="container">
+        <div className="container enter-otp-main">
             <div className="row otp-varificatio-row">
                 <div className="col-lg-6 col-md-12 col-12 col-sm-12 cols-grid logo-class">
                     <img src={logo} alt="Logo" />

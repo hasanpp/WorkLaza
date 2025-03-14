@@ -9,8 +9,21 @@ import Admin from './Admin/Admin'
 import WorkerRegister from './routes/WorkerRegister';
 import Worker from './Worker/Worker';
 import ProtectedRoute from './Compenets/ProtectedRoute/ProtectedRoute'
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { restoreUserSession } from "./authSlice";
 
 function RouteSets() {
+
+  const dispatch = useDispatch();
+  const { refreshToken } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (refreshToken) {
+      console.log(refreshToken)
+      restoreUserSession(dispatch, refreshToken);
+    }
+  }, [dispatch, refreshToken]);
 
   return (
       <Routes> 
