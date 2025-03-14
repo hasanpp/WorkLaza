@@ -111,7 +111,7 @@ const SignIn = () => {
         window.location.replace(`${apiUrl}user/auth/google/`); 
     };
     return (
-        <div className="container">
+        <div className="container sign-in-main-dive">
             
             <div className="row">
                 <div className="col-lg-6 col-md-12 col-12 col-sm-12 cols-grid logo-class">
@@ -133,14 +133,15 @@ const SignIn = () => {
                                 <input type="password" className="form-input form-input-2" id="password" value={formData.password} required onChange={handleChange}/>
                             </div>
                             <hr />
-                            <div className='google_sign_in' >
-                                <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
-                            </div>
+                            
                             <button type="submit" className="form_submit_btn" onClick={handleSubmit}>Sign In</button>
                         </form>
                         <div className="sign_up">
                             <p className='label' onClick={()=>navigate('/signUP')} style={{lineHeight:'16px'}}>{`Don't Have an account?`}<br/>Please Sign Up</p>
                             <p className='label' onClick={()=>navigate('/Forgot')} style={{textAlign:'end'}}>Forgot Password?</p>
+                        </div>
+                        <div className='google_sign_in' >
+                            <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
                         </div>
                     </div>
                 </div>

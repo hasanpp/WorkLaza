@@ -36,3 +36,14 @@
 .otp_dis{
     display: none;
 }
+
+@media screen and (max-width: 400px) {
+    .cols-grid .sign_form {
+        width: 100%;
+        padding: 30px 10%;
+    }
+    .sign_up .label{
+        font-size: 10px;
+        
+    }
+  }
