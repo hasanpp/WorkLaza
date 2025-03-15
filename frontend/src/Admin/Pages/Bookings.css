@@ -1,3 +1,11 @@
+.admin_bookings_main{
+    padding: 80px 50px 0px 120px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+
 tbody tr .sp_status{
     border: none;
     border-radius: 5px;
@@ -44,4 +52,22 @@ tbody tr .completed{
 textarea{
     font-size: 16px;
     resize: none;
+}
+
+
+
+@media screen and (max-width: 550px) {
+    .admin_bookings_main{
+        padding: 70px 10px 0px 60px;
+    }
+
+    .admin_bookings_main .pagination{
+        justify-content: end;
+        width: 670px;
+    }
+}
+@media screen and (max-width: 300px) {
+    .admin_bookings_main h1{
+        display: none;
+    }
 }

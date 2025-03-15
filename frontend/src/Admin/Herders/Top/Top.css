@@ -93,3 +93,48 @@
     width: 25px;
     height: 25px;
 }
+
+
+
+@media screen and (max-width: 550px) {
+    .top-nav .logo-class span {
+        display: none;
+    }
+    .top-nav .logo-class img{
+        width: 40px;
+        height: auto;
+    }    
+    
+    .top-nav .search-box{
+        width: 190px;
+        padding: 0px 10px;
+    }
+    .top-nav .search-box input{
+        width: 120px;
+    }
+    .top-nav .top-right {
+        width: 30px;
+        margin-right: 10px;
+    }
+}
+@media screen and (max-width: 300px) {
+    .top-nav .logo-class span {
+        display: none;
+    }
+    .top-nav .logo-class img{
+        width: 35px;
+        height: auto;
+    }    
+    
+    .top-nav .search-box{
+        width: 140px;
+        padding: 0px 10px;
+    }
+    .top-nav .search-box input{
+        width: 50px;
+    }
+    .top-nav .top-right {
+        width: 30px;
+        margin-right: 25px;
+    }
+}

@@ -1,3 +1,11 @@
+.admin_req_main{
+    padding: 80px 50px 0px 120px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+
 .action-td button{
     background-color: transparent;
     border: none;
@@ -7,4 +15,31 @@
 }
 .action-td button svg{
     font-size: 10px;
+}
+
+
+
+
+@media screen and (max-width: 550px) {
+    .admin_req_main{
+        padding: 70px 10px 0px 60px;
+    }
+    .admin_req_main .top_row {
+        display: flex;
+        width: 930px;
+        height: 50px;
+    }
+    .admin_req_main .pagination{
+        justify-content: end;
+        width: 930px;
+    }
+    .admin_req_main h1{
+        font-size: 25px;
+    }
+    .admin_req_main .top_row button {
+        padding: 5px 5px;
+    }    
+}
+@media screen and (max-width: 300px) {
+    
 }

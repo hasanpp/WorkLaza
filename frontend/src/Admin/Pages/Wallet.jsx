@@ -57,7 +57,7 @@ const Wallet = () => {
 
 
   return (
-    <div className="content-admin">
+    <div className="content-admin admin_wallet_main">
       <div>
         <div className="top_row">
           <h1>Wallet</h1>
@@ -86,7 +86,7 @@ const Wallet = () => {
             </tbody>
           </table>
         </div>
-        <h4 style={{ textAlign: 'end', margin: " 0% 4% 1% 0%" }}>Balnce : ₹ <span>{balence}</span></h4>
+        <h4 className='balence-h4' style={{ textAlign: 'end', margin: " 0% 4% 1% 0%" }}>Balnce : ₹ <span>{balence}</span></h4>
         <div className="pagination">
           <span>
             {startIndex + 1}-{endIndex} of {wallet?.length}

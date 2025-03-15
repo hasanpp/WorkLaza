@@ -131,7 +131,7 @@ const Categoryes = () => {
 
 
   return (
-    <div className="content-admin">
+    <div className="catogreyes-admin-main content-admin">
       <div>
         <div className="top_row">
           <h1>JOB Categores</h1>

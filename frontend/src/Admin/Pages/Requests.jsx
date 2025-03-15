@@ -120,7 +120,7 @@ const Requests = () => {
   };
 
   return (
-    <div className="content-admin">
+    <div className="content-admin admin_req_main">
       <div>
         <div className="top_row">
           <h1>Requests</h1>

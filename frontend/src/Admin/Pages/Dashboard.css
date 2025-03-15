@@ -217,6 +217,15 @@
   outline: none
 }
 
+
+.admin-dashboar_main {
+  padding: 70px 50px 0px 90px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .booking-graph-header {
@@ -243,5 +252,65 @@
 
   .booking-graph-section{
     margin-left: 50px;
+  }
+  .content-admin .page_name{
+    display: none;
+  }
+}
+
+
+
+@media screen and (max-width: 550px) {
+  .booking-graph-section {
+    display: none;
+  }
+  .admin-dashboar_main {
+    color: white;
+    padding: 60px 35px 0px 80px;
+  }
+  .content-admin .top_row_dash {
+    gap: 20px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .content-admin {
+    color: white;
+    padding: 60px 35px 0px 80px;
+    height: 100vh;
+  }
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: rgba(40, 42, 54, 0.6);
+    margin-right: 5px;
+  }
+  .card-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #E1E3E7;
+    margin: 0;
+  }
+  .card-count {
+    font-size: 20px;
+  }
+  .stat-text {
+    display: none;
+  }
+  .card-content {
+    overflow: hidden;
+  }
+  .dashboard-card {
+    padding: 5px;
+  }
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
   }
 }

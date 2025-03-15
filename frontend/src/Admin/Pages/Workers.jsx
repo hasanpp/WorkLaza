@@ -173,7 +173,7 @@ const Workers = () => {
   };
 
   return (
-    <div className="content-admin">
+    <div className="content-admin admin_workers_main">
       <div>
         <div className="top_row">
           <h1>Workes</h1>

@@ -1,0 +1,37 @@
+.admin_wallet_main{
+    padding: 80px 50px 0px 120px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+
+
+
+@media screen and (max-width: 550px) {
+    .admin_wallet_main{
+        padding: 70px 10px 0px 60px;
+    }
+    .admin_wallet_main .top_row {
+        display: flex;
+        width: 490px;
+        height: 50px;
+    }
+    .admin_wallet_main .pagination{
+        justify-content: end;
+        width: 490px;
+    }
+    .admin_wallet_main h1{
+        font-size: 25px;
+    }
+    .admin_wallet_main .balence-h4{
+        width: 490px;
+    }
+    .admin_wallet_main .top_row button {
+        padding: 5px 5px;
+        height: 40px;
+    }    
+}
+@media screen and (max-width: 300px) {
+    
+}

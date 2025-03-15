@@ -87,7 +87,7 @@ const Bookings = () => {
 
 
   return (
-    <div className="content-admin">
+    <div className="content-admin admin_bookings_main">
       <div>
       <div className="top_row">
         <h1>Bookings</h1>

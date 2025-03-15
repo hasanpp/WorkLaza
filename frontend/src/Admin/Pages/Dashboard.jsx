@@ -151,8 +151,8 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="content-admin"> 
-        <h1 style={{margin:"0px 30px"}}>Admin panel</h1>
+      <div className="content-admin admin-dashboar_main"> 
+        <h1 className='page_name' style={{margin:"0px 30px"}}>Admin panel</h1>
         <br />
         <div className="top_row_dash row">
           <div className="dashboard-card">
@@ -175,7 +175,7 @@ const Dashboard = () => {
                 <path d={dashData?.difference_new_users >0 ? paths.increase: dashData?.difference_new_users == 0 ? paths.unchanged :paths.decrease} fill="none" stroke={dashData?.difference_new_users > 0 ? colors.increase: dashData?.difference_new_users == 0 ? colors.unchanged :colors.decrease} strokeWidth="3" strokeLinecap="round" filter="url(#glow)" />
               </svg>
               <div className="stats-container">
-                <div className="stat-text">{`${dashData?.difference_new_users} difference from last week`}</div>
+                <div className="stat-text">{`${dashData?.difference_new_users} difference`}</div>
               </div>
             </div>
           </div>
@@ -199,7 +199,7 @@ const Dashboard = () => {
                 <path d={dashData?.difference_new_bookings >0 ? paths.increase: dashData?.difference_new_bookings == 0 ? paths.unchanged :paths.decrease} fill="none" stroke={dashData?.difference_new_bookings > 0 ? colors.increase: dashData?.difference_new_bookings == 0 ? colors.unchanged :colors.decrease} strokeWidth="3" strokeLinecap="round" filter="url(#glow)" />
               </svg>
               <div className="stats-container">
-              <div className="stat-text">{`${dashData?.difference_new_bookings} difference from last week`}</div>
+              <div className="stat-text">{`${dashData?.difference_new_bookings} difference`}</div>
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@ const Dashboard = () => {
               </svg>
               <div className="stats-container">
                 <div className="stat-number"></div>
-                <div className="stat-text">{`${dashData?.difference_new_workers} difference from last week`}</div>
+                <div className="stat-text">{`${dashData?.difference_new_workers} difference `}</div>
               </div>
             </div>
           </div>

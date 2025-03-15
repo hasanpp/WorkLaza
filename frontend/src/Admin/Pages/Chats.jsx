@@ -89,7 +89,7 @@ const Chats = () => {
 
 
   return (
-    <div className="ad-content-admin">
+    <div className="ad-content-admin admin_chat-main">
       <div className="ad-chat-container">
         <div className="ad-chat-sidebar">
           <div className="ad-sidebar-header">

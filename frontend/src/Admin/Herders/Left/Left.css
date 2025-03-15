@@ -69,3 +69,29 @@
     width: 20px;
     height: auto;
 }
+
+
+@media screen and (max-width: 550px) {
+    .sidebar {
+        width: 50px;
+    }
+    .sidebar ul {
+        margin: 75px;
+    }
+    .sidebar ul .selected {
+        width: 40px;
+        height: 40px;
+        margin: 10px 10px;
+    }
+    .sidebar ul li {
+        width: 40px;
+        height: 40px;
+        margin: 10px 10px;
+    }
+    .top-nav .logo-class {
+        width: 50px;
+    }
+}
+@media screen and (max-width: 300px) {
+    
+}

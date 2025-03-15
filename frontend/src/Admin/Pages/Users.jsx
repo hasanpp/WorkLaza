@@ -164,7 +164,7 @@ const Users = () => {
 
 
   return (
-    <div className="content-admin">
+    <div className="content-admin users_admin_main">
       <div>
         <div className="top_row">
           <h1>Users</h1>
