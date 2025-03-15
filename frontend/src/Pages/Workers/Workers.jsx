@@ -60,7 +60,7 @@ const Workers = () => {
     }
     try {
       await secureRequest(async () => {
-        const res = await API.post("/user/saved_workers_view/", { worker_id });
+        const res = await API.post("user/saved_workers_view/", { worker_id });
         toast.success(res?.data?.message);
     });
     } catch (err) {

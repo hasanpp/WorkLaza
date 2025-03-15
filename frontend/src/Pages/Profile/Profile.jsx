@@ -74,7 +74,8 @@ const Profile = () => {
     setIsLoading(true)
     try {
       const formData = new FormData();
-      formData.append("profile_picture", dataURLtoFile(croppedImage, "profile.jpg"));
+      const uniqueFileName = `${user?.username}_profile_pic.jpg`;  
+      formData.append("profile_picture", dataURLtoFile(croppedImage, uniqueFileName));
 
       await secureRequest(async () => {
         const res = await API.post("/user/profile_view/", formData, { headers: { "Content-Type": "multipart/form-data" }, });
