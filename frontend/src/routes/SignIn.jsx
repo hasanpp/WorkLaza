@@ -140,9 +140,10 @@ const SignIn = () => {
                             <p className='label' onClick={()=>navigate('/signUP')} style={{lineHeight:'16px'}}>{`Don't Have an account?`}<br/>Please Sign Up</p>
                             <p className='label' onClick={()=>navigate('/Forgot')} style={{textAlign:'end'}}>Forgot Password?</p>
                         </div>
-                        <div className='google_sign_in' >
+                        {/* <div className='google_sign_in' > */}
+                            {/* fadsfd */}
                             <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
-                        </div>
+                        {/* </div>/ */}
                     </div>
                 </div>
             </div>
