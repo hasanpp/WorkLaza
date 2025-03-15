@@ -9,6 +9,8 @@ import { LoadingContext } from '../App';
 import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch,useSelector } from 'react-redux';
 import { login } from '../authSlice';
+import { display } from '@mui/system';
+import { Justify } from 'react-bootstrap-icons';
 
 
 
@@ -142,7 +144,7 @@ const SignIn = () => {
                         </div>
                         {/* <div className='google_sign_in' > */}
                             {/* fadsfd */}
-                            <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} />
+                            <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} style={{display:"flex", justifyContent:"center"}}/>
                         {/* </div>/ */}
                     </div>
                 </div>
