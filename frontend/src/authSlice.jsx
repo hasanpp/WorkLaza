@@ -55,7 +55,7 @@ export const restoreUserSession = async (dispatch, refreshToken) => {
         }
     } catch (err) {
         console.log(err)    
-        toast.error(err?.response?.data?.message || "Session expired. Please log in again.")
+        toast.error(err?.response?.data?.message)
         dispatch(logout());
     }
 };

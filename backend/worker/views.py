@@ -321,8 +321,12 @@ class StripeWebhookView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         payload = request.body
-        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+        sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
         endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+        
+        if not sig_header:
+            print("Stripe signature missing")
+            return JsonResponse({"error": "Missing Stripe Signature"}, status=400)
         
         try:
             event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
@@ -333,7 +337,11 @@ class StripeWebhookView(APIView):
 
         if event["type"] == "checkout.session.completed":
             session = event["data"]["object"]
-            email = session["customer_email"]
+            email = session.get("customer_email")
+            if not email:
+                print("No email found in the session")
+                return JsonResponse({"error": "No email in session"}, status=400)
+
             worker = Worker.objects.get(user__email=email)
             worker.payed_fee += worker.pending_fee
             worker.pending_fee = 0

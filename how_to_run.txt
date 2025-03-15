@@ -33,6 +33,15 @@
     """ Rebuilding the Project """
         docker-compose down -v
         docker-compose up --build -d
+    
+    """ to push and build changes """
+        docker build -t hasanpulikkal/backend-web:latest .
+        docker push hasanpulikkal/backend-web:latest
+
+        - to pull
+
+        docker pull hasanpulikkal/backend-web:latest
+
 
 # --- Frontend ---
 
