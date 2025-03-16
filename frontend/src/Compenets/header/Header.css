@@ -45,6 +45,11 @@
   z-index: 100;
 }
 
+.navbar .header-icones-small{
+  width: 45px;
+  padding: 4px 10px;
+}
+
 .navbar .navbar-brand{
     display: flex;
 }

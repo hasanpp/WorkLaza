@@ -101,15 +101,17 @@ const Header = ({ page }) => {
             </li>
           </ul>
         </div>
-        <div className="header-icones">
-          <ChatLeftDots color="#AFDDE5" style={{ color: 'white', cursor: 'pointer', fontSize: '25px' }} onClick={() => { setPage('Chat'), localStorage.setItem('page', 'Chat') }}/>
+        <div className={`${!isAuthenticated && "header-icones-small"} header-icones`}>
+          {isAuthenticated && <ChatLeftDots color="#AFDDE5" style={{ color: 'white', cursor: 'pointer', fontSize: '25px' }} onClick={() => { setPage('Chat'), localStorage.setItem('page', 'Chat') }}/>}
           <button className='user-icone-heder' type="button" onClick={()=>setIsDropDwon(!isDropDwon)}>
             <PersonFill color="#AFDDE5" size={25} style={{ color: 'white', cursor: 'pointer', fontSize: '25px'}}/>
           </button>
-          <div className="notification-icon" >
-            <Bell style={{ color: '#AFDDE5', cursor: 'pointer', fontSize: '25px' }} onClick={toggleDropdown}/>
-            {notifications.length > 0 && <span className="badge">{notifications.length}</span>}
-          </div>
+          {isAuthenticated && 
+            <div className="notification-icon" >
+              <Bell style={{ color: '#AFDDE5', cursor: 'pointer', fontSize: '25px' }} onClick={toggleDropdown}/>
+              {notifications.length > 0 && <span className="badge">{notifications.length}</span>}
+            </div>
+          }
         </div>
         {
           isDropDwon && <div className={`custom-dropdown ${isAuthenticated? "blue": "not-isauth" }`}>
