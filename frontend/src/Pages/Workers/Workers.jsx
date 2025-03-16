@@ -64,9 +64,8 @@ const Workers = () => {
         toast.success(res?.data?.message);
     });
     } catch (err) {
-        console.log("error",err.response.data)
-        console.log("erooooooooor")
-        toast.error(err?.response?.data?.message||"Something went wrong ")
+        console.log(err.response.data)
+        err?.response?.data?.message && toast.error(err?.response?.data?.message)
     }
 }
 
@@ -80,7 +79,7 @@ const Workers = () => {
         setFilteredWorkers(res?.data?.Workers);
       } catch (err) {
         console.log(err)
-        toast.error(err?.response?.data?.message||"Something went wrong");
+        err?.response?.data?.message && toast.error(err?.response?.data?.message)
       }finally{
         setIsLoading(false)
       }

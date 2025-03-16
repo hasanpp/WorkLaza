@@ -30,7 +30,9 @@ const Schedule = () => {
   
       setSlots(sortedSlots);
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message)
+      }
     }
   }
 
@@ -44,7 +46,9 @@ const Schedule = () => {
       toast.success(res?.data?.message)
       setTB(!tb)
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message )
+      }
     }
   }
 
@@ -54,7 +58,9 @@ const Schedule = () => {
       toast.success(res?.data?.message)
       setTB(!tb)
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message)
+      }
     }
   }
 
@@ -64,7 +70,9 @@ const Schedule = () => {
       toast.success(res?.data?.message)
       setTB(!tb)
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message)
+      }
     }
   }
 

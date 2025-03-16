@@ -25,7 +25,9 @@ const Home = () => {
         setBookingData({ booking_data: res?.data?.booking_data || [], period: res?.data?.period || 'week' });
       });
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message)
+      }
     }
   }
 

@@ -21,11 +21,11 @@ const Chats = () => {
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
 
-  const fetchData = async (chatWorkerId = null) => {
+  const fetchData = async (chatReceiverId = null) => {
 
-    chatWorkerId = chatWorkerId == null ? localStorage.getItem("chatUserId") || 3 : chatWorkerId;
+    chatReceiverId = chatReceiverId == null ? localStorage.getItem("chatReceiverId") || 3 : chatReceiverId;
     await secureRequest(async () => {
-      API.post(`/chat/get_chats/`, { "user_id": user_id, "workerId": chatWorkerId })
+      API.post(`/chat/get_chats/`, { "user_id": user_id, "chatReceiverId": chatReceiverId })
         .then((res) => {
           setChatRooms(res?.data?.chats)
           setActiveReceiver(res?.data?.receiver)

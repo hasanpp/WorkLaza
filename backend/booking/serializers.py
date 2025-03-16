@@ -54,7 +54,7 @@ class BookingSerializer(serializers.ModelSerializer):
         
         if worker and worker.user:
             return {
-                'id': worker.id, 'full_name': worker.full_name, 'latitude':worker.latitude, 'longitude':worker.longitude, 'profile_picture': worker.user.profile_picture.url if worker.user.profile_picture else None
+                'id': worker.id, "user_id":worker.user.id,'full_name': worker.full_name, 'latitude':worker.latitude, 'longitude':worker.longitude, 'profile_picture': worker.user.profile_picture.url if worker.user.profile_picture else None
             }
         
         return None

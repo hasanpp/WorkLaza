@@ -61,7 +61,7 @@ const secureRequest = async (requestFn, ...args) => {
         return await requestFn(...args); 
     } catch (err) {
         console.error("API Request Error:", err);
-        toast.error(err?.response?.data?.message || "Something went wrong");
+        err?.response?.data?.message && toast.error(err?.response?.data?.message)
     }
 };
 

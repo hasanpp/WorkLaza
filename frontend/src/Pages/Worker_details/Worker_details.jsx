@@ -99,7 +99,7 @@ const Worker_details = ({ worker_id }) => {
                 setFormData({ ...formData, worker:res?.data?.worker?.id ,latitude: l_res.latitude, longitude:l_res.longitude, address:a_res, bookedDate:formattedDate,bookedTime:formattedTime})
             } catch (err) {
                 console.log(err?.response)
-                toast.error(err?.response?.data?.message || "Something went wrong")
+                err?.response?.data?.message && toast.error(err?.response?.data?.message)
             } finally {
                 setIsLoading(false)
             }
@@ -179,7 +179,7 @@ const Worker_details = ({ worker_id }) => {
             });
         } catch (err) {
             console.log(err)
-            toast.error(err?.response?.data?.message || "Something went wrong")
+            err?.response?.data?.message && toast.error(err?.response?.data?.message)
         }
     }
 
@@ -203,8 +203,8 @@ const Worker_details = ({ worker_id }) => {
                 toast.success(res?.data?.message);
             });
         } catch (err) {
-            toast.error(err?.response?.data?.error || "Something went wrong")
-            toast.error(err?.response?.data?.message || "Something went wrong")
+            err?.response?.data?.error && toast.error(err?.response?.data?.error)
+            err?.response?.data?.message && toast.error(err?.response?.data?.message)
         } finally {
             setIsLoading(false)
         }

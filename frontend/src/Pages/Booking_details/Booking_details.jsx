@@ -33,7 +33,7 @@ const Booking_details = ({ booking_id }) => {
         console.log(res?.data?.Booking);
         setBooking(res?.data?.Booking)
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Something went wrong")
+        err?.response?.data?.message && toast.error(err?.response?.data?.message)
       } finally {
         setIsLoading(false)
       }
@@ -51,7 +51,7 @@ const Booking_details = ({ booking_id }) => {
         setTb(!tb);
       });
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      err?.response?.data?.message && toast.error(err?.response?.data?.message)
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +91,7 @@ const Booking_details = ({ booking_id }) => {
             toast.success(res?.data?.message);
           });
         } catch (err) {
-          toast.error(err?.response?.data?.message || "Something went wrong")
+          err?.response?.data?.message && toast.error(err?.response?.data?.message)
         }finally {
           setIsLoading(false)
         }
@@ -99,10 +99,10 @@ const Booking_details = ({ booking_id }) => {
     });
   };
    
-  const handleChatOpen = (workerId, bookingId) => {
+  const handleChatOpen = (chatReceiverId, bookingId) => {
     setPage(`Chat`); 
     localStorage.setItem('page', `Chat`);
-    localStorage.setItem("chatWorkerId", workerId); 
+    localStorage.setItem("chatReceiverId", chatReceiverId); 
     localStorage.setItem("bookingId", bookingId);
   };
 
@@ -115,7 +115,7 @@ const Booking_details = ({ booking_id }) => {
           <img src={booking?.worker_profile?.profile_picture ? `${booking?.worker_profile?.profile_picture}`: user_icone } alt="" />
           <h3>{booking?.worker_profile?.full_name}</h3>
           <h3>₹ {booking?.total}</h3>
-          <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.id,booking?.id)} />
+          <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.user_id,booking?.id)} />
           <div className={`status ${booking?.status}`}>{booking?.status}</div>
         </div>
         <hr />

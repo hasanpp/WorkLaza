@@ -159,7 +159,7 @@ const Users = () => {
   const handleChatOpen = (userId) => {
     setPage(`Chats`); 
     localStorage.setItem('page', `Chats`);
-    localStorage.setItem("chatUserId", userId); 
+    localStorage.setItem("chatReceiverId", userId); 
   };
 
 

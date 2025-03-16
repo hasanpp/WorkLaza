@@ -30,7 +30,7 @@ const Bookings = () => {
         const res = await API.patch('/user/bookings_view/')
         setBookings(res?.data?.Bookings)
       } catch (err) {
-        toast.error(err?.response?.data?.message || "Something went wrong")
+        err?.response?.data?.message && toast.error(err?.response?.data?.message)
       } finally {
         setIsLoading(false)
       }
@@ -48,7 +48,7 @@ const Bookings = () => {
         setTb(!tb);
       });
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      err?.response?.data?.message && toast.error(err?.response?.data?.message)
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +108,7 @@ const Bookings = () => {
             toast.success(res?.data?.message);
           });
         } catch (err) {
-          toast.error(err?.response?.data?.message || "Something went wrong")
+          err?.response?.data?.message && toast.error(err?.response?.data?.message)
         } finally {
           setIsLoading(false)
         }
@@ -116,10 +116,10 @@ const Bookings = () => {
     });
   };
 
-  const handleChatOpen = (workerId, bookingId) => {
+  const handleChatOpen = (chatReceiverId, bookingId) => {
     setPage(`Chat`); 
     localStorage.setItem('page', `Chat`);
-    localStorage.setItem("chatWorkerId", workerId); 
+    localStorage.setItem("chatReceiverId", chatReceiverId); 
     localStorage.setItem("bookingId", bookingId);
   };
 
@@ -149,7 +149,7 @@ const Bookings = () => {
                   {booking?.status == 'created' && <button onClick={() => showConfirmAlert(booking?.id)}>Cancel now</button>}
                 </div>
                 <div className="col-lg-3 col-6">
-                  <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.id,booking?.id)}/>
+                  <ChatLeftDots onClick={()=>handleChatOpen(booking?.worker_profile?.user_id,booking?.id)}/>
                   <button onClick={() => { setPage(`Booking_details/${booking?.id}`), localStorage.setItem('page', `Booking_details/${booking?.id}`) }} >View Details</button>
                 </div>
                 <div className="col-lg-3 col-6 last_part">

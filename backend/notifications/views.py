@@ -21,29 +21,17 @@ class ChatView(APIView):
         token = request.headers['Authorization'][7:]
         decoded = jwt.decode(token,JWT_SECRET_KEY,algorithms=['HS256'])
         user_for_id = decoded['user_id']
-
         user_id = request.data.get('user_id')
-        workerId = request.data.get('workerId')
-
+        receiverId = request.data.get('chatReceiverId')
         user1 = User.objects.get(id=user_id)
-        worker = Worker.objects.filter(id=workerId).first()
-        if not worker:
-            user2 = User.objects.filter(id=workerId).first()
-        if worker: 
-            user2 = worker.user
-
-        if user1 == user2:
-            return Response({"message": "You cannot create a chat with yourself."}, status=status.HTTP_409_CONFLICT)
-
-
+        user2 = User.objects.filter(id=receiverId).first()
         chat = ChatRoom.objects.filter(Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)).first()
+        
         if not chat and user2:
             chat = ChatRoom.objects.create(user1=user1,user2=user2)
-
         admin_user = User.objects.filter(is_superuser=True).first()
         if admin_user and not ChatRoom.objects.filter(Q(user1=user1, user2=admin_user) | Q(user1=admin_user, user2=user1)).exists() and user1.is_superuser == False :  
             admin_chat = ChatRoom.objects.create(user1=user1, user2=admin_user)
-
 
         all_chats = ChatRoom.objects.filter(Q(user1=user1)|Q(user2=user1)).distinct().order_by('-user1__is_superuser', '-user2__is_superuser')
 
@@ -54,9 +42,10 @@ class ChatView(APIView):
         messages = chat.messages
 
         receiver = None
-
+        
         for chat_room in all_chats:
-            print(chat_room)
+            if chat_room.user1 == chat_room.user2:
+                all_chats.exclude(id=chat_room.id)
         if user_for_id == user1.id:
             receiver = user2
         elif user_for_id == user2.id:

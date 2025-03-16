@@ -8,7 +8,6 @@ import logo from '../../assets/logo.png'
 import secureRequest from "../ProtectedRoute/secureRequest";
 
 const Chat = () => {
-
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [activeReceiver, setActiveReceiver] = useState();
@@ -21,11 +20,10 @@ const Chat = () => {
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
 
-  const fetchData = async (chatWorkerId=null) =>{
-    chatWorkerId = chatWorkerId == null ? localStorage.getItem("chatWorkerId") || 3 : chatWorkerId;
-    console.log(user_id)
+  const fetchData = async (chatReceiverId=null) =>{
+    chatReceiverId = chatReceiverId == null ? localStorage.getItem("chatReceiverId") || 3 : chatReceiverId;
     await secureRequest(async () => {
-      API.post(`/chat/get_chats/`, {"user_id":user_id, "workerId":chatWorkerId})
+      API.post(`/chat/get_chats/`, {"user_id":user_id, "chatReceiverId":chatReceiverId})
       .then((res) => {
         setChatRooms(res?.data?.chats)
         setActiveReceiver(res?.data?.receiver)
@@ -39,30 +37,47 @@ const Chat = () => {
       })
       .catch((error) => console.error("Error fetching chats:", error));
     });
-    
   }
 
   useEffect(() => {
     fetchData();
+    if (!socket) {
+      openChat(localStorage.getItem("chatRoomId") );
+    }
   }, []);
-  
 
-  const openChat =async (chatRoomId) => {
-    localStorage.setItem("chatRoomId", chatRoomId);
-    if (socket) socket.close();
-    await secureRequest(async () => {
-      const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
-      newWs.onmessage = (event) => {
-        setChatLoading(true);
-        const data = JSON.parse(event.data);  
-        setMessages((prev) => [...prev, { sender: data.sender, text: data.message, timestamp:data.timestamp, image: data.image || null}]);
-        setTimeout(() => { 
-          setChatLoading(false);
-        }, 50);
-      };
-      setSocket(newWs);
-    })
-  };
+const openChat = async (chatRoomId) => {
+  if (socket) {
+    socket.close(); 
+  }
+
+  localStorage.setItem("chatRoomId", chatRoomId);
+  await secureRequest(async () => {
+    const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
+    
+    newWs.onopen = () => console.log("WebSocket Connected");
+    newWs.onerror = (e) => console.error("WebSocket Error:", e);
+    
+    newWs.onmessage = (event) => {
+      setChatLoading(true);
+      const data = JSON.parse(event.data);
+
+      setMessages((prev) => {
+        if (!prev.some(msg => msg.timestamp === data.timestamp && msg.sender === data.sender)) {
+          return [...prev, { sender: data.sender, text: data.message, timestamp: data.timestamp, image: data.image || null }];
+        }
+        return prev;
+      });
+
+      setTimeout(() => {
+        setChatLoading(false);
+      }, 50);
+    };
+
+    newWs.onclose = () => console.log("WebSocket Disconnected");
+    setSocket(newWs);
+  });
+};
 
   
   const sendMessage = async() => {
@@ -101,7 +116,7 @@ const Chat = () => {
           return (
             <div  key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id )} >
               <div className="avatar-container">
-                {opponet.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`$${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+                {opponet.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
                 
                 {opponet?.active && <span className="status-indicator"></span>}
               </div>

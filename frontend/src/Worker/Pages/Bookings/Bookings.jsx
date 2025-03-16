@@ -22,7 +22,7 @@ const Bookings = () => {
       const res = await API.get('/worker/bookings_view/')
       setBookings(res?.data?.Bookings);
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+       err?.response?.data?.message && toast.error(err?.response?.data?.message)
     }
   }
 
@@ -57,7 +57,7 @@ const Bookings = () => {
   const handleChatOpen = (userId) => {
     setPage(`Chats`); 
     localStorage.setItem('page', `Chats`);
-    localStorage.setItem("chatUserId", userId); 
+    localStorage.setItem("chatReceiverId", userId); 
   };
 
 

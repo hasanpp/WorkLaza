@@ -57,7 +57,9 @@ const Profile = () => {
       let address = await getAddressFromCoordinates(res.data.worker.latitude,res.data.worker.longitude)
       setAddress(address)
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong")
+      if (error?.response?.data?.message){
+        toast.error(error?.response?.data?.message)
+      }
     }
     finally{
       setIsLoading(false)
@@ -121,7 +123,9 @@ const Profile = () => {
       toast.success(res?.data?.message)
       setTb(!tb)
     } catch (err) {
-      toast.warning(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.warning(err?.response?.data?.message)
+      }
     } finally{
       setIsLoading(false)
     }
@@ -147,7 +151,9 @@ const Profile = () => {
           toast.err("Geolocation is not supported by this browser.");
       }
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -170,10 +176,11 @@ const Profile = () => {
     setIsLoading(true)
     try {
       const res = await API.patch('/worker/details_view/',worker)
-
-      toast.success(res?.data?.message || "Something went wrong")
+      toast.success(res?.data?.message)
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Something went wrong")
+      if (err?.response?.data?.message){
+        toast.error(err?.response?.data?.message)
+      }
     }finally{
       setIsLoading(false)
     }

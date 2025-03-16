@@ -73,7 +73,7 @@ const WorkerRegister = () => {
                 const j_res = await API.get('/worker/register/');
                 setJobs(j_res?.data?.Jobs)
             } catch (error) {
-                toast.error(error.response.data.message || "Something went wrong");
+                error?.response?.data?.message && toast.error(error?.response?.data?.message)
             }
         }
         fetchData();
@@ -127,7 +127,7 @@ const WorkerRegister = () => {
                 dispatch(logout())
                 navigate('/')
             } catch (error) {
-                toast.error(error?.response?.data?.message || "Something went wrong")
+                error?.response?.data?.message && toast.error(error?.response?.data?.message)
                 if (error.response.data.messages) {
                     Object.entries(error.response.data.messages).forEach(([key, value]) => {
                         toast.error(`${key} : ${value.join(', ')}`);
