@@ -5,8 +5,10 @@ import { useEffect, useState, useContext } from 'react';
 import './SignUp.css';
 import API from '../api';
 import { toast } from 'sonner';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingContext } from '../App';
+import { setUserEmail } from '../otpSlice';
+
 
 
 const SignUp = () => {
@@ -14,7 +16,7 @@ const SignUp = () => {
 
   const setIsLoading = useContext(LoadingContext);
   const { isAuthenticated } = useSelector((state) => state.auth)
-  
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     first_name: '',
@@ -46,7 +48,8 @@ const SignUp = () => {
       const response = await API.post('/user/signup/', formData);
       toast.success(response.data.message);
       localStorage.setItem('email', formData.email);
-      console.log(formData.email)
+      dispatch(setUserEmail(formData.email));
+      localStorage.setItem('forgot_password', false);
       navigate('/signup/enterotp');
     } catch (error) {
       for (let key in error.response.data) {

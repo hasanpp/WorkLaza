@@ -9,6 +9,7 @@ import { LoadingContext } from '../App';
 import { GoogleLogin } from '@react-oauth/google';
 import { useDispatch,useSelector } from 'react-redux';
 import { login } from '../authSlice';
+import { setUserEmail } from '../otpSlice';
 import { display } from '@mui/system';
 import { Justify } from 'react-bootstrap-icons';
 
@@ -73,14 +74,15 @@ const SignIn = () => {
             dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.data.username,  user_id: data_res.data.id, first_name: data_res.data.first_name, last_name: data_res.data.last_name, role: data_res.data.role}))
             toast.success(res?.data?.message)   
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error?.response?.data?.message);
             console.log(error);
             
             if (error?.response?.data?.email_varify){
                 try{
                     const get_email = await  API.patch('/user/featch_user_data/', { identifire: formData.identifire,});  
                     toast.info('This email is not verified please verify it by otp')
-                    localStorage.setItem('email', get_email.data.email);
+                    dispatch(setUserEmail(get_email.data.email));
+                    localStorage.setItem('forgot_password', false);
                     navigate('/signup/enterotp');
                 } catch {
                     toast.error("Something went wrong");

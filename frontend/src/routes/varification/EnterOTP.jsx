@@ -49,15 +49,13 @@ const EnterOTP = () => {
         setIsLoading(true);
         try {
             const otpValue = otp.join("");
-            console.log(otpValue)
-            const response = await API.patch('/user/otp_view/', {
-                email: userEmail,
-                otp: otpValue
-            });
+            const response = await API.patch('/user/otp_view/', { email: userEmail, otp: otpValue });
 
             if (response.status === 200) {
                 toast.success("OTP verified successfully!");
-                if (localStorage.getItem('forgot_password')) {
+                const forgot_password =  localStorage.getItem('forgot_password') 
+                console.log(forgot_password)
+                if (forgot_password) {
                     localStorage.removeItem('forgot_password')
                     dispatch(verifyOtp());
                     navigate('/change_password');
@@ -68,7 +66,8 @@ const EnterOTP = () => {
             }
         } catch (err) {
             console.log(err);
-            setOtp(["", "", "", "", "", ""]); // Clear OTP on failure
+            console.log(userEmail);
+            setOtp(["", "", "", "", "", ""]); 
             toast.error("Invalid OTP. Please try again.");
         } finally {
             setIsLoading(false);
