@@ -29,7 +29,7 @@ const ChangePassword = () => {
             setIsLoading(true);
             try{
                 const res = await API.patch('/user/password_view/', { email:userEmail, password:password });
-                const username = res.data.username
+                const username = res?.data?.username
                 const new_res = await API.post('token/',{ username:username, password:password})
 
                 const data_res = await API.post('user/featch_user_data/',{'token':new_res.data.access})
@@ -37,7 +37,8 @@ const ChangePassword = () => {
                 dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.username, user_id: data_res.id, first_name: data_res.first_name, last_name: data_res.last_name, role: data_res.role}))
             }
             catch(err) {
-                err?.response?.data?.message && toast.err(err.response.data.message)
+                console.log(err)
+                err?.response?.data?.message && toast.error(err.response.data.message)
             }
             finally{
                 setIsLoading(false)

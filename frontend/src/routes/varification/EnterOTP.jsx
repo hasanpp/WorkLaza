@@ -53,9 +53,9 @@ const EnterOTP = () => {
 
             if (response.status === 200) {
                 toast.success("OTP verified successfully!");
-                const forgot_password =  localStorage.getItem('forgot_password') 
-                console.log(forgot_password)
-                if (forgot_password == true) {
+                const forgot_password =  localStorage.getItem('forgot_password')
+                if (forgot_password === "true") {
+                    console.log("hello")
                     localStorage.removeItem('forgot_password')
                     dispatch(verifyOtp());
                     navigate('/change_password');
@@ -68,7 +68,7 @@ const EnterOTP = () => {
             console.log(err);
             console.log(userEmail);
             setOtp(["", "", "", "", "", ""]); 
-            toast.error("Invalid OTP. Please try again.");
+            toast.error(err?.response?.data?.message);
         } finally {
             setIsLoading(false);
         }
