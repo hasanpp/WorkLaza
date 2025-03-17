@@ -28,6 +28,7 @@ const Layout = (props) => {
   const navigate = useNavigate();
   const { role,refreshToken } = useSelector((state) => state.auth)
   const dispatch = useDispatch();
+  const [page, setPage] = useState(localStorage.getItem('page')||'Home');
 
   const user_status_handler= async() =>{
     try {
@@ -43,8 +44,6 @@ const Layout = (props) => {
     }
   }
 
-
-  const [page, setPage] = useState(localStorage.getItem('page')||'Home');
   useEffect(() => {
     if (props.not_found == "true") {
       setPage('not')
@@ -71,7 +70,6 @@ const Layout = (props) => {
     <>
       <PageContext.Provider value={setPage}>
         <Header page={page} not_found={props?.not_found} />
-
         {page == 'Home' && <Home />}
         {page == 'Saved' && <ProtectedRoute><Saved /></ProtectedRoute>}
         {page == 'Workers' && <Workers />}
@@ -81,6 +79,16 @@ const Layout = (props) => {
         {page == 'Bookings' && <ProtectedRoute><Bookings /></ProtectedRoute>}
         {page == 'Profile' && <ProtectedRoute><Profile /></ProtectedRoute>}
         {page == 'not' && <Not_found />}
+
+        {/* Redirect to Home if page is invalid */}
+        {!['Home', 'Saved', 'Workers', 'Chat', 'Bookings', 'Profile'].includes(page) &&
+          !page.startsWith('Worker_details') && !page.startsWith('Booking_details') && (() => {
+            setPage('Home');
+            localStorage.setItem('page', 'Home');
+            return <Home />;
+          })()
+        }
+
         <Footer />
       </PageContext.Provider>
     </>

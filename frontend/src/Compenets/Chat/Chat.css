@@ -273,9 +273,10 @@
   cursor: pointer;
 }
 
-.preview-img{
-  width: 40%;
+.preview-img {
+  max-width: 40%;
   height: auto;
+  max-height: 300px;
 }
 
 .image-preview{

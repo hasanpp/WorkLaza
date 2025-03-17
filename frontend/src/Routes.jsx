@@ -20,7 +20,6 @@ function RouteSets() {
 
   useEffect(() => {
     if (refreshToken) {
-      console.log(refreshToken)
       restoreUserSession(dispatch, refreshToken);
     }
   }, [dispatch, refreshToken]);

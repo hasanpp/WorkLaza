@@ -1,26 +1,24 @@
-from rest_framework import status
-from rest_framework.response import Response
-from django.conf import settings
 from .models import Worker,Jobs, WorkerAvailability as Slots
 from .serializers import WorkerSerializer,JobSerializer, SlotSerializer
 from booking.models import Booking, Review
 from booking.serializers import BookingSerializer
 from user.models import CustomUser as User
-from rest_framework.decorators import api_view, permission_classes
-from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from rest_framework.permissions import IsAuthenticated , AllowAny
-from datetime import datetime
 from admin_panel.models import Wallet
 from admin_panel.serializers import WalletSerializer
-from django.views.decorators.csrf import csrf_exempt
-from channels.layers import get_channel_layer
+from datetime import timedelta, datetime
 from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated , AllowAny
+from django.utils.decorators import method_decorator
+from django.http import JsonResponse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from datetime import timedelta
 import jwt
 import stripe
-from rest_framework.views import APIView
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 JWT_SECRET_KEY = settings.JWT_SECRET_KEY
@@ -307,8 +305,8 @@ class PaymentsView(APIView):
                     }
                 ],
                 mode="payment",
-                success_url=f"https://worklaza.site/payment-success?session_id={{CHECKOUT_SESSION_ID}}",
-                cancel_url="https://worklaza.site/payment-failed",
+                success_url=f"https://www.worklaza.site",
+                cancel_url="https://www.worklaza.site",
                 customer_email=request.user.email,
             )
             return Response({"checkout_url": checkout_session.url}, status=status.HTTP_200_OK)
@@ -321,26 +319,25 @@ class StripeWebhookView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         payload = request.body
-        sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+        sig_header = request.headers.get("Stripe-Signature")
         endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
         
         if not sig_header:
-            print("Stripe signature missing")
             return JsonResponse({"error": "Missing Stripe Signature"}, status=400)
         
         try:
             event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
         except ValueError as e:
-            return JsonResponse({"error": "Invalid payload"}, status=400)
+            return JsonResponse({"error": "Invalid payload"}, status=409)
         except stripe.error.SignatureVerificationError as e:
-            return JsonResponse({"error": "Invalid signature"}, status=400)
+            return JsonResponse({"error": "Invalid signature"}, status=401)
 
         if event["type"] == "checkout.session.completed":
             session = event["data"]["object"]
             email = session.get("customer_email")
             if not email:
                 print("No email found in the session")
-                return JsonResponse({"error": "No email in session"}, status=400)
+                return JsonResponse({"error": "No email in session"}, status=401)
 
             worker = Worker.objects.get(user__email=email)
             worker.payed_fee += worker.pending_fee

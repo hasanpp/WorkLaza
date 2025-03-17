@@ -40,7 +40,6 @@ const refreshTokenHandler = async () => {
         }
     } catch (error) {
         store.dispatch(logout()); 
-        toast.error("Session expired. Please log in again.");
         throw new Error("Token refresh failed");
     }
 };

@@ -99,10 +99,17 @@ const Worker = () => {
           {page == 'Bookings' && <ProtectedRoute><Bookings/></ProtectedRoute>}
           {page == 'Profile' && <ProtectedRoute><Profile/></ProtectedRoute>}
           {page == 'Payments' && <ProtectedRoute><Payments/></ProtectedRoute>}
+
+          {/* Redirect to Home if page is invalid */}
+          {!['Home', 'Schedule', 'Chats', 'Bookings', 'Profile', 'Payments'].includes(page) && (() => {
+              setPage('Home');
+              localStorage.setItem('page', 'Home');
+              return <Home />;
+            })()
+          }
         </div>
       </PageContext.Provider>
     </div>
-
 
   return (
     waiting ? waiting : worker_dash

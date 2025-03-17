@@ -67,6 +67,14 @@ const Admin = () => {
         {page == 'Bookings' && <ProtectedRoute><Bookings/></ProtectedRoute>}
         {page == 'Wallet' && <ProtectedRoute><Wallet/></ProtectedRoute>}
         {page == 'Requests' && <ProtectedRoute><Requests/></ProtectedRoute>}
+
+        {/* Redirect to Home if page is invalid */}
+        {!['Dash', 'Categoryes', 'Users', 'Workers', 'Chats', 'Bookings', 'Wallet', 'Requests' ].includes(page) && (() => {
+            setPage('Dash');
+            localStorage.setItem('page', 'Dash');
+            return <Dashboard />;
+          })()
+        }
         
       </PageContext.Provider>
     </SearchContext.Provider>

@@ -37,7 +37,6 @@ function ProtectedRoute({children}){
             console.error("Token refresh error:", error);
             setPage('Home')
             localStorage.setItem('page','Home')
-            toast.error("Session expired. Please log in again.");
             dispatch(logout());
             setIsAuthorized(false)
         }
