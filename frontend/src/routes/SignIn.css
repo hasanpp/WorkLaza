@@ -181,6 +181,8 @@ hr{
 .S9gUrf-YoZ4jf{
     position: relative;
     width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media screen and (max-width: 991.5px) {

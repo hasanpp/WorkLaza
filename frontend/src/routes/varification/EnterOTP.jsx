@@ -55,7 +55,7 @@ const EnterOTP = () => {
                 toast.success("OTP verified successfully!");
                 const forgot_password =  localStorage.getItem('forgot_password') 
                 console.log(forgot_password)
-                if (forgot_password) {
+                if (forgot_password == true) {
                     localStorage.removeItem('forgot_password')
                     dispatch(verifyOtp());
                     navigate('/change_password');

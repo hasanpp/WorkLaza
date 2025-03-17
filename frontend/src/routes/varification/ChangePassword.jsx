@@ -37,7 +37,7 @@ const ChangePassword = () => {
                 dispatch(login({accessToken: new_res.data.access, refreshToken: new_res.data.refresh, username: data_res.username, user_id: data_res.id, first_name: data_res.first_name, last_name: data_res.last_name, role: data_res.role}))
             }
             catch(err) {
-                toast(err.response.data.message)
+                err?.response?.data?.message && toast.err(err.response.data.message)
             }
             finally{
                 setIsLoading(false)
