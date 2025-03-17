@@ -146,7 +146,7 @@ const SignIn = () => {
                         </div>
                         {/* <div className='google_sign_in' > */}
                             {/* fadsfd */}
-                            <GoogleLogin clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} style={{display:"flex", justifyContent:"center"}}/>
+                            <GoogleLogin className="Google-login_btn_not" clientId={google_clint_id} onSuccess={responseGoogle} onFailure={responseGoogle} cookiePolicy={'single_host_origin'} style={{display:"flex", justifyContent:"center"}}/>
                         {/* </div>/ */}
                     </div>
                 </div>
