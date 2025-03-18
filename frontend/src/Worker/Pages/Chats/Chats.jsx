@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from 'react-redux';
-import { Send, X, Paperclip } from "react-bootstrap-icons";
+import { Paperclip, Send, X, ArrowBarRight, ArrowBarLeft } from "react-bootstrap-icons";
 import user_icone from '../../../assets/user.png'
 import logo from '../../../assets/logo.png'
 import "./Chats.css";
@@ -20,6 +20,7 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
+  const [sidebar, setSidebar] = useState(true);
 
   const fetchData = async (chatReceiverId=null) =>{
 
@@ -27,7 +28,6 @@ const Chat = () => {
     await secureRequest(async () => {
       API.post(`/chat/get_chats/`, {"user_id":user_id, "chatReceiverId":chatReceiverId})
         .then((res) => {
-          console.log(res?.data?.chats)
           setChatRooms(res?.data?.chats)
           setActiveReceiver(res?.data?.receiver)
           setMessages(res?.data?.messages)
@@ -81,6 +81,10 @@ const Chat = () => {
     return `${hours}:${minutes}`;
   }
 
+  const togleSidebar= ()=>{
+    setSidebar(!sidebar)
+  }
+
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
@@ -90,7 +94,7 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <div className="chat-sidebar">
+      <div className={`chat-sidebar ${sidebar? "chat-sidebar-open":"chat-sidebar-closed"}`} onClick={togleSidebar}>
         <div className="sidebar-header">
           <h1 className="sidebar-title">Chats</h1>
         </div>
@@ -114,10 +118,9 @@ const Chat = () => {
         })}
         </div>
       </div>
-      
-      
-      <div className="chat-main">
-        <div className="chat-header">
+      <button className="side_bar_togle" onClick={togleSidebar}>{sidebar ? <ArrowBarLeft fontSize={25} fontWeight={900} /> : <ArrowBarRight fontSize={25} fontWeight={900} />}</button>
+      <div className={`chat-main ${sidebar? 'chat-main-closed':'chat-main -open'}`}>
+        <div className="chat-header" onClick={togleSidebar}>
           {activeReceiver?.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}} className="current-user-avatar"></img> :activeReceiver?.profile_picture? <img  src={`${activeReceiver?.profile_picture}`}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
 
           <div className="current-user-info">

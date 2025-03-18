@@ -33,8 +33,11 @@ const Top = () => {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      setNotifications((prev) => [data, ...prev]);
-      toast(`${data.title}: ${data.body}`);
+      const ispage = localStorage.getItem("page")
+      if (ispage !== "Chats" || data.title !== "New message"){
+        setNotifications((prev) => [data, ...prev]);
+        toast(`${data.title}: ${data.body}`);
+      }
     }
 
     socket.onclose = () => {

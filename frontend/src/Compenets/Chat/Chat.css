@@ -52,7 +52,7 @@
 }
 
 .users-list {
-  overflow-y: visible;
+  overflow-y: auto;
   flex: 1;
   padding: 20px 20px;
   display: flex;
@@ -336,63 +336,71 @@
 .other-bubble .dot {
   background-color: #98989a;
 }
+
+.chat-container .side_bar_togle{
+  cursor: pointer;
+  color: var(--icon-color);
+  background-color: var(--secondary-icon-color);
+  border-top: 2px solid var(--strok-color);
+  border-bottom: 2px solid var(--strok-color);
+  border-right: 2px solid var(--strok-color);
+  border-radius: 0px 10px 10px 0px;
+  border-left: none;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 0;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  position: fixed;
+  margin-top: 50vh;
+  margin-bottom: 50vh;
+  padding: 5px;
+  display: none;
+}
+/* 
+.chat-sidebar-open{
+  width: 50%;
+}
+
+.chat-sidebar-closed{
+  width: 15%;
+} */
+
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .user-item  {
-    width: 40px;
-    height: 40px;
-    padding: 5px 3px;
-    position: relative;
-  }
-  .user-item .avatar-container img {
-    width: 35px;
-    height: 35px;
-    
-  }
-  .user-item:hover  {
-    width: 200px;
-    padding: 5px 5px;
-    z-index: 10;
-    position: relative;
-  }
-  .user-item .user-details .user-name {
-    display: none;
-  }
-  .user-item:hover .user-details .user-name {
+  .chat-container .side_bar_togle{
     display: flex;
-    
-  }
-  .chat-sidebar{
-    width: 45px;
-  }
-  .sidebar-title {
-    font-size: 10px;
   }
   .sidebar-header {
     margin-top: 75px;
-    padding: 10px 0px;
   }
   .chat-header{
     margin-top: 70px  ;
-    padding: 4px 8px;
+    padding: 10px 10px;
   }
   .message-input-container {
-    padding: 5px;
-  }
-  .users-list {
-    padding: 10px 3px 0px 0px;
-    height: 100vh;
-    overflow-x: visible;
-    overflow-y: scroll;
-  }
-  .chat-main{
-    width: 70%;
+    padding: 10px;
   }
   .message-input {
     width: 3px;
   }
   .messages-container{
-    padding: 4px;
+    padding: 10px;
+  }
+  .chat-main-closed{
+    display: none;
+  }
+  .chat-main-open{
+    display: flex;
+  }
+  
+  .chat-sidebar-open{
+    width: 100%;
+  }
+
+  .chat-sidebar-closed{
+    display: none;
   }
 }
 

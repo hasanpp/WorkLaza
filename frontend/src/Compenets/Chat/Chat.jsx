@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from 'react-redux';
-import {  Paperclip, Send, X } from "react-bootstrap-icons";
+import { Paperclip, Send, X, ArrowBarRight, ArrowBarLeft } from "react-bootstrap-icons";
 import "./Chat.css";
 import API from '../../api'
 import user_icone from '../../assets/user.png'
@@ -15,73 +15,74 @@ const Chat = () => {
   const [socket, setSocket] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [chatLoading, setChatLoading] = useState(false);
-  const { user_id } = useSelector((state) => state.auth)
+  const { user_id } = useSelector((state) => state.auth);
+  const [sidebar, setSidebar] = useState(true);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
 
-  const fetchData = async (chatReceiverId=null) =>{
+  const fetchData = async (chatReceiverId = null) => {
     chatReceiverId = chatReceiverId == null ? localStorage.getItem("chatReceiverId") || 3 : chatReceiverId;
     await secureRequest(async () => {
-      API.post(`/chat/get_chats/`, {"user_id":user_id, "chatReceiverId":chatReceiverId})
-      .then((res) => {
-        setChatRooms(res?.data?.chats)
-        setActiveReceiver(res?.data?.receiver)
-        setMessages(res?.data?.messages)
-        const chatRoomId = res?.data?.chat_id 
-        if (chatRoomId) {
-          openChat(chatRoomId);
-        } else if (res.data?.chats.length > 0) {
-          openChat(res.data.chats[0].id);
-        }
-      })
-      .catch((error) => console.error("Error fetching chats:", error));
+      API.post(`/chat/get_chats/`, { "user_id": user_id, "chatReceiverId": chatReceiverId })
+        .then((res) => {
+          setChatRooms(res?.data?.chats)
+          setActiveReceiver(res?.data?.receiver)
+          setMessages(res?.data?.messages)
+          const chatRoomId = res?.data?.chat_id
+          if (chatRoomId) {
+            openChat(chatRoomId);
+          } else if (res.data?.chats.length > 0) {
+            openChat(res.data.chats[0].id);
+          }
+        })
+        .catch((error) => console.error("Error fetching chats:", error));
     });
   }
 
   useEffect(() => {
     fetchData();
     if (!socket) {
-      openChat(localStorage.getItem("chatRoomId") );
+      openChat(localStorage.getItem("chatRoomId"));
     }
   }, []);
 
-const openChat = async (chatRoomId) => {
-  if (socket) {
-    socket.close(); 
-  }
+  const openChat = async (chatRoomId) => {
+    if (socket) {
+      socket.close();
+    }
 
-  localStorage.setItem("chatRoomId", chatRoomId);
-  await secureRequest(async () => {
-    const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
-    
-    newWs.onopen = () => console.log("WebSocket Connected");
-    newWs.onerror = (e) => console.error("WebSocket Error:", e);
-    
-    newWs.onmessage = (event) => {
-      setChatLoading(true);
-      const data = JSON.parse(event.data);
+    localStorage.setItem("chatRoomId", chatRoomId);
+    await secureRequest(async () => {
+      const newWs = new WebSocket(`${VITE_WEBSOCKET_CHAT_URL}${chatRoomId}/`);
 
-      setMessages((prev) => {
-        if (!prev.some(msg => msg.timestamp === data.timestamp && msg.sender === data.sender)) {
-          return [...prev, { sender: data.sender, text: data.message, timestamp: data.timestamp, image: data.image || null }];
-        }
-        return prev;
-      });
+      newWs.onopen = () => console.log("WebSocket Connected");
+      newWs.onerror = (e) => console.error("WebSocket Error:", e);
 
-      setTimeout(() => {
-        setChatLoading(false);
-      }, 50);
-    };
+      newWs.onmessage = (event) => {
+        setChatLoading(true);
+        const data = JSON.parse(event.data);
 
-    newWs.onclose = () => console.log("WebSocket Disconnected");
-    setSocket(newWs);
-  });
-};
+        setMessages((prev) => {
+          if (!prev.some(msg => msg.timestamp === data.timestamp && msg.sender === data.sender)) {
+            return [...prev, { sender: data.sender, text: data.message, timestamp: data.timestamp, image: data.image || null }];
+          }
+          return prev;
+        });
 
-  
-  const sendMessage = async() => {
-    if (socket && (message.trim() || selectedImage ) ) {
+        setTimeout(() => {
+          setChatLoading(false);
+        }, 50);
+      };
+
+      newWs.onclose = () => console.log("WebSocket Disconnected");
+      setSocket(newWs);
+    });
+  };
+
+
+  const sendMessage = async () => {
+    if (socket && (message.trim() || selectedImage)) {
       await secureRequest(async () => {
         await socket.send(JSON.stringify({ message: message || null, sender: user_id, image: selectedImage || null, }));
       });
@@ -97,6 +98,10 @@ const openChat = async (chatRoomId) => {
     return `${hours}:${minutes}`;
   }
 
+  const togleSidebar= ()=>{
+    setSidebar(!sidebar)
+  }
+
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
@@ -106,45 +111,44 @@ const openChat = async (chatRoomId) => {
 
   return (
     <div className="chat-container">
-      <div className="chat-sidebar">
+      <div className={`chat-sidebar ${sidebar? "chat-sidebar-open":"chat-sidebar-closed"}`} onClick={togleSidebar}>
         <div className="sidebar-header">
-          <h1 className="sidebar-title">Chats</h1>
+          Chats
         </div>
         <div className="users-list">
-        {chatRooms?.map(chatRoom => {
-          const opponet = chatRoom?.user2_profile.id == user_id ? chatRoom?.user1_profile : chatRoom?.user2_profile;
-          return (
-            <div  key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() => fetchData(opponet?.id )} >
-              <div className="avatar-container">
-                {opponet.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}}  className="user-avatar"></img>:opponet?.profile_picture?<img src={`${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
-                
-                {opponet?.active && <span className="status-indicator"></span>}
+          {chatRooms?.map(chatRoom => {
+            const opponet = chatRoom?.user2_profile.id == user_id ? chatRoom?.user1_profile : chatRoom?.user2_profile;
+            return (
+              <div key={chatRoom.id} className={`user-item ${opponet?.id === user_id ? 'active' : ''}`} onClick={() =>{fetchData(opponet?.id)}} >
+                <div className="avatar-container">
+                  {opponet.is_superuser ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="user-avatar"></img> : opponet?.profile_picture ? <img src={`${opponet?.profile_picture}`} alt={opponet?.name} className="user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="current-user-avatar" />}
+
+                  {opponet?.active && <span className="status-indicator"></span>}
+                </div>
+                <div className="user-details">
+                  {opponet.is_superuser ? <span className="user-name">Chat with admin</span> : <span className="user-name">{opponet?.first_name} {opponet?.last_name}</span>}
+                  {opponet?.unread > 0 && (
+                    <span className="unread-badge">{opponet?.unread}</span>
+                  )}
+                </div>
               </div>
-              <div className="user-details">
-                {opponet.is_superuser ?<span className="user-name">Chat with admin</span> :<span className="user-name">{opponet?.first_name} {opponet?.last_name}</span>}
-                {opponet?.unread > 0 && (
-                   <span className="unread-badge">{opponet?.unread}</span>
-                )}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
         </div>
       </div>
-      
-      
-      <div className="chat-main">
-        <div className="chat-header">
-          {activeReceiver?.is_superuser ? <img src={logo} alt="Admin user" style={{borderRadius:"0%"}} className="current-user-avatar"></img> :activeReceiver?.profile_picture? <img  src={`${activeReceiver?.profile_picture}`}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />: <img  src={user_icone}  alt={activeReceiver?.first_name}  className="current-user-avatar"  />}
+      <button className="side_bar_togle" onClick={togleSidebar}>{sidebar ? <ArrowBarLeft fontSize={25} fontWeight={900} /> : <ArrowBarRight fontSize={25} fontWeight={900} />}</button>
+      <div className={`chat-main ${sidebar? 'chat-main-closed':'chat-main -open'}`}>
+        <div className="chat-header" onClick={togleSidebar}>
+          {activeReceiver?.is_superuser ? <img src={logo} alt="Admin user" style={{ borderRadius: "0%" }} className="current-user-avatar"></img> : activeReceiver?.profile_picture ? <img src={`${activeReceiver?.profile_picture}`} alt={activeReceiver?.first_name} className="current-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="current-user-avatar" />}
           <div className="current-user-info">
-            {activeReceiver?.is_superuser ? <h5 className="current-user-name">Admin user</h5> :<h5 className="current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>} 
+            {activeReceiver?.is_superuser ? <h5 className="current-user-name">Admin user</h5> : <h5 className="current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>}
           </div>
         </div>
-        
-        <div className="messages-container" ref={messagesContainerRef}>
+
+        <div className="messages-container" ref={messagesContainerRef} >
           {messages?.map(msg => (
-            <div  key={msg.id}  className={`message-wrapper ${msg.sender == user_id ? 'user-message' : 'other-message'}`} >
-              <div className={`message-bubble ${msg.sender == user_id ?'user-bubble' : 'other-bubble'}`}>
+            <div key={msg.id} className={`message-wrapper ${msg.sender == user_id ? 'user-message' : 'other-message'}`} >
+              <div className={`message-bubble ${msg.sender == user_id ? 'user-bubble' : 'other-bubble'}`}>
                 {msg.image && <img src={`${msg.image}`} alt="Sent Image" className="chat-image" />}
                 {msg.text && <p className="message-content">{msg.text}</p>}
                 <span className="message-timestamp">{extractTime(msg.timestamp)}</span>
@@ -164,27 +168,27 @@ const openChat = async (chatRoomId) => {
           )}
           <div ref={messagesEndRef}></div>
         </div>
-        
+
         <div className="message-input-container">
           {selectedImage && (
-              <div className="image-preview">
-                <button onClick={() => setSelectedImage(null)} className="remove_selected"><X/></button>
-                <img src={selectedImage} alt="Preview" className="preview-img" />
-              </div>
-            )}
+            <div className="image-preview">
+              <button onClick={() => setSelectedImage(null)} className="remove_selected"><X /></button>
+              <img src={selectedImage} alt="Preview" className="preview-img" />
+            </div>
+          )}
           <div className="message-input-wrapper">
-            <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput" 
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) { const reader = new FileReader(); reader.onloadend = () => { setSelectedImage(reader.result) }; reader.readAsDataURL(file); }
-            }}
+            <input type="file" accept="image/*" style={{ display: "none" }} id="fileInput"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) { const reader = new FileReader(); reader.onloadend = () => { setSelectedImage(reader.result) }; reader.readAsDataURL(file); }
+              }}
             />
             <label htmlFor="fileInput" className="Paperclip_label">
-              <Paperclip className="input-icon" style={{width:"25px",height:"25px"}}/>
+              <Paperclip className="input-icon" style={{ width: "25px", height: "25px" }} />
             </label>
-            
+
             <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Write a message..." className="message-input" />
-            <button  onClick={sendMessage} className="send-button" >
+            <button onClick={sendMessage} className="send-button" >
               <Send className="send-icon" />
             </button>
           </div>

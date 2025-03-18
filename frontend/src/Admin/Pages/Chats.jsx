@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector } from 'react-redux';
-import { Send, Paperclip, X } from "react-bootstrap-icons";
+import { Send, Paperclip, X, ArrowBarRight, ArrowBarLeft } from "react-bootstrap-icons";
 import "./Chats.css";
 import API from '../../api'
 import user_icone from '../../assets/user.png'
@@ -20,6 +20,7 @@ const Chats = () => {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const VITE_WEBSOCKET_CHAT_URL = import.meta.env.VITE_WEBSOCKET_CHAT_URL;
+  const [sidebar, setSidebar] = useState(true);
 
   const fetchData = async (chatReceiverId = null) => {
 
@@ -80,6 +81,9 @@ const Chats = () => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
   }
+  const togleSidebar= ()=>{
+    setSidebar(!sidebar)
+  }
 
   useEffect(() => {
     if (messagesContainerRef.current) {
@@ -91,7 +95,7 @@ const Chats = () => {
   return (
     <div className="ad-content-admin admin_chat-main">
       <div className="ad-chat-container">
-        <div className="ad-chat-sidebar">
+        <div className={`ad-chat-sidebar ${sidebar? "ad-chat-sidebar-open":"ad-chat-sidebar-closed"}`} onClick={togleSidebar}>
           <div className="ad-sidebar-header">
             <h1 className="ad-sidebar-title">Chats</h1>
           </div>
@@ -116,10 +120,9 @@ const Chats = () => {
             })}
           </div>
         </div>
-
-
-        <div className="ad-chat-main">
-          <div className="ad-chat-header">
+        <button className="ad-side_bar_togle" onClick={togleSidebar}>{sidebar ? <ArrowBarLeft fontSize={25} fontWeight={900} /> : <ArrowBarRight fontSize={25} fontWeight={900} />}</button>
+        <div className={`ad-chat-main ${sidebar? 'ad-chat-main-closed':'ad-chat-main -open'}`}>
+          <div className="ad-chat-header" onClick={togleSidebar}>
             {activeReceiver?.is_superuser ? <img src={logo} alt="you" style={{ borderRadius: "0%" }} className="ad-current-user-avatar"></img> : activeReceiver?.profile_picture ? <img src={`${activeReceiver?.profile_picture}`} alt={activeReceiver?.first_name} className="ad-current-user-avatar" /> : <img src={user_icone} alt={activeReceiver?.first_name} className="ad-current-user-avatar" />}
             <div className="ad-current-user-info">
               {activeReceiver?.is_superuser ? <h5 className="ad-current-user-name">You</h5> : <h5 className="ad-current-user-name">{activeReceiver?.first_name} {activeReceiver?.last_name}</h5>}
