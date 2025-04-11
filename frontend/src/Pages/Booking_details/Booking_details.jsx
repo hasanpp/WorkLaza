@@ -6,6 +6,7 @@ import { useEffect,useContext,useState } from 'react';
 import { LoadingContext } from '../../App';
 import { toast } from 'sonner';
 import user_icone from '../../assets/user.png';
+import demmy_work from '../../assets/demmy_work.png';
 import Swal from "sweetalert2";
 import { Modal, Button } from 'react-bootstrap';
 import { ChatLeftDots, Star, X } from 'react-bootstrap-icons';
@@ -121,7 +122,7 @@ const Booking_details = ({ booking_id }) => {
         <hr />
         <div className="bootam_part">
           <div className="left col-12 col-lg-6">
-            <img src={`${booking?.photo}`} alt="" />
+            <img src={booking?.photo ? `${booking?.photo}`: demmy_work } alt="" />
           </div>
           <div className="right col-12 col-lg-6">
             <h4>Details of Booking</h4>
